@@ -1,30 +1,66 @@
+// args
+const key1 = 'q';
+const key2 = 'a';
+const player = 'elie';
+
 const gameSocket = new WebSocket('ws://' + window.location.host + '/ws/game/');
 
 gameSocket.onmessage = (e) => {
-  const data = JSON.parse(e.data);
-  document.querySelector('#chat-log').value += data.message + '\n';
+  document.getElementById('logs').value += e.data + '\n';
 };
 
 gameSocket.onclose = (e) => {
-  console.error('Chat socket closed unexpectedly');
+  console.error('Game ws closed');
 };
 
-document.querySelector('#chat-message-input').focus();
-document.querySelector('#chat-message-input').onkeyup = (e) => {
-  if (e.key === 'Enter') {
-    // enter, return
-    document.querySelector('#chat-message-submit').click();
+let isKey1Pressed = false;
+let isKey2Pressed = false;
+
+function keyPressed(ev) {
+  if (ev.key === key1) {
+    if (!isKey1Pressed)
+      gameSocket.send(
+        JSON.stringify({
+          type: 'key',
+          key: 1,
+          player: player,
+        })
+      );
+    isKey1Pressed = true;
+  } else if (ev.key === key2) {
+    if (!isKey2Pressed)
+      gameSocket.send(
+        JSON.stringify({
+          type: 'key',
+          key: 2,
+          player: player,
+        })
+      );
+    isKey2Pressed = true;
   }
-};
+}
 
-document.querySelector('#chat-message-submit').onclick = (e) => {
-  const messageInputDom = document.querySelector('#chat-message-input');
-  const message = messageInputDom.value;
-  gameSocket.send(
-    JSON.stringify({
-      type: 'chat.message',
-      message: message,
-    })
-  );
-  messageInputDom.value = '';
-};
+function keyReleased(ev) {
+  if (ev.key === key1) {
+    gameSocket.send(
+      JSON.stringify({
+        type: 'key',
+        key: 1,
+        player: player,
+      })
+    );
+    isKey1Pressed = false;
+  } else if (ev.key === key2) {
+    gameSocket.send(
+      JSON.stringify({
+        type: 'key',
+        key: 2,
+        player: player,
+      })
+    );
+    isKey2Pressed = false;
+  }
+}
+
+document.addEventListener('keydown', keyPressed);
+document.addEventListener('keyup', keyReleased);
