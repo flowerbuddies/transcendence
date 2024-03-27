@@ -16,5 +16,5 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def key(self, event):
         # for now just send back the key pressed
-        # but later we'll process this and send players and ball position instead
+        # but later we'll process this and send players and ball positions instead
         await self.send(text_data=json.dumps(event))
