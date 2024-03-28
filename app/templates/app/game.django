@@ -1,0 +1,27 @@
+<main class="row align-items-center vh-100">
+  <ul class="col-3 list-group">
+    <li class="list-group-item list-group-item-danger">Élie</li>
+    <li class="list-group-item list-group-item-success">
+      Markus <span class="fst-italic text-danger-emphasis">(next)</span>
+    </li>
+    <li class="list-group-item list-group-item-success">Noel</li>
+    <li class="list-group-item list-group-item-success">
+      Mark <span class="fst-italic text-danger-emphasis">(next)</span>
+    </li>
+    <li class="list-group-item list-group-item-danger">Huong</li>
+    <li class="list-group-item list-group-item-success">Jordan</li>
+    <li class="list-group-item list-group-item-danger">Emma</li>
+    <li class="list-group-item list-group-item-success">Clément</li>
+  </ul>
+  <div class="col-9 h-80 fs-4">
+    <div class="row ms-0 w-inherit">
+      <p class="col ps-0">Noel</p>
+      <p class="col pe-0 text-right">Mark</p>
+    </div>
+    <canvas class="w-inherit" id="canvas"></canvas>
+    <p class="w-inherit text-center">
+      Play with <strong><code>Q</code></strong> and
+      <strong><code>A</code></strong>
+    </p>
+  </div>
+</main>
