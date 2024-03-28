@@ -1,7 +1,12 @@
 {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[*]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
-    }
+    },
+    "[django-html]": {
+        "editor.defaultFormatter": "monosans.djlint"
+    },
 }
