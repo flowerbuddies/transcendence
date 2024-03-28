@@ -36,6 +36,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
+    "app",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -73,6 +75,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "transcendence.wsgi.application"
+ASGI_APPLICATION = "transcendence.asgi.application"
 
 
 # Database
@@ -88,6 +91,9 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+# TODO: use Redis backend
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 
 # Password validation
