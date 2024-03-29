@@ -58,6 +58,15 @@
     {% endif %}
   </td>
   <td>
+    <input class="form-control"
+           form="game-{{ forloop.counter }}"
+           required
+           type="text"
+           name="nickname"
+           placeholder="Your nickname"
+           aria-label="Your nickname" />
+  </td>
+  <td>
     <form id="game-{{ forloop.counter }}" action="" method="post">
       {% csrf_token %}
       <button class="btn btn-primary"
