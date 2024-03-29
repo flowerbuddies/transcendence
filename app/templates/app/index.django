@@ -19,5 +19,5 @@
                     crossorigin="anonymous"
                     defer></script>
       </head>
-      <body class="container">{% include "app/game.django" %}</body>
+      <body class="container">{% include "app/join.django" %}</body>
 </html>

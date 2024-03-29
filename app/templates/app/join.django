@@ -1,0 +1,16 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Type</th>
+      <th scope="col">Players</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for game in games %}
+      {% include "app/join_row.django" with exists=True %}
+    {% endfor %}
+    {% include "app/join_row.django" %}
+  </tbody>
+</table>

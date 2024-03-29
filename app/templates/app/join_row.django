@@ -1,0 +1,74 @@
+<tr>
+  <td>
+    <input class="{% if exists %}form-control-plaintext{% else %}form-control{% endif %}"
+           form="game-{{ forloop.counter }}"
+           {% if exists %}readonly{% endif %}
+           required
+           type="text"
+           name="name"
+           placeholder="Game name"
+           aria-label="Game name"
+           value="{{ game.name }}" />
+  </td>
+  <td>
+    {% if exists %}
+      <input class="form-control-plaintext"
+             form="game-{{ forloop.counter }}"
+             readonly
+             required
+             type="text"
+             name="type"
+             aria-label="Game type"
+             value="{{ game.type }}" />
+    {% else %}
+      <select class="form-select"
+              form="game-{{ forloop.counter }}"
+              required
+              name="type"
+              aria-label="Game type">
+        <option value="Tournament 1v1">Tournament 1v1</option>
+        <option value="Tournament 1v1v1v1">Tournament 1v1v1v1</option>
+        <option value="Game 1v1">Game 1v1</option>
+        <option value="Game 1vAI">Game 1vAI</option>
+        <option value="Game 1v1v1v1">Game 1v1v1v1</option>
+        <option value="Game 1v1vAIvAI">Game 1v1vAIvAI</option>
+      </select>
+    {% endif %}
+  </td>
+  <td>
+    {% if exists %}
+      <input class="form-control-plaintext"
+             form="game-{{ forloop.counter }}"
+             readonly
+             required
+             type="text"
+             name="players"
+             aria-label="Connected players"
+             value="{{ game.current_players }}/{{ game.max_players }}" />
+    {% else %}
+      <select class="form-select"
+              form="game-{{ forloop.counter }}"
+              required
+              name="players"
+              aria-label="Players spots">
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="8">8</option>
+      </select>
+    {% endif %}
+  </td>
+  <td>
+    <form id="game-{{ forloop.counter }}" action="" method="post">
+      {% csrf_token %}
+      <button class="btn btn-primary"
+              type="submit"
+              {% if exists and game.current_players == game.max_players %}disabled{% endif %}>
+        {% if exists %}
+          Join
+        {% else %}
+          Create
+        {% endif %}
+      </button>
+    </form>
+  </td>
+</tr>
