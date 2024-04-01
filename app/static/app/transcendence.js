@@ -12,6 +12,6 @@ document.querySelectorAll('form').forEach((el) =>
     });
 
     if (res.status != 200) alert(await res.text());
-    else join(formData.get('name'), formData.get('nickname'));
+    else join(formData.get('game-name'), formData.get('player-name'));
   })
 );
