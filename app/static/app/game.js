@@ -1,76 +1,82 @@
-// args
-const key1 = 'q';
-const key2 = 'a';
-const player = 'elie';
+export function join(gameName, playerName) {
+  document.getElementById('join-view').classList.add('d-none');
+  document.getElementById('game-view').classList.remove('d-none');
 
-const gameSocket = new WebSocket('ws://' + window.location.host + '/ws/game/');
+  // TODO: add support for 2 players on the same window
+  const key1 = 'q';
+  const key2 = 'a';
 
-gameSocket.onmessage = (e) => {
-  console.log(JSON.parse(e.data));
-};
+  const gameSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/game/' + gameName + '/'
+  );
 
-gameSocket.onclose = (e) => {
-  console.error('Game ws closed');
-};
+  gameSocket.onmessage = (e) => {
+    console.log(JSON.parse(e.data));
+  };
 
-let isKey1Pressed = false;
-let isKey2Pressed = false;
+  gameSocket.onclose = (e) => {
+    console.error('Game ws closed');
+  };
 
-function keyPressed(ev) {
-  if (ev.key === key1) {
-    // send only one key event on `keydown`
-    if (!isKey1Pressed)
+  let isKey1Pressed = false;
+  let isKey2Pressed = false;
+
+  function keyPressed(ev) {
+    if (ev.key === key1) {
+      // send only one key event on `keydown`
+      if (!isKey1Pressed)
+        gameSocket.send(
+          JSON.stringify({
+            type: 'key',
+            key: 1,
+            player: playerName,
+          })
+        );
+      isKey1Pressed = true;
+    } else if (ev.key === key2) {
+      // send only one key event on `keydown`
+      if (!isKey2Pressed)
+        gameSocket.send(
+          JSON.stringify({
+            type: 'key',
+            key: 2,
+            player: playerName,
+          })
+        );
+      isKey2Pressed = true;
+    }
+  }
+
+  function keyReleased(ev) {
+    if (ev.key === key1) {
       gameSocket.send(
         JSON.stringify({
           type: 'key',
           key: 1,
-          player: player,
+          player: playerName,
         })
       );
-    isKey1Pressed = true;
-  } else if (ev.key === key2) {
-    // send only one key event on `keydown`
-    if (!isKey2Pressed)
+      isKey1Pressed = false;
+    } else if (ev.key === key2) {
       gameSocket.send(
         JSON.stringify({
           type: 'key',
           key: 2,
-          player: player,
+          player: playerName,
         })
       );
-    isKey2Pressed = true;
+      isKey2Pressed = false;
+    }
   }
+
+  // we send the same event for both `keydown` and `keyup`
+  // depending on the previous state, the server will be able to understand what's happening
+  document.addEventListener('keydown', keyPressed);
+  document.addEventListener('keyup', keyReleased);
+
+  // TODO: for now just print a black square
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
-
-function keyReleased(ev) {
-  if (ev.key === key1) {
-    gameSocket.send(
-      JSON.stringify({
-        type: 'key',
-        key: 1,
-        player: player,
-      })
-    );
-    isKey1Pressed = false;
-  } else if (ev.key === key2) {
-    gameSocket.send(
-      JSON.stringify({
-        type: 'key',
-        key: 2,
-        player: player,
-      })
-    );
-    isKey2Pressed = false;
-  }
-}
-
-// we send the same event for both `keydown` and `keyup`
-// depending on the previous state, the server will be able to understand what's happening
-document.addEventListener('keydown', keyPressed);
-document.addEventListener('keyup', keyReleased);
-
-// TODO: for now just print a black square
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-ctx.fillStyle = 'black';
-ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
