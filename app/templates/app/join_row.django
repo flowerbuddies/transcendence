@@ -67,7 +67,10 @@
            aria-label="Your nickname" />
   </td>
   <td>
-    <form id="game-{{ forloop.counter }}" action="" method="post">
+    <form class="form-join"
+          id="game-{{ forloop.counter }}"
+          action=""
+          method="post">
       {% csrf_token %}
       <button class="btn btn-primary"
               type="submit"

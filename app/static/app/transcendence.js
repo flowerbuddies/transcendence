@@ -1,6 +1,6 @@
 import { join } from './game.js';
 
-document.querySelectorAll('form').forEach((el) =>
+document.querySelectorAll('.form-join').forEach((el) =>
   el.addEventListener('submit', async (ev) => {
     ev.preventDefault(); // prevent a page refresh
 

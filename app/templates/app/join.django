@@ -1,11 +1,12 @@
+{% load i18n %}
 <table id="join-view" class="table">
   <thead>
     <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Type</th>
-      <th scope="col">Players</th>
-      <th scope="col">Nickname</th>
-      <th scope="col">Action</th>
+      <th scope="col">{% trans "join.gameName.title" %}</th>
+      <th scope="col">{% trans "join.type.title" %}</th>
+      <th scope="col">{% trans "join.players.title" %}</th>
+      <th scope="col">{% trans "join.playerName.title" %}</th>
+      <th scope="col">{% trans "join.action.title" %}</th>
     </tr>
   </thead>
   <tbody>
@@ -15,3 +16,20 @@
     {% include "app/join_row.django" %}
   </tbody>
 </table>
+<div class="col-2 fixed-bottom ms-4 mb-4">
+  <form class="input-group" action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <select class="form-select" name="language">
+      {% get_current_language as LANGUAGE_CODE %}
+      {% get_available_languages as LANGUAGES %}
+      {% get_language_info_list for LANGUAGES as languages %}
+      {% for language in languages %}
+        <option value="{{ language.code }}"
+                {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+          {{ language.name_local }} ({{ language.code }})
+        </option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit">Go</button>
+  </form>
+</div>
