@@ -6,7 +6,7 @@ const player = 'elie';
 const gameSocket = new WebSocket('ws://' + window.location.host + '/ws/game/');
 
 gameSocket.onmessage = (e) => {
-  document.getElementById('logs').value += e.data + '\n';
+  console.log(JSON.parse(e.data));
 };
 
 gameSocket.onclose = (e) => {
@@ -68,3 +68,9 @@ function keyReleased(ev) {
 // depending on the previous state, the server will be able to understand what's happening
 document.addEventListener('keydown', keyPressed);
 document.addEventListener('keyup', keyReleased);
+
+// TODO: for now just print a black square
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+ctx.fillStyle = 'black';
+ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
