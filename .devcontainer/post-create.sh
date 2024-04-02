@@ -33,13 +33,19 @@ function migrate_database() {
 }
 
 function create_superuser() {
-  python manage.py createsuperuser --no-input
+  cat <<EOF | python manage.py shell
+from django.contrib.auth import get_user_model
+User = get_user_model()
+User.objects.filter(username='${DJANGO_SUPERUSER_USERNAME}').exists() or \
+    User.objects.create_superuser('${DJANGO_SUPERUSER_USERNAME}', '${DJANGO_SUPERUSER_EMAIL}', '${DJANGO_SUPERUSER_PASSWORD}')
+EOF
 }
 
 function main() {
   check_if_project_root_exists
   cd $PROJECT_ROOT
   copy_env_file_if_not_exists
+  source .env
   install_python_requirements
   migrate_database
   create_superuser
