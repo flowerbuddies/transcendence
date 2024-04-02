@@ -5,7 +5,7 @@
            {% if exists %}readonly{% endif %}
            required
            type="text"
-           name="name"
+           name="game-name"
            placeholder="Game name"
            aria-label="Game name"
            value="{{ game.name }}" />
@@ -62,7 +62,7 @@
            form="game-{{ forloop.counter }}"
            required
            type="text"
-           name="nickname"
+           name="player-name"
            placeholder="Your nickname"
            aria-label="Your nickname" />
   </td>
