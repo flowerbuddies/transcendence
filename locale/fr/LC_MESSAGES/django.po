@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-03 15:22+0000\n"
+"POT-Creation-Date: 2024-04-03 15:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: app/templates/app/game.django:23
+msgid "game.playWith"
+msgstr "Se joue avec"
+
+#: app/templates/app/game.django:23
+msgid "game.and"
+msgstr "et"
 
 #: app/templates/app/join.django:5 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11

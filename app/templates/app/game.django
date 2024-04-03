@@ -1,3 +1,4 @@
+{% load i18n %}
 <main id="game-view" class="row align-items-center vh-100 d-none">
   <ul class="col-3 list-group">
     <li class="list-group-item list-group-item-danger">Élie</li>
@@ -20,7 +21,7 @@
     </div>
     <canvas class="w-inherit" id="canvas"></canvas>
     <p class="w-inherit text-center">
-      Play with <strong><code>Q</code></strong> and
+      {% trans "game.playWith" %} <strong><code>Q</code></strong> {% trans "game.and" %}
       <strong><code>A</code></strong>
     </p>
   </div>
