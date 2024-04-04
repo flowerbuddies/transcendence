@@ -124,7 +124,6 @@ LANGUAGE_CODE = "en-us"
 LANGUAGES = [
     ("en", "English"),
     ("fr", "French"),
-    ("es", "Spanish"),
 ]
 
 LOCALE_PATHS = [BASE_DIR / "locale"]
