@@ -31,7 +31,7 @@
           </option>
         {% endfor %}
       </select>
-      <button class="btn btn-primary" type="submit">Go</button>
+      <button class="btn btn-primary" type="submit">{% trans "language.go" %}</button>
     </form>
   </div>
 </div>
