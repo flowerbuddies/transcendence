@@ -1,3 +1,4 @@
+{% load i18n %}
 <tr>
   <td>
     <input class="{% if exists %}form-control-plaintext{% else %}form-control{% endif %}"
@@ -6,8 +7,8 @@
            required
            type="text"
            name="game-name"
-           placeholder="Game name"
-           aria-label="Game name"
+           placeholder="{% trans "join.gameName.title" %}"
+           aria-label="{% trans "join.gameName.title" %}"
            value="{{ game.name }}" />
   </td>
   <td>
@@ -18,20 +19,20 @@
              required
              type="text"
              name="type"
-             aria-label="Game type"
+             aria-label="{% trans "join.type.title" %}"
              value="{{ game.type }}" />
     {% else %}
       <select class="form-select"
               form="game-{{ forloop.counter }}"
               required
               name="type"
-              aria-label="Game type">
-        <option value="Tournament 1v1">Tournament 1v1</option>
-        <option value="Tournament 1v1v1v1">Tournament 1v1v1v1</option>
-        <option value="Game 1v1">Game 1v1</option>
-        <option value="Game 1vAI">Game 1vAI</option>
-        <option value="Game 1v1v1v1">Game 1v1v1v1</option>
-        <option value="Game 1v1vAIvAI">Game 1v1vAIvAI</option>
+              aria-label="{% trans "join.type.title" %}">
+        <option value="Tournament 1v1">{% trans "join.type.types.tournament1v1" %}</option>
+        <option value="Tournament 1v1v1v1">{% trans "join.type.types.tournament1v1v1v1" %}</option>
+        <option value="Game 1v1">{% trans "join.type.types.game1v1" %}</option>
+        <option value="Game 1vAI">{% trans "join.type.types.game1vAI" %}</option>
+        <option value="Game 1v1v1v1">{% trans "join.type.types.game1v1v1v1" %}</option>
+        <option value="Game 1v1vAIvAI">{% trans "join.type.types.game1v1vAIvAI" %}</option>
       </select>
     {% endif %}
   </td>
@@ -43,14 +44,14 @@
              required
              type="text"
              name="players"
-             aria-label="Connected players"
+             aria-label="{% trans "join.players.connected_players" %}"
              value="{{ game.current_players }}/{{ game.max_players }}" />
     {% else %}
       <select class="form-select"
               form="game-{{ forloop.counter }}"
               required
               name="players"
-              aria-label="Players spots">
+              aria-label="{% trans "join.players.player_slots" %}">
         <option value="2">2</option>
         <option value="4">4</option>
         <option value="8">8</option>
@@ -63,19 +64,22 @@
            required
            type="text"
            name="player-name"
-           placeholder="Your nickname"
-           aria-label="Your nickname" />
+           placeholder="{% trans "join.playerName.title" %}"
+           aria-label="{% trans "join.playerName.title" %}" />
   </td>
   <td>
-    <form id="game-{{ forloop.counter }}" action="" method="post">
+    <form class="form-join"
+          id="game-{{ forloop.counter }}"
+          action=""
+          method="post">
       {% csrf_token %}
       <button class="btn btn-primary"
               type="submit"
               {% if exists and game.current_players == game.max_players %}disabled{% endif %}>
         {% if exists %}
-          Join
+          {% trans "join.action.join" %}
         {% else %}
-          Create
+          {% trans "join.action.create" %}
         {% endif %}
       </button>
     </form>

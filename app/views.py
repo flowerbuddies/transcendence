@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 import re
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
@@ -12,13 +13,13 @@ def index(request):
             "games": [
                 {
                     "name": "first_game",
-                    "type": "Tournament 1v1v1v1",
+                    "type": _("join.type.types.tournament1v1v1v1"),
                     "current_players": 2,
                     "max_players": 4,
                 },
                 {
                     "name": "Sec-game",
-                    "type": "Game 1v1v1v1",
+                    "type": _("join.type.types.game1v1v1v1"),
                     "current_players": 4,
                     "max_players": 4,
                 },

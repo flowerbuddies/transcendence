@@ -1,0 +1,94 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-05 15:02+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: app/templates/app/game.django:24
+msgid "game.playWith"
+msgstr "Se joue avec"
+
+#: app/templates/app/game.django:24
+msgid "game.and"
+msgstr "et"
+
+#: app/templates/app/join.django:6 app/templates/app/join_row.django:10
+#: app/templates/app/join_row.django:11
+msgid "join.gameName.title"
+msgstr "Nom de la partie"
+
+#: app/templates/app/join.django:7 app/templates/app/join_row.django:22
+#: app/templates/app/join_row.django:29
+msgid "join.type.title"
+msgstr "Type de partie"
+
+#: app/templates/app/join.django:8
+msgid "join.players.title"
+msgstr "Joueur.ses"
+
+#: app/templates/app/join.django:9 app/templates/app/join_row.django:67
+#: app/templates/app/join_row.django:68
+msgid "join.playerName.title"
+msgstr "Nom du/de la joueur.se"
+
+#: app/templates/app/join.django:10
+msgid "join.action.title"
+msgstr "Action"
+
+#: app/templates/app/join.django:34
+msgid "language.go"
+msgstr "Go"
+
+#: app/templates/app/join_row.django:30
+msgid "join.type.types.tournament1v1"
+msgstr "Tournoi 1vs1"
+
+#: app/templates/app/join_row.django:31
+msgid "join.type.types.tournament1v1v1v1"
+msgstr "Tournoi 1vs1vs1vs1"
+
+#: app/templates/app/join_row.django:32
+msgid "join.type.types.game1v1"
+msgstr "Partie 1vs1"
+
+#: app/templates/app/join_row.django:33
+msgid "join.type.types.game1vAI"
+msgstr "Partie 1vsIA"
+
+#: app/templates/app/join_row.django:34
+msgid "join.type.types.game1v1v1v1"
+msgstr "Partie 1vs1vs1vs1"
+
+#: app/templates/app/join_row.django:35
+msgid "join.type.types.game1v1vAIvAI"
+msgstr "Partie 1vs1vsIAvsIA"
+
+#: app/templates/app/join_row.django:47
+msgid "join.players.connected_players"
+msgstr "Joueur.ses connecté.es"
+
+#: app/templates/app/join_row.django:54
+msgid "join.players.player_slots"
+msgstr "Nombre de joueur.ses"
+
+#: app/templates/app/join_row.django:80
+msgid "join.action.join"
+msgstr "Rejoindre"
+
+#: app/templates/app/join_row.django:82
+msgid "join.action.create"
+msgstr "Créer"

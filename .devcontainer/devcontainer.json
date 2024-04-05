@@ -13,7 +13,8 @@
 				"batisteo.vscode-django",
 				"esbenp.prettier-vscode",
 				"Zignd.html-css-class-completion",
-				"monosans.djlint"
+				"monosans.djlint",
+				"mrorz.language-gettext"
 			]
 		}
 	},

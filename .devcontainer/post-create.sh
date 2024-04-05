@@ -41,6 +41,10 @@ User.objects.filter(username='${DJANGO_SUPERUSER_USERNAME}').exists() or \
 EOF
 }
 
+function compile_translation_files() {
+  django-admin compilemessages
+}
+
 function main() {
   check_if_project_root_exists
   cd $PROJECT_ROOT
@@ -49,6 +53,7 @@ function main() {
   install_python_requirements
   migrate_database
   create_superuser
+  compile_translation_files
 }
 
 main
