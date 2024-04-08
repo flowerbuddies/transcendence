@@ -9,7 +9,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 class GameConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gs = GameState(3)
+        self.gs = GameState(False)
 
     async def connect(self):
         self.game_name = self.scope["url_route"]["kwargs"]["game_name"]

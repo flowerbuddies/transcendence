@@ -44,6 +44,36 @@ class Paddle:
         self.y = clamp(self.y, self.height * 0.5, 1 - self.height * 0.5)
         self.x = clamp(self.x, self.width * 0.5, 1 - self.width * 0.5)
 
+    def get_edge(self, edge):
+        if edge == "left":
+            return (
+                self.x - 0.5 * self.width,
+                self.y - 0.5 * self.height,
+                self.x - 0.5 * self.width,
+                self.y + 0.5 * self.height,
+            )
+        elif edge == "right":
+            return (
+                self.x + 0.5 * self.width,
+                self.y - 0.5 * self.height,
+                self.x + 0.5 * self.width,
+                self.y + 0.5 * self.height,
+            )
+        elif edge == "top":
+            return (
+                self.x - 0.5 * self.width,
+                self.y - 0.5 * self.height,
+                self.x + 0.5 * self.width,
+                self.y - 0.5 * self.height,
+            )
+        elif edge == "bottom":
+            return (
+                self.x - 0.5 * self.width,
+                self.y + 0.5 * self.height,
+                self.x + 0.5 * self.width,
+                self.y + 0.5 * self.height,
+            )
+
 
 class Ball:
     def __init__(self):
@@ -62,7 +92,6 @@ class Ball:
 
     def update(self, dt):
         self.accelerate(1, dt)
-        self.handle_bounds_collision()
 
     def accelerate(self, a, dt):
         a_integral = a * dt * dt * 0.5
@@ -71,22 +100,46 @@ class Ball:
         self.dx += a * dt * (1 if self.dx > 0 else -1)
         self.dy += a * dt * (1 if self.dy > 0 else -1)
 
-    # 2 player mode
-    def handle_bounds_collision(self):
-        if self.x < 0.0 or self.x > 1.0:
-            self.reset()
-        elif self.y <= self.radius or self.y >= 1.0 - self.radius:
-            self.dy *= -1
+    # TODO: currently unused
+    def get_edge(self, edge):
+        if edge == "left":
+            return (
+                self.x - self.radius,
+                self.y - self.radius,
+                self.x - self.radius,
+                self.y + self.radius,
+            )
+        elif edge == "right":
+            return (
+                self.x + self.radius,
+                self.y - self.radius,
+                self.x + self.radius,
+                self.y + self.radius,
+            )
+        elif edge == "top":
+            return (
+                self.x - self.radius,
+                self.y - self.radius,
+                self.x + self.radius,
+                self.y - self.radius,
+            )
+        elif edge == "bottom":
+            return (
+                self.x - self.radius,
+                self.y + self.radius,
+                self.x + self.radius,
+                self.y + self.radius,
+            )
 
 
 class GameState:
-    def __init__(self, playerCount):
+    def __init__(self, isFourPlayer):
         self.ball = Ball()
         self.left = Player("left")
         self.right = Player("right")
-        if playerCount > 2:
+        self.isFourPlayer = isFourPlayer
+        if isFourPlayer:
             self.top = Player("top")
-        if playerCount > 3:
             self.bottom = Player("bottom")
 
     def update(self, dt):
@@ -97,6 +150,59 @@ class GameState:
         if hasattr(self, "bottom"):
             self.bottom.paddle.update()
         self.ball.update(dt)
+        self.handle_collisions(dt)
+
+    def handle_collisions(self, dt):
+        self.handle_goal()
+        if not self.isFourPlayer:
+            self.handle_wall_collision()
+        self.handle_paddle_collision(dt)
+        # increase acceleration when paddle collision occurs
+
+    def handle_goal(self):
+        if self.ball.x < 0.0:
+            self.left.score += 1
+            self.ball.reset()
+        elif self.ball.x > 1.0:
+            self.right.score += 1
+            self.ball.reset()
+        elif self.ball.y < 0.0:
+            self.top.score += 1
+            self.ball.reset()
+        elif self.ball.y > 1.0:
+            self.bottom.score += 1
+            self.ball.reset()
+
+    def handle_wall_collision(self):
+        if self.ball.y < self.ball.radius or self.ball.y > 1.0 - self.ball.radius:
+            self.ball.dy *= -1
+
+    def handle_paddle_collision(self, dt):
+        next = Ball()
+        next.x = self.ball.x
+        next.y = self.ball.y
+        next.dx = self.ball.dx
+        next.dy = self.ball.dy
+        next.accelerate(1, dt)
+
+        if self.ball.dx < 0:
+            defending_paddle = self.left.paddle
+            inward_facing_edge = "right"
+        else:
+            defending_paddle = self.right.paddle
+            inward_facing_edge = "left"
+
+        # check inward facing paddle edge
+        cx, cy, dx, dy = defending_paddle.get_edge(inward_facing_edge)
+        if does_intersect(self.ball.x, self.ball.y, next.x, next.y, cx, cy, dx, dy):
+            self.ball.dx *= -1
+        # check top and bottom paddle edges
+        cx, cy, dx, dy = defending_paddle.get_edge("top")
+        if does_intersect(self.ball.x, self.ball.y, next.x, next.y, cx, cy, dx, dy):
+            self.ball.dy *= -1
+        cx, cy, dx, dy = defending_paddle.get_edge("bottom")
+        if does_intersect(self.ball.x, self.ball.y, next.x, next.y, cx, cy, dx, dy):
+            self.ball.dy *= -1
 
     def getScene(self):
         scene = []
@@ -159,3 +265,15 @@ bipolar_between = lambda min_value, max_value: random.uniform(
 
 # constrain 'value' to between 'min_value' and 'max_value'
 clamp = lambda value, min_value, max_value: max(min(value, max_value), min_value)
+
+
+# check if 3 points are given in a counter-clockwise order
+def ccw(ax, ay, bx, by, cx, cy):
+    return (cy - ay) * (bx - ax) > (by - ay) * (cx - ax)
+
+
+# check if lines AB and CD intersect
+def does_intersect(ax, ay, bx, by, cx, cy, dx, dy):
+    return ccw(ax, ay, cx, cy, dx, dy) != ccw(bx, by, cx, cy, dx, dy) and ccw(
+        ax, ay, bx, by, cx, cy
+    ) != ccw(ax, ay, bx, by, dx, dy)
