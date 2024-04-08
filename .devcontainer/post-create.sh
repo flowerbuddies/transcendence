@@ -18,12 +18,6 @@ function check_if_project_root_exists() {
   fi
 }
 
-function copy_env_file_if_not_exists() {
-  if [ ! -f .env ]; then
-    cp .env.example .env
-  fi
-}
-
 function install_python_requirements() {
   pip install --user -r requirements.txt
 }
@@ -48,7 +42,6 @@ function compile_translation_files() {
 function main() {
   check_if_project_root_exists
   cd $PROJECT_ROOT
-  copy_env_file_if_not_exists
   source .env
   install_python_requirements
   migrate_database
