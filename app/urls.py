@@ -6,6 +6,7 @@ from . import consumers
 urlpatterns = [
     path("", views.index, name="index"),
     path("join", views.join, name="join"),
+    path("game", views.game, name="game"),
 ]
 
 ws_urlpatterns = [

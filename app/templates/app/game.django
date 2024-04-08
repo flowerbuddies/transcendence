@@ -1,5 +1,5 @@
 {% load i18n %}
-<main id="game-view" class="row align-items-center vh-100 d-none">
+<main class="row align-items-center vh-100">
   <ul class="col-3 list-group">
     <li class="list-group-item list-group-item-danger">Élie</li>
     <li class="list-group-item list-group-item-success">

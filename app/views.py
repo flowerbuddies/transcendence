@@ -12,10 +12,17 @@ def qset_length(qset):
 
 
 def index(request):
+    return render(request, "app/index.django", {"lobbies": Lobby.objects.all()})
+
+
+def game(request):
     return render(
         request,
-        "app/index.django",
-        {"lobbies": Lobby.objects.all()},
+        "app/game.django",
+        {
+            "lobby": request.GET.get("lobby"),
+            "player": request.GET.get("player"),
+        },
     )
 
 
@@ -65,14 +72,14 @@ def join(request: HttpRequest):
                 )
         elif game_type == "join.type.types.tournament1v1":
             is_tournament = True
-            if player_count != 4:
+            if player_count % 2 != 0:
                 return HttpResponseBadRequest(
                     "Player count must be a modulo of 2 for this game mode"
                 )
         elif game_type == "join.type.types.tournament1v1v1v1":
             is_tournament = True
             is_match_four = True
-            if player_count != 4:
+            if not player_count % 4 != 0:
                 return HttpResponseBadRequest(
                     "Player count must be a modulo of 4 for this game mode"
                 )
