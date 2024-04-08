@@ -10,15 +10,15 @@ def index(request):
         "app/index.django",
         # TODO: temporary test data, this will be retrieved from the db
         {
-            "games": [
+            "lobbies": [
                 {
-                    "name": "first_game",
+                    "name": "first_lobby",
                     "type": _("join.type.types.tournament1v1v1v1"),
                     "current_players": 2,
                     "max_players": 4,
                 },
                 {
-                    "name": "Sec-game",
+                    "name": "Sec-lobby",
                     "type": _("join.type.types.game1v1v1v1"),
                     "current_players": 4,
                     "max_players": 4,
@@ -33,14 +33,14 @@ def join(request: HttpRequest):
 
     # check fields
     if not all(
-        key in fields for key in {"game-name", "type", "players", "player-name"}
+        key in fields for key in {"lobby-name", "type", "players", "player-name"}
     ):
         return HttpResponseBadRequest("Not all fields specified")
 
-    # validate the `game-name` field
-    if not bool(re.compile(r"^[\w\-\.]{1,100}$").match(fields["game-name"])):
+    # validate the `lobby-name` field
+    if not bool(re.compile(r"^[\w\-\.]{1,100}$").match(fields["lobby-name"])):
         return HttpResponseBadRequest(
-            "Game name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods"
+            "Lobby name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods"
         )
 
     # validate the `player-name` field
@@ -48,9 +48,9 @@ def join(request: HttpRequest):
         return HttpResponseBadRequest("Player name must not be empty")
 
     # validate the `type` & `players` fields
-    # only check them if creating a new game
-    # we detect if a new game is created by checking if `players` is an integer
-    # (eg: new game="4"; existing game="2/4")
+    # only check them if creating a new lobby
+    # we detect if a new lobby is created by checking if `players` is an integer
+    # (eg: new lobby="4"; existing lobby="2/4")
     try:
         player_count = int(fields["players"])
         match fields["type"]:
@@ -79,6 +79,6 @@ def join(request: HttpRequest):
     except ValueError:
         pass
 
-    # TODO: check if the game is full
+    # TODO: check if the lobby is full
 
     return HttpResponse()

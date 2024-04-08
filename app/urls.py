@@ -9,5 +9,5 @@ urlpatterns = [
 ]
 
 ws_urlpatterns = [
-    re_path(r"ws/game/(?P<game_name>[\w\-\.]+)/$", consumers.GameConsumer.as_asgi()),
+    re_path(r"ws/lobby/(?P<lobby_name>[\w\-\.]+)/$", consumers.LobbyConsumer.as_asgi()),
 ]

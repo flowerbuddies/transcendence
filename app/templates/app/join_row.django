@@ -2,28 +2,28 @@
 <tr>
   <td>
     <input class="{% if exists %}form-control-plaintext{% else %}form-control{% endif %}"
-           form="game-{{ forloop.counter }}"
+           form="lobby-{{ forloop.counter }}"
            {% if exists %}readonly{% endif %}
            required
            type="text"
-           name="game-name"
-           placeholder="{% trans "join.gameName.title" %}"
-           aria-label="{% trans "join.gameName.title" %}"
-           value="{{ game.name }}" />
+           name="lobby-name"
+           placeholder="{% trans "join.lobbyName.title" %}"
+           aria-label="{% trans "join.lobbyName.title" %}"
+           value="{{ lobby.name }}" />
   </td>
   <td>
     {% if exists %}
       <input class="form-control-plaintext"
-             form="game-{{ forloop.counter }}"
+             form="lobby-{{ forloop.counter }}"
              readonly
              required
              type="text"
              name="type"
              aria-label="{% trans "join.type.title" %}"
-             value="{{ game.type }}" />
+             value="{{ lobby.type }}" />
     {% else %}
       <select class="form-select"
-              form="game-{{ forloop.counter }}"
+              form="lobby-{{ forloop.counter }}"
               required
               name="type"
               aria-label="{% trans "join.type.title" %}">
@@ -39,16 +39,16 @@
   <td>
     {% if exists %}
       <input class="form-control-plaintext"
-             form="game-{{ forloop.counter }}"
+             form="lobby-{{ forloop.counter }}"
              readonly
              required
              type="text"
              name="players"
              aria-label="{% trans "join.players.connected_players" %}"
-             value="{{ game.current_players }}/{{ game.max_players }}" />
+             value="{{ lobby.current_players }}/{{ lobby.max_players }}" />
     {% else %}
       <select class="form-select"
-              form="game-{{ forloop.counter }}"
+              form="lobby-{{ forloop.counter }}"
               required
               name="players"
               aria-label="{% trans "join.players.player_slots" %}">
@@ -60,7 +60,7 @@
   </td>
   <td>
     <input class="form-control"
-           form="game-{{ forloop.counter }}"
+           form="lobby-{{ forloop.counter }}"
            required
            type="text"
            name="player-name"
@@ -69,13 +69,13 @@
   </td>
   <td>
     <form class="form-join"
-          id="game-{{ forloop.counter }}"
+          id="lobby-{{ forloop.counter }}"
           action=""
           method="post">
       {% csrf_token %}
       <button class="btn btn-primary"
               type="submit"
-              {% if exists and game.current_players == game.max_players %}disabled{% endif %}>
+              {% if exists and lobby.current_players == lobby.max_players %}disabled{% endif %}>
         {% if exists %}
           {% trans "join.action.join" %}
         {% else %}

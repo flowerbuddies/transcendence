@@ -10,7 +10,7 @@ class Lobby(models.Model):
 		return self.name
 
 class Player(models.Model):
-	game = models.ForeignKey(Lobby, on_delete=models.CASCADE)
+	lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 	name = models.CharField(max_length=12)
 	is_eliminated = models.BooleanField(default=False)
 	is_ai = models.BooleanField(default=False)
