@@ -11,36 +11,37 @@ class Player:
 class Paddle:
     def __init__(self, side):
         self.side = side
+        self.margin = 0.1
         if side == "left":
-            self.x = 0
+            self.x = self.margin
             self.y = 0.5
         elif side == "right":
-            self.x = 1
+            self.x = 1 - self.margin
             self.y = 0.5
         elif side == "top":
             self.x = 0.5
-            self.y = 0
+            self.y = self.margin
         elif side == "bottom":
             self.x = 0.5
-            self.y = 1
-        self.width = 0.1
+            self.y = 1 - self.margin
+        self.width = 0.07
         self.height = 0.2
-        self.speed = 2e-2
+        self.speed = 42
         self.is_down_pressed = False
         self.is_up_pressed = False
 
-    def update(self):
+    def update(self, dt):
         if self.side == "left" or self.side == "right":
-            self.move(True)
+            self.move(dt, True)
         else:
-            self.move(False)
+            self.move(dt, False)
 
-    def move(self, is_vertical):
+    def move(self, dt, is_vertical):
         direction = 1 if self.is_down_pressed else -1 if self.is_up_pressed else 0
         if is_vertical:
-            self.y += direction * self.speed
+            self.y += direction * self.speed * dt
         else:
-            self.x += direction * self.speed
+            self.x += direction * self.speed * dt
         self.y = clamp(self.y, self.height * 0.5, 1 - self.height * 0.5)
         self.x = clamp(self.x, self.width * 0.5, 1 - self.width * 0.5)
 
@@ -143,12 +144,12 @@ class GameState:
             self.bottom = Player("bottom")
 
     def update(self, dt):
-        self.left.paddle.update()
-        self.right.paddle.update()
+        self.left.paddle.update(dt)
+        self.right.paddle.update(dt)
         if hasattr(self, "top"):
-            self.top.paddle.update()
+            self.top.paddle.update(dt)
         if hasattr(self, "bottom"):
-            self.bottom.paddle.update()
+            self.bottom.paddle.update(dt)
         self.ball.update(dt)
         self.handle_collisions(dt)
 
