@@ -1,0 +1,12 @@
+# Codeowners file for transcendence
+# People defined as owners of some code matching a pattern
+# This can be used to automatically request reviews from the codeowners
+# Multiple codeowners do not share authority, each codeowner has full authority independently
+# Later matches override earlier ones
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global and default codeowners
+* @mxafi @Hunam6 @Rubidium7 @Markfelixm
+
+# Protect codeowners file
+/.github/CODEOWNERS @mxafi
