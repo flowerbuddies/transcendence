@@ -28,13 +28,13 @@ msgstr "and"
 
 #: app/templates/app/join.django:6 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11
-msgid "join.gameName.title"
-msgstr "Game name"
+msgid "join.lobbyName.title"
+msgstr "Lobby name"
 
 #: app/templates/app/join.django:7 app/templates/app/join_row.django:22
 #: app/templates/app/join_row.django:29
 msgid "join.type.title"
-msgstr "Game type"
+msgstr "Game mode"
 
 #: app/templates/app/join.django:8
 msgid "join.players.title"

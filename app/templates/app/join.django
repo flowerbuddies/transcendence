@@ -3,7 +3,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">{% trans "join.gameName.title" %}</th>
+        <th scope="col">{% trans "join.lobbyName.title" %}</th>
         <th scope="col">{% trans "join.type.title" %}</th>
         <th scope="col">{% trans "join.players.title" %}</th>
         <th scope="col">{% trans "join.playerName.title" %}</th>
@@ -11,7 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for game in games %}
+      {% for lobby in lobbies %}
         {% include "app/join_row.django" with exists=True %}
       {% endfor %}
       {% include "app/join_row.django" %}
