@@ -16,6 +16,7 @@ class Lobby(models.Model):
 class Player(models.Model):
     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE, related_name="players")
     name = models.CharField(max_length=12)
+    channel_name = models.CharField(max_length=100, null=True)
     is_eliminated = models.BooleanField(default=False)
     is_ai = models.BooleanField(default=False)
 

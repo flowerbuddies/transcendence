@@ -6,6 +6,10 @@ const gameSocket = new WebSocket(
     'ws://' + window.location.host + '/ws/lobby/' + lobbyName + '/'
 );
 
+gameSocket.onopen = () => {
+    gameSocket.send(JSON.stringify({ type: 'init', player: playerName }));
+};
+
 gameSocket.onmessage = (e) => {
     const data = JSON.parse(e.data);
 
@@ -17,10 +21,12 @@ gameSocket.onmessage = (e) => {
 
         // players list
         const list = document.getElementById('players-list');
+        let content = '';
         for (const player of data.players)
-            list.innerHTML += `<li class="list-group-item list-group-item-${
+            content += `<li class="list-group-item list-group-item-${
                 player.is_eliminated ? 'danger' : 'success'
             }">${player.name} ${player.is_ai ? '🤖' : ''}</li>`;
+        list.innerHTML = content;
     }
 };
 
