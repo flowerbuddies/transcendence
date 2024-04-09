@@ -7,7 +7,21 @@ const gameSocket = new WebSocket(
 );
 
 gameSocket.onmessage = (e) => {
-    console.log(JSON.parse(e.data));
+    const data = JSON.parse(e.data);
+
+    if (data.type == 'players') {
+        // players connected
+        document.getElementById(
+            'players-connected'
+        ).textContent = `${data.players.length} / ${data.max}`;
+
+        // players list
+        const list = document.getElementById('players-list');
+        for (const player of data.players)
+            list.innerHTML += `<li class="list-group-item list-group-item-${
+                player.is_eliminated ? 'danger' : 'success'
+            }">${player.name} ${player.is_ai ? '🤖' : ''}</li>`;
+    }
 };
 
 gameSocket.onclose = (e) => {
