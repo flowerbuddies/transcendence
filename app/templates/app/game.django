@@ -19,9 +19,16 @@
       <p class="col pe-0 text-right">Mark</p>
     </div>
     <canvas class="w-inherit" id="canvas"></canvas>
-    <p class="w-inherit text-center">
-      Play with <strong><code>Q</code></strong> and
-      <strong><code>A</code></strong>
+    <p class="w-inherit text-center" fs-2>
+        Play a paddle with:<br>
+      Left: <strong><code>W</code></strong> and
+      <strong><code>S</code></strong><br>
+      Right: <strong><code>A</code></strong> and
+      <strong><code>D</code></strong><br>
+      Top: <strong><code>Up Arrow</code></strong> and
+      <strong><code>Down Arrow</code></strong><br>
+      Bottom: <strong><code>Left Arrow</code></strong> and
+      <strong><code>Right Arrow</code></strong><br>
     </p>
   </div>
 </main>

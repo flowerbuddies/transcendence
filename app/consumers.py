@@ -37,6 +37,31 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.gs.left.paddle.is_down_pressed = (
                     not self.gs.left.paddle.is_down_pressed
                 )
+        if event["side"] == "right":
+            if event["key"] == 3:
+                self.gs.right.paddle.is_up_pressed = (
+                    not self.gs.right.paddle.is_up_pressed
+                )
+            elif event["key"] == 4:
+                self.gs.right.paddle.is_down_pressed = (
+                    not self.gs.right.paddle.is_down_pressed
+                )
+        if event["side"] == "top":
+            if event["key"] == 5:
+                self.gs.top.paddle.is_up_pressed = not self.gs.top.paddle.is_up_pressed
+            elif event["key"] == 6:
+                self.gs.top.paddle.is_down_pressed = (
+                    not self.gs.top.paddle.is_down_pressed
+                )
+        if event["side"] == "bottom":
+            if event["key"] == 7:
+                self.gs.bottom.paddle.is_up_pressed = (
+                    not self.gs.bottom.paddle.is_up_pressed
+                )
+            elif event["key"] == 8:
+                self.gs.bottom.paddle.is_down_pressed = (
+                    not self.gs.bottom.paddle.is_down_pressed
+                )
 
     async def loop(self):
         target_fps = 60
