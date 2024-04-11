@@ -1,7 +1,7 @@
 import asyncio
 import json
 from urllib.parse import unquote
-from .game import GameState
+from .game.game import GameState
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -9,7 +9,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 class GameConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.gs = GameState(False)
+        # self.gs = GameState(False)
+        self.gs = GameState(True)
 
     async def connect(self):
         self.game_name = self.scope["url_route"]["kwargs"]["game_name"]
