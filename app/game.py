@@ -78,59 +78,75 @@ class Paddle:
 
 class Ball:
     def __init__(self):
+        self.radius = 2e-2
         self.x = 0
         self.y = 0
         self.dx = 0
         self.dy = 0
-        self.radius = 2e-2
         self.reset()
 
     def reset(self):
         self.x = 0.5
         self.y = 0.5
-        self.dx = bipolar_between(15, 25)
-        self.dy = bipolar_between(15, 25)
+        # self.dx = bipolar_between(10, 25)
+        self.dx = -5
+        self.dy = bipolar_between(5, 25)
 
     def update(self, dt):
-        self.accelerate(1, dt)
+        # self.accelerate(1, dt)
+        self.x += self.dx * dt
+        self.y += self.dy * dt
+        clamp(self.y, 0, 1)
 
     def accelerate(self, a, dt):
-        a_integral = a * dt * dt * 0.5
-        self.x += self.dx * dt + a_integral
-        self.y += self.dy * dt + a_integral
         self.dx += a * dt * (1 if self.dx > 0 else -1)
         self.dy += a * dt * (1 if self.dy > 0 else -1)
 
-    # TODO: currently unused
-    def get_edge(self, edge):
-        if edge == "left":
+    def get_trajectory(self, dt):
+        next = Ball()
+        next.x = self.x
+        next.y = self.y
+        next.dx = self.dx
+        next.dy = self.dy
+        next.update(dt)
+        return (self.x, self.y, next.x, next.y)
+
+    def get_corner_trajectory(self, corner, dt):
+        cx, cy, nx, ny = self.get_trajectory(dt)
+        if corner == "topleft":
             return (
-                self.x - self.radius,
-                self.y - self.radius,
-                self.x - self.radius,
-                self.y + self.radius,
+                cx - self.radius,
+                cy - self.radius,
+                nx - self.radius,
+                ny - self.radius,
             )
-        elif edge == "right":
+        if corner == "topright":
             return (
-                self.x + self.radius,
-                self.y - self.radius,
-                self.x + self.radius,
-                self.y + self.radius,
+                cx + self.radius,
+                cy - self.radius,
+                nx + self.radius,
+                ny - self.radius,
             )
-        elif edge == "top":
+        if corner == "bottomleft":
             return (
-                self.x - self.radius,
-                self.y - self.radius,
-                self.x + self.radius,
-                self.y - self.radius,
+                cx - self.radius,
+                cy + self.radius,
+                nx - self.radius,
+                ny + self.radius,
             )
-        elif edge == "bottom":
+        if corner == "bottomright":
             return (
-                self.x - self.radius,
-                self.y + self.radius,
-                self.x + self.radius,
-                self.y + self.radius,
+                cx + self.radius,
+                cy + self.radius,
+                nx + self.radius,
+                ny + self.radius,
             )
+
+    # // continue with
+    # get ball corners, use 2 paddle-facing corners in paddle intercepting check
+    # improve move ball, it should return future position which you can check if it will intercept
+    # update loop should be: move paddles, check future ball position, move ball
+    # rewrite accelerate function, less complex
 
 
 class GameState:
@@ -156,7 +172,7 @@ class GameState:
     def handle_collisions(self, dt):
         self.handle_goal()
         if not self.isFourPlayer:
-            self.handle_wall_collision()
+            self.handle_wall_collision(dt)
         self.handle_paddle_collision(dt)
         # increase acceleration when paddle collision occurs
 
@@ -174,35 +190,43 @@ class GameState:
             self.bottom.score += 1
             self.ball.reset()
 
-    def handle_wall_collision(self):
-        if self.ball.y < self.ball.radius or self.ball.y > 1.0 - self.ball.radius:
+    def handle_wall_collision(self, dt):
+        top_wall = (0, 0, 1, 0)
+        bottom_wall = (0, 1, 1, 1)
+        if does_intersect(top_wall, self.ball.get_trajectory(dt)) or does_intersect(
+            bottom_wall, self.ball.get_trajectory(dt)
+        ):
             self.ball.dy *= -1
 
     def handle_paddle_collision(self, dt):
-        next = Ball()
-        next.x = self.ball.x
-        next.y = self.ball.y
-        next.dx = self.ball.dx
-        next.dy = self.ball.dy
-        next.accelerate(1, dt)
-
         if self.ball.dx < 0:
             defending_paddle = self.left.paddle
-            inward_facing_edge = "right"
+            inward_edge = "right"
+            ball_trajectory_top_corner = self.ball.get_corner_trajectory("topleft", dt)
+            ball_trajectory_bottom_corner = self.ball.get_corner_trajectory(
+                "bottomleft", dt
+            )
         else:
             defending_paddle = self.right.paddle
-            inward_facing_edge = "left"
+            inward_edge = "left"
+            ball_trajectory_top_corner = self.ball.get_corner_trajectory("topright", dt)
+            ball_trajectory_bottom_corner = self.ball.get_corner_trajectory(
+                "bottomright", dt
+            )
 
         # check inward facing paddle edge
-        cx, cy, dx, dy = defending_paddle.get_edge(inward_facing_edge)
-        if does_intersect(self.ball.x, self.ball.y, next.x, next.y, cx, cy, dx, dy):
+        if does_intersect(
+            defending_paddle.get_edge(inward_edge), ball_trajectory_top_corner
+        ) or does_intersect(
+            defending_paddle.get_edge(inward_edge), ball_trajectory_bottom_corner
+        ):
             self.ball.dx *= -1
         # check top and bottom paddle edges
-        cx, cy, dx, dy = defending_paddle.get_edge("top")
-        if does_intersect(self.ball.x, self.ball.y, next.x, next.y, cx, cy, dx, dy):
-            self.ball.dy *= -1
-        cx, cy, dx, dy = defending_paddle.get_edge("bottom")
-        if does_intersect(self.ball.x, self.ball.y, next.x, next.y, cx, cy, dx, dy):
+        if does_intersect(
+            defending_paddle.get_edge("top"), ball_trajectory_bottom_corner
+        ) or does_intersect(
+            defending_paddle.get_edge("bottom"), ball_trajectory_top_corner
+        ):
             self.ball.dy *= -1
 
     def getScene(self):
@@ -273,8 +297,10 @@ def ccw(ax, ay, bx, by, cx, cy):
     return (cy - ay) * (bx - ax) > (by - ay) * (cx - ax)
 
 
-# check if lines AB and CD intersect
-def does_intersect(ax, ay, bx, by, cx, cy, dx, dy):
+# check if 2 lines intersect
+def does_intersect(line1, line2):
+    ax, ay, bx, by = line1
+    cx, cy, dx, dy = line2
     return ccw(ax, ay, cx, cy, dx, dy) != ccw(bx, by, cx, cy, dx, dy) and ccw(
         ax, ay, bx, by, cx, cy
     ) != ccw(ax, ay, bx, by, dx, dy)
