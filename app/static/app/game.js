@@ -72,12 +72,16 @@ export function join(gameName, playerName) {
 
   function drawScene(scene) {
     scene.forEach((element) => {
-      ctx.fillRect(
-        ctx.canvas.width * element.x,
-        ctx.canvas.height * element.y,
-        ctx.canvas.width * element.width,
-        ctx.canvas.height * element.height
-      );
+      if (element.type === "score") {
+        console.log(element.side + "'s score is " + element.score);
+      } else {
+        ctx.fillRect(
+          ctx.canvas.width * element.x,
+          ctx.canvas.height * element.y,
+          ctx.canvas.width * element.width,
+          ctx.canvas.height * element.height
+        );
+      }
     });
   }
 }

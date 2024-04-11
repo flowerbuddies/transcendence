@@ -145,6 +145,23 @@ class GameState:
 
     def getScene(self):
         scene = []
+
+        scene.append(
+            {
+                "type": "score",
+                "side": "left",
+                "score": self.left.score,
+            }
+        )
+
+        scene.append(
+            {
+                "type": "score",
+                "side": "right",
+                "score": self.right.score,
+            }
+        )
+
         scene.append(
             {
                 "type": "ball",
@@ -174,7 +191,22 @@ class GameState:
             }
         )
 
-        if hasattr(self, "top"):
+        if self.isFourPlayer:
+            scene.append(
+                {
+                    "type": "score",
+                    "side": "top",
+                    "score": self.top.score,
+                }
+            )
+
+            scene.append(
+                {
+                    "type": "score",
+                    "side": "bottom",
+                    "score": self.bottom.score,
+                }
+            )
             scene.append(
                 {
                     "type": "top",
@@ -184,7 +216,6 @@ class GameState:
                     "height": self.top.paddle.depth,
                 }
             )
-        if hasattr(self, "bottom"):
             scene.append(
                 {
                     "type": "bottom",
