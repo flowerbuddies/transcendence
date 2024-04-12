@@ -25,7 +25,7 @@ gameSocket.onmessage = (e) => {
         for (const player of data.players)
             content += `<li class="list-group-item list-group-item-${
                 player.is_eliminated ? 'danger' : 'success'
-            }">${player.name} ${player.is_ai ? '🤖' : ''}</li>`;
+            }">${player.name}</li>`;
         list.innerHTML = content;
     }
 };
