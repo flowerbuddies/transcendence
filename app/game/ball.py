@@ -13,8 +13,8 @@ class Ball:
     def reset(self):
         self.x = 0.5 - self.radius
         self.y = 0.5 - self.radius
-        self.dx = bipolar_between(3, 15)
-        self.dy = bipolar_between(3, 15)
+        self.dx = bipolar_between(5e-2, 5e-1)
+        self.dy = bipolar_between(5e-2, 5e-1)
 
     def update(self, dt):
         self.x += self.dx * dt

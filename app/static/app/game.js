@@ -1,6 +1,12 @@
 export function join(gameName, playerName) {
   document.getElementById("join-view").classList.add("d-none");
   document.getElementById("game-view").classList.remove("d-none");
+  document.addEventListener("keydown", keyPressed);
+  document.addEventListener("keyup", keyReleased);
+  let canvas = document.getElementById("canvas");
+  let ctx = canvas.getContext("2d");
+
+  let sceneData = [];
 
   const keyMappings = {
     w: { key: 1, side: "left" },
@@ -13,13 +19,34 @@ export function join(gameName, playerName) {
     ArrowRight: { key: 8, side: "bottom" },
   };
 
+  // render loop redraws the current scene and reports the time taken to backend
+  const log_fps = false;
+  let lastTimeStamp = 0;
+  window.requestAnimationFrame(renderLoop);
+  function renderLoop(timeStamp) {
+    clearCanvas();
+    drawScene(sceneData);
+    if (gameSocket.readyState === WebSocket.OPEN) {
+      gameSocket.send(
+        JSON.stringify({
+          type: "frame_time",
+          time: timeStamp - lastTimeStamp,
+        })
+      );
+      lastTimeStamp = timeStamp;
+    }
+    if (log_fps) {
+      updateFPS();
+    }
+    window.requestAnimationFrame(renderLoop);
+  }
+
   const gameSocket = new WebSocket(
     "ws://" + window.location.host + "/ws/game/" + gameName + "/"
   );
 
   gameSocket.onmessage = (e) => {
-    clearCanvas();
-    drawScene(JSON.parse(e.data));
+    sceneData = JSON.parse(e.data);
   };
 
   gameSocket.onclose = (e) => {
@@ -58,12 +85,6 @@ export function join(gameName, playerName) {
     }
   }
 
-  document.addEventListener("keydown", keyPressed);
-  document.addEventListener("keyup", keyReleased);
-
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-
   function clearCanvas() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -72,16 +93,28 @@ export function join(gameName, playerName) {
 
   function drawScene(scene) {
     scene.forEach((element) => {
-      if (element.type === "score") {
-        console.log(element.side + "'s score is " + element.score);
-      } else {
-        ctx.fillRect(
-          ctx.canvas.width * element.x,
-          ctx.canvas.height * element.y,
-          ctx.canvas.width * element.width,
-          ctx.canvas.height * element.height
-        );
-      }
+      ctx.fillRect(
+        ctx.canvas.width * element.x,
+        ctx.canvas.height * element.y,
+        ctx.canvas.width * element.width,
+        ctx.canvas.height * element.height
+      );
     });
+  }
+}
+
+// check performance
+let startTime = performance.now();
+let frames = 0;
+
+function updateFPS() {
+  frames++;
+  const currentTime = performance.now();
+  const delta = currentTime - startTime;
+
+  if (delta >= 1000) {
+    console.log("FPS:", frames);
+    frames = 0;
+    startTime = currentTime;
   }
 }

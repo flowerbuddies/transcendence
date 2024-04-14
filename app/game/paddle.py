@@ -16,7 +16,7 @@ class Paddle:
         elif side == "bottom":
             self.x = 0.5 - 0.5 * self.length
             self.y = 1 - self.margin - self.depth
-        self.speed = 42
+        self.speed = 0.8
         self.is_down_pressed = False
         self.is_up_pressed = False
 
