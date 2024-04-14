@@ -59,7 +59,11 @@ class GameState:
 
         # check paddle collisions
         # TODO: increase acceleration when paddle collision occurs
-        self.handle_paddle_collision(next)
+        self.handle_paddle_collision(next, self.left.paddle)
+        self.handle_paddle_collision(next, self.right.paddle)
+        if self.isFourPlayer:
+            self.handle_paddle_collision(next, self.top.paddle)
+            self.handle_paddle_collision(next, self.bottom.paddle)
 
     def check_wall_collision(self, next):
         top_wall = (0, 0, 1, 0)
@@ -72,76 +76,29 @@ class GameState:
         ):
             self.ball.dy *= -1
 
-    def handle_paddle_collision(self, next):
+    def handle_paddle_collision(self, next, paddle):
+        # depending on the direction of the ball, check the paddle's ball-facing edge
+        # check one edge of the paddle against both orthogonal edges of the ball
         if self.ball.dx < 0.0:
-            if (
-                ortho_intersects(
-                    self.left.paddle.get_edge("right"), next.get_edge("top")
-                )
-                or ortho_intersects(
-                    self.left.paddle.get_edge("right"), next.get_edge("bottom")
-                )
-                or ortho_intersects(
-                    self.left.paddle.get_edge("left"), next.get_edge("top")
-                )
-                or ortho_intersects(
-                    self.left.paddle.get_edge("left"), next.get_edge("bottom")
-                )
-            ):
+            if ortho_intersects(
+                paddle.get_edge("right"), next.get_edge("top")
+            ) or ortho_intersects(paddle.get_edge("right"), next.get_edge("bottom")):
                 self.ball.dx *= -1
         else:
-            if (
-                ortho_intersects(
-                    self.right.paddle.get_edge("left"), next.get_edge("top")
-                )
-                or ortho_intersects(
-                    self.right.paddle.get_edge("left"), next.get_edge("bottom")
-                )
-                or ortho_intersects(
-                    self.right.paddle.get_edge("right"), next.get_edge("top")
-                )
-                or ortho_intersects(
-                    self.right.paddle.get_edge("right"), next.get_edge("bottom")
-                )
-            ):
+            if ortho_intersects(
+                paddle.get_edge("left"), next.get_edge("top")
+            ) or ortho_intersects(paddle.get_edge("left"), next.get_edge("bottom")):
                 self.ball.dx *= -1
-        if self.isFourPlayer:
-            if self.ball.dy < 0.0:
-                if (
-                    ortho_intersects(
-                        next.get_edge("left"), self.top.paddle.get_edge("bottom")
-                    )
-                    or ortho_intersects(
-                        next.get_edge("right"), self.top.paddle.get_edge("bottom")
-                    )
-                    or ortho_intersects(
-                        next.get_edge("left"), self.top.paddle.get_edge("top")
-                    )
-                    or ortho_intersects(
-                        next.get_edge("right"), self.top.paddle.get_edge("top")
-                    )
-                ):
-                    self.ball.dy *= -1
-            else:
-                if (
-                    ortho_intersects(
-                        next.get_edge("left"),
-                        self.bottom.paddle.get_edge("top"),
-                    )
-                    or ortho_intersects(
-                        next.get_edge("right"),
-                        self.bottom.paddle.get_edge("top"),
-                    )
-                    or ortho_intersects(
-                        next.get_edge("left"),
-                        self.bottom.paddle.get_edge("bottom"),
-                    )
-                    or ortho_intersects(
-                        next.get_edge("right"),
-                        self.bottom.paddle.get_edge("bottom"),
-                    )
-                ):
-                    self.ball.dy *= -1
+        if self.ball.dy < 0.0:
+            if ortho_intersects(
+                next.get_edge("left"), paddle.get_edge("bottom")
+            ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("bottom")):
+                self.ball.dy *= -1
+        else:
+            if ortho_intersects(
+                next.get_edge("left"), paddle.get_edge("top")
+            ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("top")):
+                self.ball.dy *= -1
 
     def getScene(self):
         scene = []
