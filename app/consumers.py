@@ -77,7 +77,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             # update and send state
             self.gs.update(self.client_frame_time)
-            await self.send(text_data=json.dumps(self.gs.getScene()))
+            await self.send(text_data=json.dumps(self.gs.get_scene()))
 
             # sleep to maintain client refresh rate
             server_frame_time = asyncio.get_event_loop().time() - start_time

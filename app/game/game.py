@@ -104,25 +104,20 @@ class GameState:
                 self.ball.dy *= -1
                 self.ball.apply_accel = True
 
-    def getScene(self):
+    def get_scene(self):
+        # returns an array of clientside-supported objects for displaying the gamestate
         scene = []
 
-        scene.append(
-            {
-                "type": "score",
-                "side": "left",
-                "score": self.left.score,
-            }
-        )
+        self.ball_to_scene(scene)
 
-        scene.append(
-            {
-                "type": "score",
-                "side": "right",
-                "score": self.right.score,
-            }
-        )
+        self.player_to_scene(self.left, scene)
+        self.player_to_scene(self.right, scene)
+        if self.isFourPlayer:
+            self.player_to_scene(self.top, scene)
+            self.player_to_scene(self.bottom, scene)
+        return scene
 
+    def ball_to_scene(self, scene):
         for index, segment in enumerate(self.ball.trail):
             segment["type"] = "trail"
             segment["width"] = 2 * self.ball.radius
@@ -141,60 +136,28 @@ class GameState:
             }
         )
 
+    def player_to_scene(self, player, scene):
         scene.append(
             {
-                "type": "left",
-                "x": self.left.paddle.x,
-                "y": self.left.paddle.y,
-                "width": self.left.paddle.depth,
-                "height": self.left.paddle.length,
+                "type": "score",
+                "side": player.side,
+                "score": player.score,
             }
         )
+        self.paddle_to_scene(player.paddle, scene)
+
+    def paddle_to_scene(self, paddle, scene):
+        is_vertical_paddle = paddle.side == "left" or paddle.side == "right"
         scene.append(
             {
-                "type": "right",
-                "x": self.right.paddle.x,
-                "y": self.right.paddle.y,
-                "width": self.right.paddle.depth,
-                "height": self.right.paddle.length,
+                "type": "paddle",
+                "side": paddle.side,
+                "x": paddle.x,
+                "y": paddle.y,
+                "width": (paddle.depth if is_vertical_paddle else paddle.length),
+                "height": (paddle.length if is_vertical_paddle else paddle.depth),
             }
         )
-
-        if self.isFourPlayer:
-            scene.append(
-                {
-                    "type": "score",
-                    "side": "top",
-                    "score": self.top.score,
-                }
-            )
-
-            scene.append(
-                {
-                    "type": "score",
-                    "side": "bottom",
-                    "score": self.bottom.score,
-                }
-            )
-            scene.append(
-                {
-                    "type": "top",
-                    "x": self.top.paddle.x,
-                    "y": self.top.paddle.y,
-                    "width": self.top.paddle.length,
-                    "height": self.top.paddle.depth,
-                }
-            )
-            scene.append(
-                {
-                    "type": "bottom",
-                    "x": self.bottom.paddle.x,
-                    "y": self.bottom.paddle.y,
-                    "width": self.bottom.paddle.length,
-                    "height": self.bottom.paddle.depth,
-                }
-            )
-        return scene
 
 
 # check if a vertical and horizontal line intersect
