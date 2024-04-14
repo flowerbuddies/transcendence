@@ -123,6 +123,14 @@ class GameState:
             }
         )
 
+        for index, segment in enumerate(self.ball.trail):
+            segment["type"] = "trail"
+            segment["width"] = 2 * self.ball.radius
+            segment["height"] = 2 * self.ball.radius
+            alpha = 1 - index / self.ball.max_trail_len
+            segment["color"] = f"rgba(255, 255, 255, {alpha})"
+            scene.append(segment)
+
         scene.append(
             {
                 "type": "ball",

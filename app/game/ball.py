@@ -11,20 +11,33 @@ class Ball:
         self.reset()
         self.apply_accel = False
         self.accel = 2
+        self.trail = []
+        self.max_trail_len = 20
 
     def reset(self):
         self.x = 0.5 - self.radius
         self.y = 0.5 - self.radius
         self.dx = bipolar_between(5e-2, 5e-1)
         self.dy = bipolar_between(5e-2, 5e-1)
+        self.trail = []
 
     def update(self, dt):
+        self.update_trail()
         if self.apply_accel:
             self.dx += self.accel * dt * (1 if self.dx > 0 else -1)
             self.dy += self.accel * dt * (1 if self.dy > 0 else -1)
             self.apply_accel = False
         self.x += self.dx * dt
         self.y += self.dy * dt
+
+    def update_trail(self):
+        segment = {
+            "x": self.x,
+            "y": self.y,
+        }
+        self.trail.insert(0, segment)
+        if len(self.trail) > self.max_trail_len:
+            self.trail.pop()
 
     def next_position(self, dt):
         next = Ball()

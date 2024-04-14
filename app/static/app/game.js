@@ -88,11 +88,15 @@ export function join(gameName, playerName) {
   function clearCanvas() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillStyle = "white";
   }
 
   function drawScene(scene) {
     scene.forEach((element) => {
+      if (element.color) {
+        ctx.fillStyle = element.color;
+      } else {
+        ctx.fillStyle = "white";
+      }
       ctx.fillRect(
         ctx.canvas.width * element.x,
         ctx.canvas.height * element.y,
