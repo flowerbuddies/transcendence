@@ -58,7 +58,6 @@ class GameState:
             self.check_wall_collision(next)
 
         # check paddle collisions
-        # TODO: increase acceleration when paddle collision occurs
         self.handle_paddle_collision(next, self.left.paddle)
         self.handle_paddle_collision(next, self.right.paddle)
         if self.isFourPlayer:
@@ -79,26 +78,31 @@ class GameState:
     def handle_paddle_collision(self, next, paddle):
         # depending on the direction of the ball, check the paddle's ball-facing edge
         # check one edge of the paddle against both orthogonal edges of the ball
+        # if a collision occurs, invert the orthogonal velocity and set next update to apply acceleration
         if self.ball.dx < 0.0:
             if ortho_intersects(
                 paddle.get_edge("right"), next.get_edge("top")
             ) or ortho_intersects(paddle.get_edge("right"), next.get_edge("bottom")):
                 self.ball.dx *= -1
+                self.ball.apply_accel = True
         else:
             if ortho_intersects(
                 paddle.get_edge("left"), next.get_edge("top")
             ) or ortho_intersects(paddle.get_edge("left"), next.get_edge("bottom")):
                 self.ball.dx *= -1
+                self.ball.apply_accel = True
         if self.ball.dy < 0.0:
             if ortho_intersects(
                 next.get_edge("left"), paddle.get_edge("bottom")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("bottom")):
                 self.ball.dy *= -1
+                self.ball.apply_accel = True
         else:
             if ortho_intersects(
                 next.get_edge("left"), paddle.get_edge("top")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("top")):
                 self.ball.dy *= -1
+                self.ball.apply_accel = True
 
     def getScene(self):
         scene = []

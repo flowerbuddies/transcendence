@@ -9,6 +9,8 @@ class Ball:
         self.dx = 0
         self.dy = 0
         self.reset()
+        self.apply_accel = False
+        self.accel = 2
 
     def reset(self):
         self.x = 0.5 - self.radius
@@ -17,12 +19,12 @@ class Ball:
         self.dy = bipolar_between(5e-2, 5e-1)
 
     def update(self, dt):
+        if self.apply_accel:
+            self.dx += self.accel * dt * (1 if self.dx > 0 else -1)
+            self.dy += self.accel * dt * (1 if self.dy > 0 else -1)
+            self.apply_accel = False
         self.x += self.dx * dt
         self.y += self.dy * dt
-
-    def accelerate(self, a, dt):
-        self.dx += a * dt * (1 if self.dx > 0 else -1)
-        self.dy += a * dt * (1 if self.dy > 0 else -1)
 
     def next_position(self, dt):
         next = Ball()
