@@ -1,7 +1,5 @@
 {% extends "app/base.django" %}
 {% load i18n %}
-{% extends "app/base.django" %}
-{% load i18n %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
