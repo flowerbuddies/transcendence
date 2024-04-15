@@ -38,17 +38,18 @@ class Paddle:
         direction = 1 if self.is_down_pressed else -1 if self.is_up_pressed else 0
         if move_vertically:
             self.y += direction * self.speed * dt
-            if isFourPlayer:
-                self.y = clamp(self.y, 0, 1 - self.length)
-            else:
-                self.y = clamp(
-                    self.y,
-                    self.margin + self.depth,
-                    1 - self.length - self.margin - self.depth,
-                )
+            self.y = clamp(
+                self.y,
+                self.margin + self.depth,
+                1 - self.length - self.margin - self.depth,
+            )
         else:
             self.x += direction * self.speed * dt
-            self.x = clamp(self.x, 0, 1 - self.length)
+            self.x = clamp(
+                self.x,
+                self.margin + self.depth,
+                1 - self.length - self.margin - self.depth,
+            )
 
     def get_edge(self, edge):
         if edge == "left":
