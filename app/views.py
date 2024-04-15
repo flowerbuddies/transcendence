@@ -75,14 +75,14 @@ def join(request: HttpRequest):
                 )
         elif game_type == "join.type.types.tournament1v1":
             is_tournament = True
-            if player_count % 2 != 0:
+            if player_count % 2:
                 return HttpResponseBadRequest(
                     "Player count must be a modulo of 2 for this game mode"
                 )
         elif game_type == "join.type.types.tournament1v1v1v1":
             is_tournament = True
             is_match_four = True
-            if not player_count % 4 != 0:
+            if player_count % 4:
                 return HttpResponseBadRequest(
                     "Player count must be a modulo of 4 for this game mode"
                 )
@@ -92,7 +92,7 @@ def join(request: HttpRequest):
     except ValueError:
         pass  # If it's not an int, it just means the user is trying to join an existing game
 
-    lobby, _ = Lobby.objects.get_or_create(
+    lobby, created = Lobby.objects.get_or_create(
         name=fields["lobby-name"],
         defaults={
             "name": fields["lobby-name"],
@@ -102,6 +102,14 @@ def join(request: HttpRequest):
             "max_players": player_count,
         },
     )
+
+    # when creating a lobby with AI players, add them already
+    if created:
+        if game_type == "join.type.types.game1vAI":
+            lobby.players.create(name="AI", is_ai=True)
+        elif game_type == "join.type.types.game1v1vAIvAI":
+            lobby.players.create(name="AI 1", is_ai=True)
+            lobby.players.create(name="AI 2", is_ai=True)
 
     if len(lobby.players.all()) == lobby.max_players:
         return HttpResponseBadRequest("The lobby is full")
