@@ -27,6 +27,9 @@ def game(request):
 
 
 def join(request: HttpRequest):
+    if request.method == "GET":
+        return render(request, "app/join.django", {"lobbies": Lobby.objects.all()})
+
     fields = request.POST.dict()
 
     # check fields
