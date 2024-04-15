@@ -1,14 +1,15 @@
-import { gameSocket } from '/static/app/game.js';
 import { registerJoinForms } from '/static/app/join.js';
 
 history.replaceState('join', null);
 registerJoinForms();
 
+const closeWSConnsEvent = new Event('closeWSConns');
+
 window.onpopstate = async (event) => {
     if (event.state === 'join') {
         await setBody('/join');
         registerJoinForms();
-        gameSocket.close();
+        document.dispatchEvent(closeWSConnsEvent);
     }
 };
 

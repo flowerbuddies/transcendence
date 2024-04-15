@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-05 15:02+0000\n"
+"POT-Creation-Date: 2024-04-15 16:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,30 +18,31 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/templates/app/game.django:24
+#: app/templates/app/game.django:15
 msgid "game.playWith"
 msgstr "Play with"
 
-#: app/templates/app/game.django:24
+#: app/templates/app/game.django:15
 msgid "game.and"
 msgstr "and"
 
-#: app/templates/app/join.django:6 app/templates/app/join_row.django:10
+#: app/templates/app/join.django:5 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11
 msgid "join.lobbyName.title"
 msgstr "Lobby name"
 
-#: app/templates/app/join.django:7 app/templates/app/join_row.django:22
+#: app/templates/app/join.django:6 app/templates/app/join_row.django:22
 #: app/templates/app/join_row.django:29
 msgid "join.type.title"
 msgstr "Game mode"
 
-#: app/templates/app/join.django:8
+#: app/templates/app/join.django:7
 msgid "join.players.title"
 msgstr "Players"
 
-#: app/templates/app/join.django:9 app/templates/app/join_row.django:67
-#: app/templates/app/join_row.django:68
+#: app/templates/app/join.django:8 app/templates/app/join.django:9
+#: app/templates/app/join_row.django:67 app/templates/app/join_row.django:68
+#: app/templates/app/join_row.django:75 app/templates/app/join_row.django:76
 msgid "join.playerName.title"
 msgstr "Player name"
 
@@ -49,7 +50,7 @@ msgstr "Player name"
 msgid "join.action.title"
 msgstr "Action"
 
-#: app/templates/app/join.django:34
+#: app/templates/app/join.django:36
 msgid "language.go"
 msgstr "Go"
 
@@ -85,10 +86,14 @@ msgstr "Connected players"
 msgid "join.players.player_slots"
 msgstr "Player slots"
 
-#: app/templates/app/join_row.django:80
+#: app/templates/app/join_row.django:88
+msgid "join.action.full"
+msgstr "Full"
+
+#: app/templates/app/join_row.django:90
 msgid "join.action.join"
 msgstr "Join"
 
-#: app/templates/app/join_row.django:82
+#: app/templates/app/join_row.django:92
 msgid "join.action.create"
 msgstr "Create"
