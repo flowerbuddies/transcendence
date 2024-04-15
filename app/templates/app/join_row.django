@@ -63,7 +63,15 @@
            form="lobby-{{ forloop.counter }}"
            required
            type="text"
-           name="player-name"
+           name="player-1-name"
+           placeholder="{% trans "join.playerName.title" %}"
+           aria-label="{% trans "join.playerName.title" %}" />
+  </td>
+  <td>
+    <input class="form-control"
+           form="lobby-{{ forloop.counter }}"
+           type="text"
+           name="player-2-name"
            placeholder="{% trans "join.playerName.title" %}"
            aria-label="{% trans "join.playerName.title" %}" />
   </td>
@@ -76,7 +84,9 @@
       <button class="btn btn-primary"
               type="submit"
               {% if exists and lobby.players|qset_length == lobby.max_players %}disabled{% endif %}>
-        {% if exists %}
+        {% if exists and lobby.players|qset_length == lobby.max_players %}
+          {% trans "join.action.full" %}
+        {% elif exists %}
           {% trans "join.action.join" %}
         {% else %}
           {% trans "join.action.create" %}

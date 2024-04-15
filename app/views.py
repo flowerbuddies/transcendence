@@ -16,14 +16,7 @@ def index(request):
 
 
 def game(request):
-    return render(
-        request,
-        "app/game.django",
-        {
-            "lobby": request.GET.get("lobby"),
-            "player": request.GET.get("player"),
-        },
-    )
+    return render(request, "app/game.django")
 
 
 def join(request: HttpRequest):
@@ -32,33 +25,42 @@ def join(request: HttpRequest):
 
     fields = request.POST.dict()
 
-    # check fields
+    # check that the request has all the mondatory fields
     if not all(
-        key in fields for key in {"lobby-name", "type", "players", "player-name"}
+        key in fields for key in {"lobby-name", "type", "players", "player-1-name"}
     ):
         return HttpResponseBadRequest("Not all fields specified")
 
-    # validate the `lobby-name` field
+    # check the `lobby-name` field
     if not bool(re.compile(r"^[\w\-\.]{1,100}$").match(fields["lobby-name"])):
         return HttpResponseBadRequest(
             "Lobby name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods"
         )
 
-    # validate the `player-name` field
-    if not (1 <= len(fields["player-name"]) <= 12):
-        return HttpResponseBadRequest("Player name must be between 1 and 12 characters")
+    # check the `player-1-name` field
+    if not (1 <= len(fields["player-1-name"]) <= 12):
+        return HttpResponseBadRequest(
+            "Player 1 name must be between 1 and 12 characters"
+        )
+
+    # check the `player-2-name` field
+    if fields["player-2-name"] and not (1 <= len(fields["player-2-name"]) <= 12):
+        return HttpResponseBadRequest(
+            "Player 2 name must be between 1 and 12 characters"
+        )
 
     is_tournament = False
     is_match_four = False
     player_count = -1
 
-    # validate the `type` & `players` fields
+    # check the `type` & `players` fields
     # only check them if creating a new lobby
     # we detect if a new lobby is created by checking if `players` is an integer
     # (eg: new lobby="4"; existing lobby="2/4")
     try:
         player_count = int(fields["players"])
         game_type = fields["type"]
+
         if game_type in ["join.type.types.game1v1", "join.type.types.game1vAI"]:
             if player_count != 2:
                 return HttpResponseBadRequest(
@@ -113,8 +115,17 @@ def join(request: HttpRequest):
 
     if len(lobby.players.all()) == lobby.max_players:
         return HttpResponseBadRequest("The lobby is full")
-    if lobby.players.filter(name=fields["player-name"]).exists():
-        return HttpResponseBadRequest("Name already taken")
-    lobby.players.create(name=fields["player-name"])
+    if fields["player-2-name"] and len(lobby.players.all()) + 1 == lobby.max_players:
+        return HttpResponseBadRequest("The lobby cannot accept 2 more players")
+    if lobby.players.filter(name=fields["player-1-name"]).exists():
+        return HttpResponseBadRequest("Player 1 name already taken")
+    if (
+        fields["player-2-name"]
+        and lobby.players.filter(name=fields["player-2-name"]).exists()
+    ):
+        return HttpResponseBadRequest("Player 2 name already taken")
+    lobby.players.create(name=fields["player-1-name"])
+    if fields["player-2-name"]:
+        lobby.players.create(name=fields["player-2-name"])
 
     return HttpResponse()

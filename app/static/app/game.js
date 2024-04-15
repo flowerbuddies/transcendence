@@ -1,11 +1,5 @@
-export let gameSocket;
-
-function initConn(lobbyName, playerName) {
-    // TODO: add support for 2 players on the same window
-    const key1 = 'q';
-    const key2 = 'a';
-
-    gameSocket = new WebSocket(
+function initConn(lobbyName, playerName, key1, key2) {
+    const gameSocket = new WebSocket(
         'ws://' + window.location.host + '/ws/lobby/' + lobbyName + '/'
     );
 
@@ -88,17 +82,18 @@ function initConn(lobbyName, playerName) {
     // depending on the previous state, the server will be able to understand what's happening
     document.addEventListener('keydown', keyPressed);
     document.addEventListener('keyup', keyReleased);
+    document.addEventListener('closeWSConns', () => gameSocket.close());
 }
 
 function initScene() {
-    // TODO: for now just print a black square
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
-export function joinLobby(lobbyName, playerName) {
-    initConn(lobbyName, playerName);
+export function joinLobby(lobbyName, player1Name, player2Name) {
+    initConn(lobbyName, player1Name, 'ArrowUp', 'ArrowDown');
+    if (player2Name) initConn(lobbyName, player2Name, 'q', 'a');
     initScene();
 }

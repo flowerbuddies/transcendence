@@ -16,10 +16,12 @@ export function registerJoinForms() {
             if (joinRes.status != 200) return alert(await joinRes.text());
 
             // switch to game view
-            const lobbyName = formData.get('lobby-name');
-            const playerName = formData.get('player-name');
-            await setBody(`/game?lobby=${lobbyName}&player=${playerName}`);
-            joinLobby(lobbyName, playerName);
+            await setBody('/game');
+            joinLobby(
+                formData.get('lobby-name'),
+                formData.get('player-1-name'),
+                formData.get('player-2-name')
+            );
         })
     );
 }
