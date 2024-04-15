@@ -4,10 +4,10 @@ import random
 class Ball:
     def __init__(self):
         self.radius = 15e-3
-        self.x = 0
-        self.y = 0
-        self.dx = 0
-        self.dy = 0
+        self.x = 0.0
+        self.y = 0.0
+        self.dx = 0.0
+        self.dy = 0.0
         self.reset()
         self.apply_accel = False
         self.accel = 2

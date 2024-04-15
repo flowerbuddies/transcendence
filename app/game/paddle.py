@@ -4,6 +4,9 @@ class Paddle:
         self.margin = 0.04
         self.depth = 0.04
         self.length = 0.16
+        self.speed = 0.8
+        self.is_down_pressed = False
+        self.is_up_pressed = False
         if side == "left":
             self.x = self.margin
             self.y = 0.5 - 0.5 * self.length
@@ -16,33 +19,43 @@ class Paddle:
         elif side == "bottom":
             self.x = 0.5 - 0.5 * self.length
             self.y = 1 - self.margin - self.depth
-        self.speed = 0.8
-        self.is_down_pressed = False
-        self.is_up_pressed = False
+        elif side == "wall_top":
+            self.x = 0.0
+            self.y = self.margin
+            self.length = 1.0
+        elif side == "wall_bottom":
+            self.x = 0.0
+            self.y = 1 - self.margin - self.depth
+            self.length = 1.0
 
-    def update(self, dt):
+    def update(self, dt, isFourPlayer):
         if self.side == "left" or self.side == "right":
-            self.move(dt, True)
-        else:
-            self.move(dt, False)
+            self.move(dt, True, isFourPlayer)
+        elif self.side == "top" or self.side == "bottom":
+            self.move(dt, False, isFourPlayer)
 
-    def move(self, dt, move_vertically):
+    def move(self, dt, move_vertically, isFourPlayer):
         direction = 1 if self.is_down_pressed else -1 if self.is_up_pressed else 0
         if move_vertically:
             self.y += direction * self.speed * dt
-            self.y = clamp(self.y, 0, 1 - self.length)
+            if isFourPlayer:
+                self.y = clamp(self.y, 0, 1 - self.length)
+            else:
+                self.y = clamp(
+                    self.y,
+                    self.margin + self.depth,
+                    1 - self.length - self.margin - self.depth,
+                )
         else:
             self.x += direction * self.speed * dt
             self.x = clamp(self.x, 0, 1 - self.length)
 
-    # TODO: check if all edges are needed (e.g. top and bottom edges of vertically moving paddles)
     def get_edge(self, edge):
         if edge == "left":
             if self.side == "left" or self.side == "right":
                 return (self.x, self.y, self.x, self.y + self.length)
             else:
                 return (self.x, self.y, self.x, self.y + self.depth)
-
         elif edge == "right":
             if self.side == "left" or self.side == "right":
                 return (

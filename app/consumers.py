@@ -10,8 +10,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 class GameConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.gs = GameState(False)
-        self.gs = GameState(True)
+        self.gs = GameState(False)
+        # self.gs = GameState(True)
         self.fps_monitor = FPSMonitor()
         self.client_frame_time = 1.0 / 60.0
 
@@ -34,6 +34,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         else:
             await self.channel_layer.group_send(self.game_name, data)
 
+    # TODO: refactor with keymap; (request from client on game start)
     async def key(self, event):
         if event["side"] == "left":
             if event["key"] == 1:

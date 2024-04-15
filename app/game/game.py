@@ -18,17 +18,19 @@ class GameState:
         if isFourPlayer:
             self.top = Player("top")
             self.bottom = Player("bottom")
+        else:
+            self.top = Player("wall_top")
+            self.bottom = Player("wall_bottom")
 
     def update(self, dt):
         # check if goal scored, update score, reset ball
         self.handle_goal()
 
         # move paddles
-        self.left.paddle.update(dt)
-        self.right.paddle.update(dt)
-        if self.isFourPlayer:
-            self.top.paddle.update(dt)
-            self.bottom.paddle.update(dt)
+        self.left.paddle.update(dt, self.isFourPlayer)
+        self.right.paddle.update(dt, self.isFourPlayer)
+        self.top.paddle.update(dt, self.isFourPlayer)
+        self.bottom.paddle.update(dt, self.isFourPlayer)
 
         # set ball dx, dy according to collisions occuring next dt
         self.handle_collisions(dt)
@@ -43,37 +45,20 @@ class GameState:
         elif self.ball.x + 2 * self.ball.radius > 1.0:
             self.right.score += 1
             self.ball.reset()
-        elif self.isFourPlayer and self.ball.y < 0.0:
+        elif self.ball.y < 0.0:
             self.top.score += 1
             self.ball.reset()
-        elif self.isFourPlayer and self.ball.y + 2 * self.ball.radius > 1.0:
+        elif self.ball.y + 2 * self.ball.radius > 1.0:
             self.bottom.score += 1
             self.ball.reset()
 
     def handle_collisions(self, dt):
+        # check the next ball's position for collision with paddles
         next = self.ball.next_position(dt)
-
-        # if walls exist, check if wall bounce
-        if not self.isFourPlayer:
-            self.check_wall_collision(next)
-
-        # check paddle collisions
         self.handle_paddle_collision(next, self.left.paddle)
         self.handle_paddle_collision(next, self.right.paddle)
-        if self.isFourPlayer:
-            self.handle_paddle_collision(next, self.top.paddle)
-            self.handle_paddle_collision(next, self.bottom.paddle)
-
-    def check_wall_collision(self, next):
-        top_wall = (0, 0, 1, 0)
-        bottom_wall = (0, 1, 1, 1)
-        if (
-            ortho_intersects(next.get_edge("left"), top_wall)
-            or ortho_intersects(next.get_edge("right"), top_wall)
-            or ortho_intersects(next.get_edge("left"), bottom_wall)
-            or ortho_intersects(next.get_edge("right"), bottom_wall)
-        ):
-            self.ball.dy *= -1
+        self.handle_paddle_collision(next, self.top.paddle)
+        self.handle_paddle_collision(next, self.bottom.paddle)
 
     def handle_paddle_collision(self, next, paddle):
         # depending on the direction of the ball, check the paddle's ball-facing edge
@@ -96,13 +81,13 @@ class GameState:
                 next.get_edge("left"), paddle.get_edge("bottom")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("bottom")):
                 self.ball.dy *= -1
-                self.ball.apply_accel = True
+                self.ball.apply_accel = self.isFourPlayer
         else:
             if ortho_intersects(
                 next.get_edge("left"), paddle.get_edge("top")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("top")):
                 self.ball.dy *= -1
-                self.ball.apply_accel = True
+                self.ball.apply_accel = self.isFourPlayer
 
     def get_scene(self):
         # returns an array of clientside-supported objects for displaying the gamestate
@@ -112,9 +97,8 @@ class GameState:
 
         self.player_to_scene(self.left, scene)
         self.player_to_scene(self.right, scene)
-        if self.isFourPlayer:
-            self.player_to_scene(self.top, scene)
-            self.player_to_scene(self.bottom, scene)
+        self.player_to_scene(self.top, scene)
+        self.player_to_scene(self.bottom, scene)
         return scene
 
     def ball_to_scene(self, scene):
