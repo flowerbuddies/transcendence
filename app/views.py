@@ -116,7 +116,7 @@ def join(request: HttpRequest):
     if len(lobby.players.all()) == lobby.max_players:
         return HttpResponseBadRequest("The lobby is full")
     if fields["player-2-name"] and len(lobby.players.all()) + 1 == lobby.max_players:
-        return HttpResponseBadRequest("The lobby cannot accept 2 more players")
+        return HttpResponseBadRequest("Only one spot left")
     if lobby.players.filter(name=fields["player-1-name"]).exists():
         return HttpResponseBadRequest("Player 1 name already taken")
     if (
