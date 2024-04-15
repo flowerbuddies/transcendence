@@ -13,10 +13,13 @@
 				"batisteo.vscode-django",
 				"esbenp.prettier-vscode",
 				"Zignd.html-css-class-completion",
-				"monosans.djlint"
+				"monosans.djlint",
+				"mrorz.language-gettext"
 			]
 		}
 	},
+	// run commands on the host before the container is created
+	"initializeCommand": "bash ${localWorkspaceFolder}/.devcontainer/init-host.sh ${localWorkspaceFolder}",
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
