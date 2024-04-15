@@ -20,7 +20,6 @@ export function registerJoinForms() {
             const playerName = formData.get('player-name');
             await setBody(`/game?lobby=${lobbyName}&player=${playerName}`);
             joinLobby(lobbyName, playerName);
-            history.pushState('game', null);
         })
     );
 }
