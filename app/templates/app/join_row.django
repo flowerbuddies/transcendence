@@ -20,19 +20,19 @@
              type="text"
              name="type"
              aria-label="{% trans "join.type.title" %}"
-             value="{{ lobby.type }}" />
+             value="{% trans lobby.type %}" />
     {% else %}
       <select class="form-select"
               form="lobby-{{ forloop.counter }}"
               required
               name="type"
               aria-label="{% trans "join.type.title" %}">
-        <option value="Tournament 1v1">{% trans "join.type.types.tournament1v1" %}</option>
-        <option value="Tournament 1v1v1v1">{% trans "join.type.types.tournament1v1v1v1" %}</option>
-        <option value="Game 1v1">{% trans "join.type.types.game1v1" %}</option>
-        <option value="Game 1vAI">{% trans "join.type.types.game1vAI" %}</option>
-        <option value="Game 1v1v1v1">{% trans "join.type.types.game1v1v1v1" %}</option>
-        <option value="Game 1v1vAIvAI">{% trans "join.type.types.game1v1vAIvAI" %}</option>
+        <option value="join.type.types.tournament1v1">{% trans "join.type.types.tournament1v1" %}</option>
+        <option value="join.type.types.tournament1v1v1v1">{% trans "join.type.types.tournament1v1v1v1" %}</option>
+        <option value="join.type.types.game1v1">{% trans "join.type.types.game1v1" %}</option>
+        <option value="join.type.types.game1vAI">{% trans "join.type.types.game1vAI" %}</option>
+        <option value="join.type.types.game1v1v1v1">{% trans "join.type.types.game1v1v1v1" %}</option>
+        <option value="join.type.types.game1v1vAIvAI">{% trans "join.type.types.game1v1vAIvAI" %}</option>
       </select>
     {% endif %}
   </td>
@@ -45,7 +45,7 @@
              type="text"
              name="players"
              aria-label="{% trans "join.players.connected_players" %}"
-             value="{{ lobby.current_players }}/{{ lobby.max_players }}" />
+             value="{{ lobby.players|qset_length }} / {{ lobby.max_players }}" />
     {% else %}
       <select class="form-select"
               form="lobby-{{ forloop.counter }}"
@@ -75,7 +75,7 @@
       {% csrf_token %}
       <button class="btn btn-primary"
               type="submit"
-              {% if exists and lobby.current_players == lobby.max_players %}disabled{% endif %}>
+              {% if exists and lobby.players|qset_length == lobby.max_players %}disabled{% endif %}>
         {% if exists %}
           {% trans "join.action.join" %}
         {% else %}

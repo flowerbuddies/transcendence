@@ -2,28 +2,26 @@ from django.utils.translation import gettext as _
 import re
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
+from app.models import Lobby
+from django.template.defaulttags import register
+
+
+@register.filter
+def qset_length(qset):
+    return len(qset.all())
 
 
 def index(request):
+    return render(request, "app/index.django", {"lobbies": Lobby.objects.all()})
+
+
+def game(request):
     return render(
         request,
-        "app/index.django",
-        # TODO: temporary test data, this will be retrieved from the db
+        "app/game.django",
         {
-            "lobbies": [
-                {
-                    "name": "first_lobby",
-                    "type": _("join.type.types.tournament1v1v1v1"),
-                    "current_players": 2,
-                    "max_players": 4,
-                },
-                {
-                    "name": "Sec-lobby",
-                    "type": _("join.type.types.game1v1v1v1"),
-                    "current_players": 4,
-                    "max_players": 4,
-                },
-            ]
+            "lobby": request.GET.get("lobby"),
+            "player": request.GET.get("player"),
         },
     )
 
@@ -44,8 +42,12 @@ def join(request: HttpRequest):
         )
 
     # validate the `player-name` field
-    if len(fields["player-name"]) == 0:
-        return HttpResponseBadRequest("Player name must not be empty")
+    if not (1 <= len(fields["player-name"]) <= 12):
+        return HttpResponseBadRequest("Player name must be between 1 and 12 characters")
+
+    is_tournament = False
+    is_match_four = False
+    player_count = -1
 
     # validate the `type` & `players` fields
     # only check them if creating a new lobby
@@ -53,32 +55,63 @@ def join(request: HttpRequest):
     # (eg: new lobby="4"; existing lobby="2/4")
     try:
         player_count = int(fields["players"])
-        match fields["type"]:
-            case "Game 1v1", "Game 1vAI":
-                if player_count != 2:
-                    return HttpResponseBadRequest(
-                        "Player count must be 2 for this game mode"
-                    )
-            case "Game 1v1v1v1", "Game 1v1vAIvAI":
-                if player_count != 4:
-                    return HttpResponseBadRequest(
-                        "Player count must be 4 for this game mode"
-                    )
-            case "Tournament 1v1":
-                if player_count % 2 != 0:
-                    return HttpResponseBadRequest(
-                        "Player count must be a modulo of 2 for this game mode"
-                    )
-            case "Tournament 1v1v1v1":
-                if player_count % 4 != 0:
-                    return HttpResponseBadRequest(
-                        "Player count must be a modulo of 4 for this game mode"
-                    )
-            case _:
-                return HttpResponseBadRequest("Invalid game mode")
-    except ValueError:
-        pass
+        game_type = fields["type"]
+        if game_type in ["join.type.types.game1v1", "join.type.types.game1vAI"]:
+            if player_count != 2:
+                return HttpResponseBadRequest(
+                    "Player count must be 2 for this game mode"
+                )
+        elif game_type in [
+            "join.type.types.game1v1v1v1",
+            "join.type.types.game1v1vAIvAI",
+        ]:
+            is_match_four = True
+            if player_count != 4:
+                return HttpResponseBadRequest(
+                    "Player count must be 4 for this game mode"
+                )
+        elif game_type == "join.type.types.tournament1v1":
+            is_tournament = True
+            if player_count % 2:
+                return HttpResponseBadRequest(
+                    "Player count must be a modulo of 2 for this game mode"
+                )
+        elif game_type == "join.type.types.tournament1v1v1v1":
+            is_tournament = True
+            is_match_four = True
+            if player_count % 4:
+                return HttpResponseBadRequest(
+                    "Player count must be a modulo of 4 for this game mode"
+                )
+        else:
+            return HttpResponseBadRequest("Invalid game mode")
 
-    # TODO: check if the lobby is full
+    except ValueError:
+        pass  # If it's not an int, it just means the user is trying to join an existing game
+
+    lobby, created = Lobby.objects.get_or_create(
+        name=fields["lobby-name"],
+        defaults={
+            "name": fields["lobby-name"],
+            "type": fields["type"],
+            "is_tournament": is_tournament,
+            "is_match_four": is_match_four,
+            "max_players": player_count,
+        },
+    )
+
+    # when creating a lobby with AI players, add them already
+    if created:
+        if game_type == "join.type.types.game1vAI":
+            lobby.players.create(name="AI", is_ai=True)
+        elif game_type == "join.type.types.game1v1vAIvAI":
+            lobby.players.create(name="AI 1", is_ai=True)
+            lobby.players.create(name="AI 2", is_ai=True)
+
+    if len(lobby.players.all()) == lobby.max_players:
+        return HttpResponseBadRequest("The lobby is full")
+    if lobby.players.filter(name=fields["player-name"]).exists():
+        return HttpResponseBadRequest("Name already taken")
+    lobby.players.create(name=fields["player-name"])
 
     return HttpResponse()
