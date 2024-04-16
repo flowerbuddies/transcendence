@@ -1,5 +1,6 @@
 import asyncio
 import json
+import random
 from channels.db import database_sync_to_async
 from .game.game import GameState
 
@@ -30,6 +31,14 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             self.lobby.max_players,
         )
 
+    @database_sync_to_async
+    def get_alive_players(self):
+        return list(self.lobby.players.filter(is_eliminated=False))
+
+    @database_sync_to_async
+    def is_match_four(self):
+        return self.lobby.is_match_four
+
     # link the `AsyncWebsocketConsumer`'s channel_name with the db player and the game state
     @database_sync_to_async
     def init_player(self, player_name):
@@ -55,7 +64,6 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             self.lobby_name, {"type": "players", "players": players, "max": max_players}
         )
 
-    # WS base methods
     async def connect(self):
         self.lobby_name = self.scope["url_route"]["kwargs"]["lobby_name"]
         if not self.lobby:
@@ -66,7 +74,6 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
         # when a player connect to a lobby, send the list players to all connected players
         await self.send_players_list()
-        # if len(self.lobby.players.all()) == self.lobby.max_players:
 
     async def disconnect(self, _):
         await self.eliminate_player()
@@ -82,14 +89,20 @@ class LobbyConsumer(AsyncWebsocketConsumer):
                 if await self.is_ready_to_start():
                     await self.start_game()
             case "key":
-                await self.key(data["key"])
+                await self.key(data)
 
-    async def key(self, key):
+    async def key(self, data):
         gs = self.get_game_state()
-        if key == 1:
-            gs.left.paddle.is_up_pressed = not gs.left.paddle.is_up_pressed
-        elif key == 2:
-            gs.left.paddle.is_down_pressed = not gs.left.paddle.is_down_pressed
+        if not gs:
+            return
+        player = gs.players[data["player"]]
+        if not player:
+            return
+
+        if data["key"] == 1:
+            player.paddle.is_up_pressed = not player.paddle.is_up_pressed
+        elif data["key"] == 2:
+            player.paddle.is_down_pressed = not player.paddle.is_down_pressed
 
     async def players(self, event):
         await self.send(text_data=json.dumps(event))
@@ -99,11 +112,24 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     async def start_game(self):
         if not self.get_game_state():
-            lobby_to_gs[self.lobby.name] = GameState(False, self)
+            lobby_to_gs[self.lobby.name] = GameState(await self.is_match_four(), self)
 
-        if not self.get_game_state().is_started:
+        gs = self.get_game_state()
+        if not gs.is_started:
+            # TODO: this needs to run for every match
+            alive_players = await self.get_alive_players()
+            alive_player_names = list(map(lambda player: player.name, alive_players))
+            match_type = 4 if await self.is_match_four() else 2
+            selected_players = random.sample(alive_player_names, match_type)
+
+            gs.players[selected_players[0]] = gs.left
+            gs.players[selected_players[1]] = gs.right
+            if match_type == 4:
+                gs.players[selected_players[2]] = gs.top
+                gs.players[selected_players[3]] = gs.bottom
+
             asyncio.create_task(lobby_to_gs[self.lobby.name].game_loop())
-            self.get_game_state().is_started = True
+            gs.is_started = True
 
     def get_game_state(self):
         try:
@@ -112,4 +138,4 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             return None
 
 
-# TODO: when the game is finished, remove the gs
+# TODO: when the game is finished, remove the gs, cancel the task

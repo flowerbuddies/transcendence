@@ -16,6 +16,7 @@ class GameState:
         self.is_started = False
 
         self.ball = Ball()
+
         self.left = Player("left")
         self.right = Player("right")
         self.isFourPlayer = isFourPlayer
@@ -25,6 +26,8 @@ class GameState:
         else:
             self.top = Player("wall_top")
             self.bottom = Player("wall_bottom")
+
+        self.players = {}
 
     async def game_loop(self):
         server_frame_time = 0.0
