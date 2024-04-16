@@ -1,3 +1,5 @@
+let data = {};
+
 function initConn(lobbyName, playerName, key1, key2) {
     const gameSocket = new WebSocket(
         'ws://' + window.location.host + '/ws/lobby/' + lobbyName + '/'
@@ -8,7 +10,7 @@ function initConn(lobbyName, playerName, key1, key2) {
     };
 
     gameSocket.onmessage = (e) => {
-        const data = JSON.parse(e.data);
+        data = JSON.parse(e.data);
 
         if (data.type == 'players') {
             // players connected
@@ -86,14 +88,57 @@ function initConn(lobbyName, playerName, key1, key2) {
 }
 
 function initScene() {
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const ctx = document.getElementById('canvas').getContext('2d');
+
+    window.requestAnimationFrame(renderLoop);
+
+    function renderLoop() {
+        clearCanvas(ctx);
+        drawScene(data.scene, ctx);
+        window.requestAnimationFrame(renderLoop);
+    }
 }
 
 export function joinLobby(lobbyName, player1Name, player2Name) {
     initConn(lobbyName, player1Name, 'ArrowUp', 'ArrowDown');
     if (player2Name) initConn(lobbyName, player2Name, 'q', 'a');
     initScene();
+}
+
+function clearCanvas(ctx) {
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+}
+
+function drawScene(scene, ctx) {
+    if (!scene) return;
+    scene.forEach((element) => {
+        if (element.color) {
+            ctx.fillStyle = element.color;
+        } else {
+            ctx.fillStyle = 'white';
+        }
+        ctx.fillRect(
+            ctx.canvas.width * element.x,
+            ctx.canvas.height * element.y,
+            ctx.canvas.width * element.width,
+            ctx.canvas.height * element.height
+        );
+    });
+}
+
+// check performance
+let startTime = performance.now();
+let frames = 0;
+
+function updateFPS() {
+    frames++;
+    const currentTime = performance.now();
+    const delta = currentTime - startTime;
+
+    if (delta >= 1000) {
+        console.log('FPS:', frames);
+        frames = 0;
+        startTime = currentTime;
+    }
 }
