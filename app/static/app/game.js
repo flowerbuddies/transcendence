@@ -2,30 +2,33 @@ let data = {};
 
 function initConn(lobbyName, playerName, key1, key2) {
     const gameSocket = new WebSocket(
-        "ws://" + window.location.host + "/ws/lobby/" + lobbyName + "/"
+        'ws://' + window.location.host + '/ws/lobby/' + lobbyName + '/'
     );
 
     gameSocket.onopen = () => {
-        gameSocket.send(JSON.stringify({ type: "init", player: playerName }));
+        gameSocket.send(JSON.stringify({ type: 'init', player: playerName }));
     };
 
     gameSocket.onmessage = (e) => {
         data = JSON.parse(e.data);
 
-        if (data.type == "players") {
+        if (data.type == 'players') {
             // players connected
             document.getElementById(
-                "players-connected"
+                'players-connected'
             ).textContent = `${data.players.length} / ${data.max}`;
 
             // players list
-            const list = document.getElementById("players-list");
-            let content = "";
+            const list = document.getElementById('players-list');
+            let content = '';
             for (const player of data.players)
                 content += `<li class="list-group-item list-group-item-${
-                    player.is_eliminated ? "danger" : "success"
-                }">${player.name} ${player.is_ai ? "🤖" : ""}</li>`;
+                    player.is_eliminated ? 'danger' : 'success'
+                }">${player.name} ${player.is_ai ? '🤖' : ''}</li>`;
             list.innerHTML = content;
+
+            if (data.players.length === data.max)
+                gameSocket.send(JSON.stringify({ type: 'ready' }));
         }
     };
 
@@ -38,7 +41,7 @@ function initConn(lobbyName, playerName, key1, key2) {
             if (!isKey1Pressed)
                 gameSocket.send(
                     JSON.stringify({
-                        type: "key",
+                        type: 'key',
                         key: 1,
                         player: playerName,
                     })
@@ -49,7 +52,7 @@ function initConn(lobbyName, playerName, key1, key2) {
             if (!isKey2Pressed)
                 gameSocket.send(
                     JSON.stringify({
-                        type: "key",
+                        type: 'key',
                         key: 2,
                         player: playerName,
                     })
@@ -62,7 +65,7 @@ function initConn(lobbyName, playerName, key1, key2) {
         if (ev.key === key1) {
             gameSocket.send(
                 JSON.stringify({
-                    type: "key",
+                    type: 'key',
                     key: 1,
                     player: playerName,
                 })
@@ -71,7 +74,7 @@ function initConn(lobbyName, playerName, key1, key2) {
         } else if (ev.key === key2) {
             gameSocket.send(
                 JSON.stringify({
-                    type: "key",
+                    type: 'key',
                     key: 2,
                     player: playerName,
                 })
@@ -82,13 +85,13 @@ function initConn(lobbyName, playerName, key1, key2) {
 
     // we send the same event for both `keydown` and `keyup`
     // depending on the previous state, the server will be able to understand what's happening
-    document.addEventListener("keydown", keyPressed);
-    document.addEventListener("keyup", keyReleased);
-    document.addEventListener("closeWSConns", () => gameSocket.close());
+    document.addEventListener('keydown', keyPressed);
+    document.addEventListener('keyup', keyReleased);
+    document.addEventListener('closeWSConns', () => gameSocket.close());
 }
 
 function initScene() {
-    const ctx = document.getElementById("canvas").getContext("2d");
+    const ctx = document.getElementById('canvas').getContext('2d');
 
     window.requestAnimationFrame(renderLoop);
 
@@ -100,13 +103,13 @@ function initScene() {
 }
 
 export function joinLobby(lobbyName, player1Name, player2Name) {
-    initConn(lobbyName, player1Name, "ArrowUp", "ArrowDown");
-    if (player2Name) initConn(lobbyName, player2Name, "q", "a");
+    initConn(lobbyName, player1Name, 'ArrowUp', 'ArrowDown');
+    if (player2Name) initConn(lobbyName, player2Name, 'q', 'a');
     initScene();
 }
 
 function clearCanvas(ctx) {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
@@ -116,7 +119,7 @@ function drawScene(scene, ctx) {
         if (element.color) {
             ctx.fillStyle = element.color;
         } else {
-            ctx.fillStyle = "white";
+            ctx.fillStyle = 'white';
         }
         ctx.fillRect(
             ctx.canvas.width * element.x,
@@ -137,7 +140,7 @@ function updateFPS() {
     const delta = currentTime - startTime;
 
     if (delta >= 1000) {
-        console.log("FPS:", frames);
+        console.log('FPS:', frames);
         frames = 0;
         startTime = currentTime;
     }

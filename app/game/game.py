@@ -1,3 +1,4 @@
+import asyncio
 from .ball import Ball
 from .paddle import Paddle
 
@@ -10,7 +11,10 @@ class Player:
 
 
 class GameState:
-    def __init__(self, isFourPlayer):
+    def __init__(self, isFourPlayer, lobby):
+        self.lobby = lobby
+        self.is_started = False
+
         self.ball = Ball()
         self.left = Player("left")
         self.right = Player("right")
@@ -21,6 +25,32 @@ class GameState:
         else:
             self.top = Player("wall_top")
             self.bottom = Player("wall_bottom")
+
+        # self.loop = asyncio.new_event_loop()
+
+        # asyncio.set_event_loop(self.loop)
+
+    # def __del__(self):
+    # self.loop_task.cancel()
+
+    async def game_loop(self):
+        print("hello mark init")
+        server_frame_time = 0.0
+        target_frame_time = 1.0 / 60.0
+        while True:
+            start_time = asyncio.get_event_loop().time()
+
+            # update and send state
+            self.update(target_frame_time)
+            await self.lobby.channel_layer.group_send(
+                self.lobby.lobby_name, {"type": "scene", "scene": self.get_scene()}
+            )
+
+            # sleep to maintain client refresh rate
+            server_frame_time = asyncio.get_event_loop().time() - start_time
+            sleep_time = max(0, target_frame_time - server_frame_time)
+            await asyncio.sleep(sleep_time)
+            # self.fps_monitor.tick()
 
     def update(self, dt):
         # check if goal scored, update score, reset ball

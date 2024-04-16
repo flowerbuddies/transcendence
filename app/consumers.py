@@ -2,20 +2,19 @@ import asyncio
 import json
 from channels.db import database_sync_to_async
 from .game.game import GameState
-from .game.performance import FPSMonitor
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from app.models import Lobby
 from django.core.serializers import serialize
+
+channel_to_lobby = {}
+lobby_to_gs = {}  # gs stands for game state
 
 
 class LobbyConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.lobby = None
-        self.gs = GameState(False)
-        # self.gs = GameState(True)
-        self.fps_monitor = FPSMonitor()
 
     @database_sync_to_async
     def get_lobby(self):
@@ -31,12 +30,31 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             self.lobby.max_players,
         )
 
-    # link the `AsyncWebsocketConsumer`'s channel_name with the db player
+    # link the `AsyncWebsocketConsumer`'s channel_name with the db player and the game state
     @database_sync_to_async
-    def set_channel_name(self, player_name):
+    def init_player(self, player_name):
         player = self.lobby.players.filter(name=player_name).first()
         player.channel_name = self.channel_name
         player.save()
+        channel_to_lobby[self.channel_name] = player.lobby.name
+        if player.lobby.name not in lobby_to_gs:
+            lobby_to_gs[player.lobby.name] = GameState(False, self)
+
+            # lobby_to_gs[player.lobby.name].loop.create_task(
+            #     lobby_to_gs[player.lobby.name].game_loop()
+            # )
+            # print(player.lobby.name)
+            # print(lobby_to_gs[player.lobby.name])
+            # asyncio.run(lobby_to_gs[player.lobby.name].game_loop())
+
+            # async def tmp():
+            #     # await task
+
+            # tmp()
+
+            # asyncio.run(tmp())
+
+    # async def start_game_if_full(self):
 
     # eliminate a player
     @database_sync_to_async
@@ -59,49 +77,47 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
         await self.channel_layer.group_add(self.lobby_name, self.channel_name)
         await self.accept()
-        self.loop_task = asyncio.create_task(self.loop())
 
         # when a player connect to a lobby, send the list players to all connected players
         await self.send_players_list()
+        # if len(self.lobby.players.all()) == self.lobby.max_players:
 
     async def disconnect(self, _):
-        if self.loop_task:
-            self.loop_task.cancel()
         await self.eliminate_player()
         await self.channel_layer.group_discard(self.lobby_name, self.channel_name)
         await self.send_players_list()
 
     async def receive(self, text_data):
-        await self.channel_layer.group_send(self.lobby_name, json.loads(text_data))
+        data = json.loads(text_data)
+        match data["type"]:
+            case "init":
+                await self.init_player(data["player"])
+                # await self.start_game_if_full()
+            case "key":
+                await self.key(data["key"])
+            case "ready":
+                await self.start_game()
 
-    async def key(self, event):
-        if event["key"] == 1:
-            self.gs.left.paddle.is_up_pressed = not self.gs.left.paddle.is_up_pressed
-        elif event["key"] == 2:
-            self.gs.left.paddle.is_down_pressed = (
-                not self.gs.left.paddle.is_down_pressed
-            )
+    async def key(self, key):
+        gs = self.get_game_state()
+        if key == 1:
+            gs.left.paddle.is_up_pressed = not gs.left.paddle.is_up_pressed
+        elif key == 2:
+            gs.left.paddle.is_down_pressed = not gs.left.paddle.is_down_pressed
 
     async def players(self, event):
         await self.send(text_data=json.dumps(event))
 
-    async def init(self, event):
-        await self.set_channel_name(event["player"])
+    async def scene(self, event):
+        await self.send(text_data=json.dumps(event))
 
-    async def loop(self):
-        server_frame_time = 0.0
-        target_frame_time = 1.0 / 60.0
-        while True:
-            start_time = asyncio.get_event_loop().time()
+    async def start_game(self):
+        if not self.get_game_state().is_started:
+            asyncio.create_task(lobby_to_gs[self.lobby.name].game_loop())
+            self.get_game_state().is_started = True
 
-            # update and send state
-            self.gs.update(target_frame_time)
-            await self.send(
-                text_data=json.dumps({"type": "scene", "scene": self.gs.get_scene()})
-            )
+    def get_game_state(self):
+        return lobby_to_gs[channel_to_lobby[self.channel_name]]
 
-            # sleep to maintain client refresh rate
-            server_frame_time = asyncio.get_event_loop().time() - start_time
-            sleep_time = max(0, target_frame_time - server_frame_time)
-            await asyncio.sleep(sleep_time)
-            self.fps_monitor.tick()
+
+# TODO: when the game is finished, remove the gs
