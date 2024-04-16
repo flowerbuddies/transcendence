@@ -37,24 +37,10 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         player.channel_name = self.channel_name
         player.save()
         channel_to_lobby[self.channel_name] = player.lobby.name
-        if player.lobby.name not in lobby_to_gs:
-            lobby_to_gs[player.lobby.name] = GameState(False, self)
 
-            # lobby_to_gs[player.lobby.name].loop.create_task(
-            #     lobby_to_gs[player.lobby.name].game_loop()
-            # )
-            # print(player.lobby.name)
-            # print(lobby_to_gs[player.lobby.name])
-            # asyncio.run(lobby_to_gs[player.lobby.name].game_loop())
-
-            # async def tmp():
-            #     # await task
-
-            # tmp()
-
-            # asyncio.run(tmp())
-
-    # async def start_game_if_full(self):
+    @database_sync_to_async
+    def is_ready_to_start(self):
+        return len(self.lobby.players.all()) == self.lobby.max_players
 
     # eliminate a player
     @database_sync_to_async
@@ -89,14 +75,14 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
+
         match data["type"]:
             case "init":
                 await self.init_player(data["player"])
-                # await self.start_game_if_full()
+                if await self.is_ready_to_start():
+                    await self.start_game()
             case "key":
                 await self.key(data["key"])
-            case "ready":
-                await self.start_game()
 
     async def key(self, key):
         gs = self.get_game_state()
@@ -112,12 +98,18 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(event))
 
     async def start_game(self):
+        if not self.get_game_state():
+            lobby_to_gs[self.lobby.name] = GameState(False, self)
+
         if not self.get_game_state().is_started:
             asyncio.create_task(lobby_to_gs[self.lobby.name].game_loop())
             self.get_game_state().is_started = True
 
     def get_game_state(self):
-        return lobby_to_gs[channel_to_lobby[self.channel_name]]
+        try:
+            return lobby_to_gs[channel_to_lobby[self.channel_name]]
+        except:
+            return None
 
 
 # TODO: when the game is finished, remove the gs

@@ -26,9 +26,6 @@ function initConn(lobbyName, playerName, key1, key2) {
                     player.is_eliminated ? 'danger' : 'success'
                 }">${player.name} ${player.is_ai ? '🤖' : ''}</li>`;
             list.innerHTML = content;
-
-            if (data.players.length === data.max)
-                gameSocket.send(JSON.stringify({ type: 'ready' }));
         }
     };
 

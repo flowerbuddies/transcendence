@@ -26,15 +26,7 @@ class GameState:
             self.top = Player("wall_top")
             self.bottom = Player("wall_bottom")
 
-        # self.loop = asyncio.new_event_loop()
-
-        # asyncio.set_event_loop(self.loop)
-
-    # def __del__(self):
-    # self.loop_task.cancel()
-
     async def game_loop(self):
-        print("hello mark init")
         server_frame_time = 0.0
         target_frame_time = 1.0 / 60.0
         while True:
