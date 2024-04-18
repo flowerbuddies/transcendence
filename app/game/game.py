@@ -1,6 +1,7 @@
 import asyncio
 from .ball import Ball
 from .paddle import Paddle
+from .performance import FPSMonitor  # TODO: rm
 
 
 class Player:
@@ -30,6 +31,7 @@ class GameState:
         self.players = {}
 
     async def game_loop(self):
+        fps_monitor = FPSMonitor()  # TODO: rm
         server_frame_time = 0.0
         target_frame_time = 1.0 / 60.0
         while True:
@@ -45,7 +47,7 @@ class GameState:
             server_frame_time = asyncio.get_event_loop().time() - start_time
             sleep_time = max(0, target_frame_time - server_frame_time)
             await asyncio.sleep(sleep_time)
-            # self.fps_monitor.tick()
+            fps_monitor.tick()  # TODO: rm
 
     def update(self, dt):
         # check if goal scored, update score, reset ball
