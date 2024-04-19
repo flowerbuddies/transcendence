@@ -1,0 +1,7 @@
+.env
+.env.example
+.github
+.vscode
+.devcontainer
+compose.yaml
+pgdata
