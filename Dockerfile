@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 RUN \
-apk add --no-cache python3 py3-pip tini; \
+apk add --no-cache python3 py3-pip gettext tini; \
 pip install --upgrade --break-system-packages pip setuptools-scm; \
 pip install --break-system-packages -r requirements.txt; \
 addgroup -g 1000 appuser; \
