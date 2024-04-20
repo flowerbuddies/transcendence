@@ -8,3 +8,4 @@ pgdata
 *.md
 __pycache__
 *.mo
+Dockerfile
