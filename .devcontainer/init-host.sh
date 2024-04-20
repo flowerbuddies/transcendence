@@ -30,7 +30,8 @@ function copy_env_file_if_not_exists() {
                         "POSTGRES_PASSWORD" \
                         "DJANGO_SUPERUSER_EMAIL" \
                         "DJANGO_SUPERUSER_USERNAME" \
-                        "DJANGO_SUPERUSER_PASSWORD")
+                        "DJANGO_SUPERUSER_PASSWORD" \
+                        "DJANGO_SECRET_KEY")
     for variable in "${required_variables[@]}"; do
       if ! grep -q "$variable" .env; then
         echo "$variable variable (or more) is missing in .env file, copying .env.example file to .env."
