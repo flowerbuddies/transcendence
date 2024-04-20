@@ -2,8 +2,10 @@
 
 cd /app
 
-python3 manage.py makemigrations
-python3 manage.py migrate
+source .profile
+
+python manage.py makemigrations
+python manage.py migrate
 
 cat <<EOF | python manage.py shell
 from django.contrib.auth import get_user_model
@@ -14,4 +16,4 @@ EOF
 
 django-admin compilemessages
 
-exec python3 manage.py runserver 0.0.0.0:8000
+exec python manage.py runserver 0.0.0.0:8000
