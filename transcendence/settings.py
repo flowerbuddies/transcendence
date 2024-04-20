@@ -30,7 +30,12 @@ SECRET_KEY = "django-insecure-+%48*+a99mf#1abc5t)zm@=p%jndkue#r3)jn^)#&thw+e5%g7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "*.hive.fi",
+    "127.0.0.1",
+    "[::1]"
+]
 
 
 # Application definition
