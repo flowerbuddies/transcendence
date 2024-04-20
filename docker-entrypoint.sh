@@ -23,5 +23,8 @@ django-admin compilemessages --ignore=.local
 # Collect static files
 python manage.py collectstatic --noinput
 
+# Start the proxy
+nginx -c nginx.conf -p /app
+
 # Start the server
 exec python manage.py runserver 0.0.0.0:8000
