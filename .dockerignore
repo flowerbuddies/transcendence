@@ -6,3 +6,5 @@
 compose.yaml
 pgdata
 *.md
+__pycache__
+*.mo
