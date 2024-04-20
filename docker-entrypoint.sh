@@ -18,7 +18,7 @@ User.objects.filter(username='${DJANGO_SUPERUSER_USERNAME}').exists() or \
 EOF
 
 # Compile translations
-django-admin compilemessages
+django-admin compilemessages --ignore=.local
 
 # Start the server
 exec python manage.py runserver 0.0.0.0:8000
