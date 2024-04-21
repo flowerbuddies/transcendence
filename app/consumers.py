@@ -95,9 +95,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         gs = self.get_game_state()
         if not gs:
             return
-        player = gs.players[data["player"]]
-        if not player:
+        if not data["player"] in gs.players:
             return
+        player = gs.players[data["player"]]
 
         if data["key"] == 1:
             player.paddle.is_up_pressed = not player.paddle.is_up_pressed
