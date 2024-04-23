@@ -29,10 +29,33 @@ class GameState:
 
         self.players = {}
 
+    def players_alive(self):
+        alive_count = 0
+        if self.left.score < 3:
+            alive_count += 1
+        if self.right.score < 3:
+            alive_count += 1
+        if not self.isFourPlayer:
+            return alive_count != 1
+        if self.top.score < 3:
+            alive_count += 1
+        if self.bottom.score < 3:
+            alive_count += 1
+        return alive_count != 1
+
+    def get_winner(self):
+        if self.left.score < 3:
+            return self.left
+        if self.right.score < 3:
+            return self.right
+        if self.top.score < 3:
+            return self.top
+        return self.bottom
+
     async def game_loop(self):
         server_frame_time = 0.0
         target_frame_time = 1.0 / 60.0
-        while True:
+        while self.players_alive():
             start_time = asyncio.get_event_loop().time()
 
             # update and send state
@@ -46,6 +69,10 @@ class GameState:
             sleep_time = max(0, target_frame_time - server_frame_time)
             await asyncio.sleep(sleep_time)
             # self.fps_monitor.tick()
+
+        await self.lobby.channel_layer.group_send(
+            self.lobby.lobby_name, {"type": "end"}
+        )
 
     def update(self, dt):
         # check if goal scored, update score, reset ball

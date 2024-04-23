@@ -32,12 +32,16 @@ function initConn(lobbyName, playerName, key1, key2) {
                 if (element.type == "score" && element.side == "right")
                     document.getElementById(
                         "score-right"
-                    ).textContent = `balls missed: ${element.score}`;
+                    ).textContent = `balls missed: ${element.score}/3`;
                 if (element.type == "score" && element.side == "left")
                     document.getElementById(
                         "score-left"
-                    ).textContent = `balls missed: ${element.score}`;
+                    ).textContent = `balls missed: ${element.score}/3`;
             });
+        }
+        if (data.type == "end") {
+            const ctx = document.getElementById("canvas").getContext("2d");
+            clearCanvas(ctx);
         }
     };
 
