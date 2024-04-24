@@ -15,5 +15,6 @@
       {% trans "game.playWith" %} <strong><code>Q</code></strong> {% trans "game.and" %}
       <strong><code>A</code></strong>
     </p>
+    <p id="winner" class="w-inherit text-center"></p>
   </div>
 </main>

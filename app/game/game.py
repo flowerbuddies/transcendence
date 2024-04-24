@@ -45,12 +45,12 @@ class GameState:
 
     def get_winner(self):
         if self.left.score < 3:
-            return self.left
+            return self.left.side
         if self.right.score < 3:
-            return self.right
+            return self.right.side
         if self.top.score < 3:
-            return self.top
-        return self.bottom
+            return self.top.side
+        return self.bottom.side
 
     async def game_loop(self):
         server_frame_time = 0.0
@@ -71,7 +71,7 @@ class GameState:
             # self.fps_monitor.tick()
 
         await self.lobby.channel_layer.group_send(
-            self.lobby.lobby_name, {"type": "end"}
+            self.lobby.lobby_name, {"type": "end", "winner": self.get_winner()}
         )
 
     def update(self, dt):

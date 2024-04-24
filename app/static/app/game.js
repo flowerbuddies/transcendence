@@ -27,6 +27,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                 }">${player.name} ${player.is_ai ? "🤖" : ""}</li>`;
             list.innerHTML = content;
         }
+        //TODO translate 'balls missed' or remove
         if (data.type == "scene") {
             data.scene.forEach((element) => {
                 if (element.type == "score" && element.side == "right")
@@ -40,6 +41,9 @@ function initConn(lobbyName, playerName, key1, key2) {
             });
         }
         if (data.type == "end") {
+            document.getElementById(
+                "winner"
+            ).textContent = `${data.winner} side won woo!`;
             const ctx = document.getElementById("canvas").getContext("2d");
             clearCanvas(ctx);
         }
