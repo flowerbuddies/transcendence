@@ -1,3 +1,4 @@
+import { setBody } from "/static/app/index.js";
 let data = {};
 
 function initConn(lobbyName, playerName, key1, key2) {
@@ -40,7 +41,10 @@ function initConn(lobbyName, playerName, key1, key2) {
                     ).textContent = `balls missed: ${element.score}/3`;
             });
         }
+        //TODO print player name not side ? and translate or remove
         if (data.type == "end") {
+            //document.getElementById("score-right").textContent = "";
+            //document.getElementById("score-left").textContent = "";
             document.getElementById(
                 "winner"
             ).textContent = `${data.winner} side won woo!`;
@@ -79,6 +83,7 @@ function initConn(lobbyName, playerName, key1, key2) {
     }
 
     function keyReleased(ev) {
+        console.log(ev.key);
         if (ev.key === key1) {
             gameSocket.send(
                 JSON.stringify({
@@ -97,7 +102,14 @@ function initConn(lobbyName, playerName, key1, key2) {
                 })
             );
             isKey2Pressed = false;
+        } else if (ev.key === "Escape") {
+            backToJoin();
         }
+    }
+
+    async function backToJoin() {
+        gameSocket.close();
+        await setBody("/join");
     }
 
     // we send the same event for both `keydown` and `keyup`

@@ -12,6 +12,10 @@ def qset_length(qset):
 
 
 def index(request):
+    # Lobbies = Lobby.objects.all()
+    # for lobby in Lobbies:
+    #     if len(lobby.players.filter(is_eliminated=False)) == 0:
+    #         lobby.delete()
     return render(request, "app/index.django", {"lobbies": Lobby.objects.all()})
 
 
@@ -25,7 +29,7 @@ def join(request: HttpRequest):
 
     fields = request.POST.dict()
 
-    # check that the request has all the mondatory fields
+    # check that the request has all the mandatory fields
     if not all(
         key in fields for key in {"lobby-name", "type", "players", "player-1-name"}
     ):
