@@ -25,6 +25,10 @@ def qset_length(qset):
 
 
 def index(request):
+    Lobbies = Lobby.objects.all()
+    for lobby in Lobbies:
+        if len(lobby.players.filter(is_eliminated=False)) == 0:
+            lobby.delete()
     return render(request, "app/index.django", {"lobbies": Lobby.objects.all()})
 
 
