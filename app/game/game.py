@@ -4,9 +4,9 @@ from .paddle import Paddle
 
 
 class Player:
-    def __init__(self, side):
+    def __init__(self, side, score):
         self.side = side
-        self.score = 0
+        self.score = score
         self.paddle = Paddle(side)
 
 
@@ -17,15 +17,15 @@ class GameState:
 
         self.ball = Ball()
 
-        self.left = Player("left")
-        self.right = Player("right")
+        self.left = Player("left", 0)
+        self.right = Player("right", 0)
         self.isFourPlayer = isFourPlayer
         if isFourPlayer:
-            self.top = Player("top")
-            self.bottom = Player("bottom")
+            self.top = Player("top", 0)
+            self.bottom = Player("bottom", 0)
         else:
-            self.top = Player("wall_top")
-            self.bottom = Player("wall_bottom")
+            self.top = Player("wall_top", 0)
+            self.bottom = Player("wall_bottom", 0)
 
         self.players = {}
 
@@ -79,6 +79,10 @@ class GameState:
         # check if goal scored, update score, reset ball
         self.handle_goal()
 
+        # check if players have died and make them into walls
+        if self.isFourPlayer:
+            self.transform_dead_players()
+
         # move paddles
         self.left.paddle.update(dt, self.isFourPlayer)
         self.right.paddle.update(dt, self.isFourPlayer)
@@ -104,6 +108,17 @@ class GameState:
         elif self.ball.y + 2 * self.ball.radius > 1.0:
             self.bottom.score += 1
             self.ball.reset()
+
+    def transform_dead_players(self):
+        #TODO mark dead players as eliminated
+        if self.left.score == 3:
+            self.left = Player("wall_left", 3)
+        if self.right.score == 3:
+            self.right = Player("wall_right", 3)
+        if self.top.score == 3:
+            self.top = Player("wall_top", 3)
+        if self.bottom.score == 3:
+            self.bottom = Player("wall_bottom", 3)
 
     def handle_collisions(self, dt):
         # check the next ball's position for collision with paddles
