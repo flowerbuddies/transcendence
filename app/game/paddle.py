@@ -27,6 +27,7 @@ class Paddle:
             self.x = 0.0
             self.y = 1 - self.margin - self.depth
             self.length = 1.0
+        #TODO add wall_right and wall_left
 
     def update(self, dt, isFourPlayer):
         if self.side == "left" or self.side == "right":
