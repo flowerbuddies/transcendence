@@ -83,7 +83,6 @@ function initConn(lobbyName, playerName, key1, key2) {
     }
 
     function keyReleased(ev) {
-        console.log(ev.key);
         if (ev.key === key1) {
             gameSocket.send(
                 JSON.stringify({
@@ -112,7 +111,7 @@ function initConn(lobbyName, playerName, key1, key2) {
         document.removeEventListener("keyup", keyReleased);
         document.removeEventListener("closeWSConns", () => gameSocket.close());
         gameSocket.close();
-        await setBody("/join");
+        await setBody("/");
     }
 
     // we send the same event for both `keydown` and `keyup`
