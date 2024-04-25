@@ -39,6 +39,14 @@ function initConn(lobbyName, playerName, key1, key2) {
                     document.getElementById(
                         "score-left"
                     ).textContent = `balls missed: ${element.score}/3`;
+                if (element.type == "score" && element.side == "top")
+                    document.getElementById(
+                        "score-top"
+                    ).textContent = `balls missed: ${element.score}/3`;
+                if (element.type == "score" && element.side == "bottom")
+                    document.getElementById(
+                        "score-bottom"
+                    ).textContent = `balls missed: ${element.score}/3`;
             });
         }
         //TODO print player name not side ? and translate or remove
