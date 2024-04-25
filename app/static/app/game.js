@@ -103,11 +103,14 @@ function initConn(lobbyName, playerName, key1, key2) {
             );
             isKey2Pressed = false;
         } else if (ev.key === "Escape") {
-            backToJoin();
+            closeGameConnection();
         }
     }
 
-    async function backToJoin() {
+    async function closeGameConnection() {
+        document.removeEventListener("keydown", keyPressed);
+        document.removeEventListener("keyup", keyReleased);
+        document.removeEventListener("closeWSConns", () => gameSocket.close());
         gameSocket.close();
         await setBody("/join");
     }
