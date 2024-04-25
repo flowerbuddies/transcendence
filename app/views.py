@@ -12,10 +12,6 @@ def qset_length(qset):
 
 
 def index(request):
-    Lobbies = Lobby.objects.all()
-    for lobby in Lobbies:
-        if len(lobby.players.filter(is_eliminated=False)) == 0:
-            lobby.delete()
     return render(request, "app/index.django", {"lobbies": Lobby.objects.all()})
 
 
@@ -25,10 +21,6 @@ def game(request):
 
 def join(request: HttpRequest):
     if request.method == "GET":
-        Lobbies = Lobby.objects.all()
-        for lobby in Lobbies:
-            if len(lobby.players.filter(is_eliminated=False)) == 0:
-                lobby.delete()
         return render(request, "app/join.django", {"lobbies": Lobby.objects.all()})
 
     fields = request.POST.dict()
