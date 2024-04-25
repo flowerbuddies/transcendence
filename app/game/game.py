@@ -70,6 +70,7 @@ class GameState:
             await asyncio.sleep(sleep_time)
             # self.fps_monitor.tick()
 
+        #TODO connect side and player name so win screen can show the name of the player
         await self.lobby.channel_layer.group_send(
             self.lobby.lobby_name, {"type": "end", "winner": self.get_winner()}
         )
