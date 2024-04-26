@@ -86,8 +86,7 @@ class GameState:
         self.handle_goal()
 
         # check if players have died and make them into walls
-        if self.isFourPlayer:
-            self.transform_dead_players()
+        self.transform_dead_players()
 
         # move paddles
         self.left.paddle.update(dt, self.isFourPlayer)
@@ -117,14 +116,30 @@ class GameState:
 
     def transform_dead_players(self):
         #TODO mark dead players as eliminated
-        if self.left.score == 3 and self.left.side != "wall_left":
-            self.left = Player("wall_left", 3)
-        if self.right.score == 3 and self.right.side != "wall_right":
-            self.right = Player("wall_right", 3)
-        if self.top.score == 3 and self.top.side != "wall_top":
-            self.top = Player("wall_top", 3)
-        if self.bottom.score == 3 and self.bottom.side != "wall_bottom":
-            self.bottom = Player("wall_bottom", 3)
+        if self.left.score == 3:
+            self.lobby.channel_layer.send(
+                self.lobby.lobby_name, {"type": "kill", "target": self.left.name}
+            )
+            if self.isFourPlayer and self.left.side != "wall_left":
+                self.left = Player("wall_left", 3)
+        if self.right.score == 3:
+            self.lobby.channel_layer.send(
+                self.lobby.lobby_name, {"type": "kill", "target": self.right.name}
+            )
+            if self.isFourPlayer and self.right.side != "wall_right":
+                self.right = Player("wall_right", 3)
+        if self.top.score == 3:
+            self.lobby.channel_layer.send(
+                self.lobby.lobby_name, {"type": "kill", "target": self.top.name}
+            )
+            if self.isFourPlayer and self.top.side != "wall_top":
+                self.top = Player("wall_top", 3)
+        if self.bottom.score == 3:
+            self.lobby.channel_layer.send(
+                self.lobby.lobby_name, {"type": "kill", "target": self.lebottomft.name}
+            )
+            if self.isFourPlayer and self.bottom.side != "wall_bottom":
+                self.bottom = Player("wall_bottom", 3)
 
     def handle_collisions(self, dt):
         # check the next ball's position for collision with paddles

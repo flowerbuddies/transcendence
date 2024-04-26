@@ -58,6 +58,12 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         player.is_eliminated = True
         player.save()
 
+    @database_sync_to_async
+    def kill_by_name(self, player_name):
+        player = self.lobby.players.filter(name=player_name)
+        player.is_eliminated = True
+        player.save()
+
     async def send_players_list(self):
         players, max_players = await self.get_players()
         await self.channel_layer.group_send(
@@ -112,6 +118,10 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     async def end(self, event):
         await self.send(text_data=json.dumps(event))
+
+    @database_sync_to_async
+    async def kill(self, event):
+        await self.kill_by_name()
 
     async def start_game(self):
         if not self.get_game_state():
