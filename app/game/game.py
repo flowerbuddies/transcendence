@@ -6,6 +6,7 @@ from .paddle import Paddle
 class Player:
     def __init__(self, side, score):
         self.side = side
+        self.name = None
         self.score = score
         self.paddle = Paddle(side)
 
@@ -29,6 +30,10 @@ class GameState:
 
         self.players = {}
 
+    def assign_players(self):
+        for player in self.players:
+            self.players[player].name = player
+
     def players_alive(self):
         alive_count = 0
         if self.left.score < 3:
@@ -45,16 +50,17 @@ class GameState:
 
     def get_winner(self):
         if self.left.score < 3:
-            return self.left.side
+            return self.left.name
         if self.right.score < 3:
-            return self.right.side
+            return self.right.name
         if self.top.score < 3:
-            return self.top.side
-        return self.bottom.side
+            return self.top.name
+        return self.bottom.name
 
     async def game_loop(self):
         server_frame_time = 0.0
         target_frame_time = 1.0 / 60.0
+        self.assign_players()
         while self.players_alive():
             start_time = asyncio.get_event_loop().time()
 
@@ -192,6 +198,7 @@ class GameState:
         scene.append(
             {
                 "type": "score",
+                "name": player.name,
                 "side": player.side,
                 "score": player.score,
             }

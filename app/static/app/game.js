@@ -31,34 +31,54 @@ function initConn(lobbyName, playerName, key1, key2) {
         //TODO translate 'balls missed' or remove
         if (data.type == "scene") {
             data.scene.forEach((element) => {
+                let score = "eliminated";
+                if (element.type == "score" && element.score < 3)
+                    score = ` balls missed ${element.score}/3`;
                 if (
                     element.type == "score" &&
                     (element.side == "right" || element.side == "wall_right")
                 )
-                    document.getElementById(
-                        "score-right"
-                    ).textContent = `balls missed: ${element.score}/3`;
+                    if (!element.name) {
+                        document.getElementById("score-right").textContent = "";
+                    } else {
+                        document.getElementById(
+                            "score-right"
+                        ).textContent = `${element.name}: ${score}`;
+                    }
                 if (
                     element.type == "score" &&
                     (element.side == "left" || element.side == "wall_left")
                 )
-                    document.getElementById(
-                        "score-left"
-                    ).textContent = `balls missed: ${element.score}/3`;
+                    if (!element.name) {
+                        document.getElementById("score-left").textContent = "";
+                    } else {
+                        document.getElementById(
+                            "score-left"
+                        ).textContent = `${element.name}: ${score}`;
+                    }
                 if (
                     element.type == "score" &&
                     (element.side == "top" || element.side == "wall_top")
                 )
-                    document.getElementById(
-                        "score-top"
-                    ).textContent = `balls missed: ${element.score}/3`;
+                    if (!element.name) {
+                        document.getElementById("score-top").textContent = "";
+                    } else {
+                        document.getElementById(
+                            "score-top"
+                        ).textContent = `${element.name}: ${score}`;
+                    }
                 if (
                     element.type == "score" &&
                     (element.side == "bottom" || element.side == "wall_bottom")
                 )
-                    document.getElementById(
-                        "score-bottom"
-                    ).textContent = `balls missed: ${element.score}/3`;
+                    if (!element.name) {
+                        document.getElementById("score-bottom").textContent =
+                            "";
+                    } else {
+                        document.getElementById(
+                            "score-bottom"
+                        ).textContent = `${element.name}: ${score}`;
+                    }
             });
         }
         //TODO print player name not side ? and translate or remove
@@ -67,7 +87,7 @@ function initConn(lobbyName, playerName, key1, key2) {
             //document.getElementById("score-left").textContent = "";
             document.getElementById(
                 "winner"
-            ).textContent = `${data.winner} side won woo!`;
+            ).textContent = `${data.winner} won woo!`;
             const ctx = document.getElementById("canvas").getContext("2d");
             clearCanvas(ctx);
         }
