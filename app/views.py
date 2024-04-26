@@ -25,7 +25,7 @@ def join(request: HttpRequest):
 
     fields = request.POST.dict()
 
-    # check that the request has all the mondatory fields
+    # check that the request has all the mandatory fields
     if not all(
         key in fields for key in {"lobby-name", "type", "players", "player-1-name"}
     ):

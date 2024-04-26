@@ -7,13 +7,19 @@
   </div>
   <div class="col-9 h-80 fs-4">
     <div class="row ms-0 w-inherit">
-      <p class="col ps-0">Noel</p>
-      <p class="col pe-0 text-right">Mark</p>
+      <!--TODO translate-->
+      <p id="score-left" class="col ps-0">waiting on players..</p>
+      <p id="score-right" class="col pe-0 text-right"></p>
     </div>
     <canvas class="w-inherit" id="canvas"></canvas>
+    <p id="winner" class="w-inherit text-center"></p>
     <p class="w-inherit text-center">
       {% trans "game.playWith" %} <strong><code>Q</code></strong> {% trans "game.and" %}
       <strong><code>A</code></strong>
+    </p>
+    <!--TODO translate-->
+    <p class="w-inherit text-center">
+      press <strong><code>esc</code></strong> to exit
     </p>
   </div>
 </main>

@@ -110,6 +110,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def scene(self, event):
         await self.send(text_data=json.dumps(event))
 
+    async def end(self, event):
+        await self.send(text_data=json.dumps(event))
+
     async def start_game(self):
         if not self.get_game_state():
             lobby_to_gs[self.lobby.name] = GameState(await self.is_match_four(), self)
