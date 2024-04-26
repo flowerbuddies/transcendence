@@ -24,13 +24,14 @@ class Match:
 class Tournament:
     logger = logging.getLogger(__name__)
     
-    def __init__(self, gamestate: 'GameState', players, max_players, is_four_player):
-        self.players = players
-        self.player_count = max_players
+    def __init__(self, gamestate: 'GameState', player_name_list, is_four_player):
+        self.players = player_name_list
+        self.player_count = len(player_name_list)
         self.match_count = self.player_count - 1
         self.is_four_player = is_four_player
         self.matches = []
         self.winner = None
+        self.gamestate = gamestate
         self.logger.debug("Tournament created with {} players".format(self.player_count))
 
     def get_match_count(self):
@@ -41,7 +42,7 @@ class Tournament:
             return None
         return self.matches[index]
 
-    def create_tournament(self):
+    def start_tournament(self):
         if self.player_count < 2:
             self.logger.error("Not enough players to create a tournament (minimum 2 players)")
             return
@@ -51,8 +52,8 @@ class Tournament:
             pass # TODO: Implement four player tournament
             
     def _create_two_player_tournament(self):
-        initial_player_pool = list(self.players)
-        shuffle(initial_player_pool)
+        players = self.players
+        shuffle(players)
         first_round_match_count = self.player_count // 2
         
         for _ in range(self.match_count):
@@ -61,11 +62,12 @@ class Tournament:
         for i in range(first_round_match_count):
             offset = i * 2
             match = self.matches[i]
-            match.players.append(initial_player_pool[offset])
-            match.players.append(initial_player_pool[offset + 1])
+            match.players.append(players[offset])
+            match.players.append(players[offset + 1])
             self.matches.append(match)
 
-    def assign_players_to_current_match(self, gamestate: 'GameState', match_index: int):
+    def assign_players(self, gamestate: 'GameState', match_index: int):
+        """Assigns players to a match based on the match index in the gamestate"""
         if not self.is_four_player:
             self._assign_two_player_match(gamestate, match_index)
         else:
