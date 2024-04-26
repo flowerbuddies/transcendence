@@ -31,19 +31,31 @@ function initConn(lobbyName, playerName, key1, key2) {
         //TODO translate 'balls missed' or remove
         if (data.type == "scene") {
             data.scene.forEach((element) => {
-                if (element.type == "score" && element.side == "right")
+                if (
+                    element.type == "score" &&
+                    (element.side == "right" || element.side == "wall_right")
+                )
                     document.getElementById(
                         "score-right"
                     ).textContent = `balls missed: ${element.score}/3`;
-                if (element.type == "score" && element.side == "left")
+                if (
+                    element.type == "score" &&
+                    (element.side == "left" || element.side == "wall_left")
+                )
                     document.getElementById(
                         "score-left"
                     ).textContent = `balls missed: ${element.score}/3`;
-                if (element.type == "score" && element.side == "top")
+                if (
+                    element.type == "score" &&
+                    (element.side == "top" || element.side == "wall_top")
+                )
                     document.getElementById(
                         "score-top"
                     ).textContent = `balls missed: ${element.score}/3`;
-                if (element.type == "score" && element.side == "bottom")
+                if (
+                    element.type == "score" &&
+                    (element.side == "bottom" || element.side == "wall_bottom")
+                )
                     document.getElementById(
                         "score-bottom"
                     ).textContent = `balls missed: ${element.score}/3`;

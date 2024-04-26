@@ -111,13 +111,13 @@ class GameState:
 
     def transform_dead_players(self):
         #TODO mark dead players as eliminated
-        if self.left.score == 3:
+        if self.left.score == 3 and self.left.side != "wall_left":
             self.left = Player("wall_left", 3)
-        if self.right.score == 3:
+        if self.right.score == 3 and self.right.side != "wall_right":
             self.right = Player("wall_right", 3)
-        if self.top.score == 3:
+        if self.top.score == 3 and self.top.side != "wall_top":
             self.top = Player("wall_top", 3)
-        if self.bottom.score == 3:
+        if self.bottom.score == 3 and self.bottom.side != "wall_bottom":
             self.bottom = Player("wall_bottom", 3)
 
     def handle_collisions(self, dt):
