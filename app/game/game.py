@@ -4,10 +4,14 @@ from .paddle import Paddle
 
 
 class Player:
-    def __init__(self, side, score):
+    def __init__(self, side):
         self.side = side
+        self.score = 0
         self.name = None
-        self.score = score
+        self.paddle = Paddle(side)
+
+    def change_side(self, side):
+        self.side = side
         self.paddle = Paddle(side)
 
 
@@ -18,15 +22,15 @@ class GameState:
 
         self.ball = Ball()
 
-        self.left = Player("left", 0)
-        self.right = Player("right", 0)
+        self.left = Player("left")
+        self.right = Player("right")
         self.isFourPlayer = isFourPlayer
         if isFourPlayer:
-            self.top = Player("top", 0)
-            self.bottom = Player("bottom", 0)
+            self.top = Player("top")
+            self.bottom = Player("bottom")
         else:
-            self.top = Player("wall_top", 0)
-            self.bottom = Player("wall_bottom", 0)
+            self.top = Player("wall_top")
+            self.bottom = Player("wall_bottom")
 
         self.players = {}
 
@@ -121,25 +125,25 @@ class GameState:
                 self.lobby.channel_name, {"type": "kill", "target": self.left.name}
             )
             if self.isFourPlayer:
-                self.left = Player("wall_left", 3)
+                self.left.change_side("wall_left")
         if self.right.score == 3 and self.right.side != "wall_right":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.right.name}
             )
             if self.isFourPlayer:
-                self.right = Player("wall_right", 3)
+                self.right.change_side("wall_right")
         if not self.isFourPlayer:
             return
         if self.top.score == 3 and self.top.side != "wall_top":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.top.name}
             )
-            self.top = Player("wall_top", 3)
+            self.top.change_side("wall_top")
         if self.bottom.score == 3 and self.bottom.side != "wall_bottom":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.bottom.name}
             )
-            self.bottom = Player("wall_bottom", 3)
+            self.bottom.change_side("wall_bottom")
 
     def handle_collisions(self, dt):
         # check the next ball's position for collision with paddles
