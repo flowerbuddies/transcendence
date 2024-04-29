@@ -95,12 +95,7 @@ class Tournament:
         self._assign_future_matches(match_index)
 
     def _assign_future_matches(self, match_index: int):
-        if not self.is_four_player:
-            self._assign_future_two_player_matches(match_index)
-        else:
-            pass  # TODO: Implement four player tournament future match assignment
-
-    def _assign_future_two_player_matches(self, match_index: int):
+        required_player_count = 4 if self.is_four_player else 2
         if match_index < 0 or match_index >= self.match_count:
             print("Invalid match index")
             return
@@ -109,10 +104,11 @@ class Tournament:
             print("Winner of the tournament is {}".format(self.winner))
             return
         if len(self.unassigned_players) < 1:
-            print("No players to assign! The tournament should have ended")
+            print("No players to assign, this should not happen!")
             return
         for i in range(match_index + 1, self.match_count):
             match = self.matches[i]
-            if len(match.players) < 2:
+            if len(match.players) < required_player_count:
                 match.players.append(self.unassigned_players.pop())
                 return
+        print("No matches to assign players to")
