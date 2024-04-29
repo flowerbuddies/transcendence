@@ -12,22 +12,22 @@ from random import shuffle
 #   - Number of matches to be played to determine the champion before the any matches are played
 #   - Assign players to matches by modifying the GameState object before a match starts
 
+
 class Match:
     def __init__(self):
-        self.players = []
-        self.winner = None
+        self.players: list[str] = []
+        self.winner: Player = None
 
-# alive_players = await self.get_alive_players()
-# alive_player_names = list(map(lambda player: player.name, alive_players))
 
 class Tournament:
-    def __init__(self, gamestate: 'GameState', player_name_list, is_four_player):
-        self.players = player_name_list
+    def __init__(self, gamestate: "GameState", player_name_list, is_four_player):
+        self.players: list[str] = player_name_list
         self.player_count = len(player_name_list)
         self.match_count = self.player_count - 1
         self.is_four_player = is_four_player
         self.matches = []
-        self.winner = None
+        self.unassigned_players: list[str] = []
+        self.winner: str = None
         self.gamestate = gamestate
         print("Tournament created with {} players".format(self.player_count))
 
@@ -46,13 +46,13 @@ class Tournament:
         if not self.is_four_player:
             self._create_two_player_tournament()
         else:
-            pass # TODO: Implement four player tournament
-            
+            pass  # TODO: Implement four player tournament
+
     def _create_two_player_tournament(self):
         players = self.players
         shuffle(players)
         first_round_match_count = self.player_count // 2
-        
+
         for _ in range(self.match_count):
             self.matches.append(Match())
 
@@ -62,14 +62,14 @@ class Tournament:
             match.players.append(players[offset])
             match.players.append(players[offset + 1])
 
-    def assign_players(self, gamestate: 'GameState', match_index: int):
+    def assign_players(self, gamestate: "GameState", match_index: int):
         """Assigns players to a match based on the match index in the gamestate"""
         if not self.is_four_player:
             self._assign_two_player_match(gamestate, match_index)
         else:
-            pass # TODO: Implement four player tournament match assignment
-    
-    def _assign_two_player_match(self, gs: 'GameState', match_index: int):
+            pass  # TODO: Implement four player tournament match assignment
+
+    def _assign_two_player_match(self, gs: "GameState", match_index: int):
         if match_index < 0 or match_index >= len(self.matches):
             print("Invalid match index")
             return
@@ -79,8 +79,8 @@ class Tournament:
             gs.players[match.players[1]] = gs.right
         else:
             print("Match has invalid number of players")
-        
-    def set_match_winner(self, match_index: int, winner: 'Player'):
+
+    def set_match_winner(self, match_index: int, winner: str):
         if match_index < 0 or match_index >= len(self.matches):
             print("Invalid match index")
             return
@@ -91,4 +91,29 @@ class Tournament:
             print("Match already has a winner")
             return
         self.matches[match_index].winner = winner
-            
+        self.unassigned_players.append(winner)
+        self._assign_future_matches(match_index)
+
+    def _assign_future_matches(self, match_index: int):
+        if not self.is_four_player:
+            self._assign_future_two_player_matches(match_index)
+        else:
+            pass  # TODO: Implement four player tournament future match assignment
+
+    def _assign_future_two_player_matches(self, match_index: int):
+        if match_index < 0 or match_index >= self.match_count:
+            print("Invalid match index")
+            return
+        if match_index == self.match_count - 1:
+            self.winner = self.unassigned_players.pop()
+            print("Winner of the tournament is {}".format(self.winner))
+            return
+        if len(self.unassigned_players) < 2:
+            print("Not enough players to assign to the next match: skipping")
+            return
+        for i in range(match_index + 1, self.match_count):
+            match = self.matches[i]
+            if len(match.players) == 0:
+                match.players.append(self.unassigned_players.pop())
+                match.players.append(self.unassigned_players.pop())
+                return
