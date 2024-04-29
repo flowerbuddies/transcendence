@@ -54,27 +54,20 @@ class Tournament:
         return self.matches[index]
 
     def start_tournament(self):
-        if self.player_count < 2:
-            print("Not enough players to create a tournament (minimum 2 players)")
+        required_player_count = 4 if self.is_four_player else 2
+        if self.player_count < required_player_count:
+            print("Not enough players to create a tournament")
             return
-        if not self.is_four_player:
-            self._create_two_player_tournament()
-        else:
-            pass  # TODO: Implement four player tournament
-
-    def _create_two_player_tournament(self):
         players = self.players
         shuffle(players)
-        first_round_match_count = self.player_count // 2
-
+        first_round_match_count = self.player_count // required_player_count
         for _ in range(self.match_count):
             self.matches.append(Match())
-
         for i in range(first_round_match_count):
-            offset = i * 2
+            offset = i * required_player_count
             match = self.matches[i]
-            match.players.append(players[offset])
-            match.players.append(players[offset + 1])
+            for n in range(required_player_count):
+                match.players.append(players[offset + n])
 
     def assign_player_positions(self, gs: "GameState", match_index: int):
         """Assigns players in a match to their positions in the gamestate object"""
