@@ -64,7 +64,6 @@ class Tournament:
             match = self.matches[i]
             match.players.append(players[offset])
             match.players.append(players[offset + 1])
-            self.matches.append(match)
 
     def assign_players(self, gamestate: 'GameState', match_index: int):
         """Assigns players to a match based on the match index in the gamestate"""
