@@ -43,7 +43,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                     } else {
                         document.getElementById(
                             "score-right"
-                        ).textContent = `${element.name}: ${score}`;
+                        ).textContent = `(right) ${element.name}: ${score}`;
                     }
                 if (
                     element.type == "score" &&
@@ -54,7 +54,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                     } else {
                         document.getElementById(
                             "score-left"
-                        ).textContent = `${element.name}: ${score}`;
+                        ).textContent = `(left) ${element.name}: ${score}`;
                     }
                 if (
                     element.type == "score" &&
@@ -65,7 +65,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                     } else {
                         document.getElementById(
                             "score-top"
-                        ).textContent = `${element.name}: ${score}`;
+                        ).textContent = `(top) ${element.name}: ${score}`;
                     }
                 if (
                     element.type == "score" &&
@@ -77,14 +77,16 @@ function initConn(lobbyName, playerName, key1, key2) {
                     } else {
                         document.getElementById(
                             "score-bottom"
-                        ).textContent = `${element.name}: ${score}`;
+                        ).textContent = `(bottom) ${element.name}: ${score}`;
                     }
             });
         }
         //TODO print player name not side ? and translate or remove
         if (data.type == "end") {
-            //document.getElementById("score-right").textContent = "";
-            //document.getElementById("score-left").textContent = "";
+            document.getElementById("score-right").textContent = "";
+            document.getElementById("score-left").textContent = "";
+            document.getElementById("score-top").textContent = "";
+            document.getElementById("score-bottom").textContent = "";
             document.getElementById(
                 "winner"
             ).textContent = `${data.winner} won woo!`;
