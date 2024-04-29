@@ -125,6 +125,7 @@ function initConn(lobbyName, playerName, key1, key2) {
     }
 
     function keyReleased(ev) {
+        console.log(ev.key);
         if (ev.key === key1) {
             gameSocket.send(
                 JSON.stringify({
