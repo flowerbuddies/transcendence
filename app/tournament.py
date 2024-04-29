@@ -62,7 +62,7 @@ class Tournament:
             match.players.append(players[offset])
             match.players.append(players[offset + 1])
 
-    def assign_players(self, gs: "GameState", match_index: int):
+    def assign_player_positions(self, gs: "GameState", match_index: int):
         """Assigns players to a match based on the match index in the gamestate"""
         required_player_count = 4 if self.is_four_player else 2
         if match_index < 0 or match_index >= len(self.matches):
