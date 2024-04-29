@@ -108,12 +108,11 @@ class Tournament:
             self.winner = self.unassigned_players.pop()
             print("Winner of the tournament is {}".format(self.winner))
             return
-        if len(self.unassigned_players) < 2:
-            print("Not enough players to assign to the next match: skipping")
+        if len(self.unassigned_players) < 1:
+            print("No players to assign! The tournament should have ended")
             return
         for i in range(match_index + 1, self.match_count):
             match = self.matches[i]
-            if len(match.players) == 0:
-                match.players.append(self.unassigned_players.pop())
+            if len(match.players) < 2:
                 match.players.append(self.unassigned_players.pop())
                 return
