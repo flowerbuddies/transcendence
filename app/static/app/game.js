@@ -151,7 +151,7 @@ function initConn(lobbyName, playerName, key1, key2) {
         document.removeEventListener("keyup", keyReleased);
         document.removeEventListener("closeWSConns", () => gameSocket.close());
         gameSocket.close();
-        await setBody("/");
+        await setBody("/join");
     }
 
     // we send the same event for both `keydown` and `keyup`

@@ -65,7 +65,7 @@ class GameState:
             start_time = asyncio.get_event_loop().time()
 
             # update and send state
-            self.update(target_frame_time)
+            await self.update(target_frame_time)
             await self.lobby.channel_layer.group_send(
                 self.lobby.lobby_name, {"type": "scene", "scene": self.get_scene()}
             )
@@ -81,12 +81,12 @@ class GameState:
             self.lobby.lobby_name, {"type": "end", "winner": self.get_winner()}
         )
 
-    def update(self, dt):
+    async def update(self, dt):
         # check if goal scored, update score, reset ball
         self.handle_goal()
 
         # check if players have died and make them into walls
-        self.transform_dead_players()
+        await self.transform_dead_players()
 
         # move paddles
         self.left.paddle.update(dt, self.isFourPlayer)
@@ -114,32 +114,32 @@ class GameState:
             self.bottom.score += 1
             self.ball.reset()
 
-    def transform_dead_players(self):
-        #TODO mark dead players as eliminated
-        if self.left.score == 3:
-            self.lobby.channel_layer.send(
-                self.lobby.lobby_name, {"type": "kill", "target": self.left.name}
+    async def transform_dead_players(self):
+        #TODO potentially refactor into two functions, where the async part is it's separate function
+        if self.left.score == 3 and self.left.side != "wall_left":
+            await self.lobby.channel_layer.send(
+                self.lobby.channel_name, {"type": "kill", "target": self.left.name}
             )
-            if self.isFourPlayer and self.left.side != "wall_left":
+            if self.isFourPlayer:
                 self.left = Player("wall_left", 3)
-        if self.right.score == 3:
-            self.lobby.channel_layer.send(
-                self.lobby.lobby_name, {"type": "kill", "target": self.right.name}
+        if self.right.score == 3 and self.right.side != "wall_right":
+            await self.lobby.channel_layer.send(
+                self.lobby.channel_name, {"type": "kill", "target": self.right.name}
             )
-            if self.isFourPlayer and self.right.side != "wall_right":
+            if self.isFourPlayer:
                 self.right = Player("wall_right", 3)
-        if self.top.score == 3:
-            self.lobby.channel_layer.send(
-                self.lobby.lobby_name, {"type": "kill", "target": self.top.name}
+        if not self.isFourPlayer:
+            return
+        if self.top.score == 3 and self.top.side != "wall_top":
+            await self.lobby.channel_layer.send(
+                self.lobby.channel_name, {"type": "kill", "target": self.top.name}
             )
-            if self.isFourPlayer and self.top.side != "wall_top":
-                self.top = Player("wall_top", 3)
-        if self.bottom.score == 3:
-            self.lobby.channel_layer.send(
-                self.lobby.lobby_name, {"type": "kill", "target": self.lebottomft.name}
+            self.top = Player("wall_top", 3)
+        if self.bottom.score == 3 and self.bottom.side != "wall_bottom":
+            await self.lobby.channel_layer.send(
+                self.lobby.channel_name, {"type": "kill", "target": self.bottom.name}
             )
-            if self.isFourPlayer and self.bottom.side != "wall_bottom":
-                self.bottom = Player("wall_bottom", 3)
+            self.bottom = Player("wall_bottom", 3)
 
     def handle_collisions(self, dt):
         # check the next ball's position for collision with paddles

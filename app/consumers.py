@@ -55,12 +55,16 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def eliminate_player(self):
         player = self.lobby.players.filter(channel_name=self.channel_name).first()
+        if not player or player.is_eliminated:
+            return
         player.is_eliminated = True
         player.save()
 
     @database_sync_to_async
     def kill_by_name(self, player_name):
-        player = self.lobby.players.filter(name=player_name)
+        player = self.lobby.players.filter(name=player_name).first()
+        if not player or player.is_eliminated:
+            return
         player.is_eliminated = True
         player.save()
 
@@ -101,7 +105,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         gs = self.get_game_state()
         if not gs:
             return
-        if not data["player"] in gs.players:
+        if data["player"] not in gs.players:
             return
         player = gs.players[data["player"]]
 
@@ -119,9 +123,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def end(self, event):
         await self.send(text_data=json.dumps(event))
 
-    @database_sync_to_async
     async def kill(self, event):
-        await self.kill_by_name()
+        await self.kill_by_name(event["target"])
+        await self.send_players_list()
 
     async def start_game(self):
         if not self.get_game_state():
@@ -147,7 +151,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     def get_game_state(self):
         try:
             return lobby_to_gs[channel_to_lobby[self.channel_name]]
-        except:
+        except:  # noqa: E722
             return None
 
 
