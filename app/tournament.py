@@ -62,23 +62,21 @@ class Tournament:
             match.players.append(players[offset])
             match.players.append(players[offset + 1])
 
-    def assign_players(self, gamestate: "GameState", match_index: int):
+    def assign_players(self, gs: "GameState", match_index: int):
         """Assigns players to a match based on the match index in the gamestate"""
-        if not self.is_four_player:
-            self._assign_two_player_match(gamestate, match_index)
-        else:
-            pass  # TODO: Implement four player tournament match assignment
-
-    def _assign_two_player_match(self, gs: "GameState", match_index: int):
+        required_player_count = 4 if self.is_four_player else 2
         if match_index < 0 or match_index >= len(self.matches):
             print("Invalid match index")
             return
         match = self.matches[match_index]
-        if len(match.players) == 2:
-            gs.players[match.players[0]] = gs.left
-            gs.players[match.players[1]] = gs.right
-        else:
+        if len(match.players) != required_player_count:
             print("Match has invalid number of players")
+            return
+        gs.players[match.players[0]] = gs.left
+        gs.players[match.players[1]] = gs.right
+        if required_player_count == 4:
+            gs.players[match.players[2]] = gs.top
+            gs.players[match.players[3]] = gs.bottom
 
     def set_match_winner(self, match_index: int, winner: str):
         if match_index < 0 or match_index >= len(self.matches):
