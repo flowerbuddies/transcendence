@@ -1,7 +1,6 @@
 from .game.game import GameState
 from .game.game import Player
 from random import shuffle
-import logging
 
 # Create a tournament class that will create a tournament
 # based on the number of players in the lobby
@@ -22,8 +21,6 @@ class Match:
 # alive_player_names = list(map(lambda player: player.name, alive_players))
 
 class Tournament:
-    logger = logging.getLogger(__name__)
-    
     def __init__(self, gamestate: 'GameState', player_name_list, is_four_player):
         self.players = player_name_list
         self.player_count = len(player_name_list)
@@ -32,7 +29,7 @@ class Tournament:
         self.matches = []
         self.winner = None
         self.gamestate = gamestate
-        self.logger.debug("Tournament created with {} players".format(self.player_count))
+        print("Tournament created with {} players".format(self.player_count))
 
     def get_match_count(self):
         return self.match_count
@@ -44,7 +41,7 @@ class Tournament:
 
     def start_tournament(self):
         if self.player_count < 2:
-            self.logger.error("Not enough players to create a tournament (minimum 2 players)")
+            print("Not enough players to create a tournament (minimum 2 players)")
             return
         if not self.is_four_player:
             self._create_two_player_tournament()
@@ -74,24 +71,24 @@ class Tournament:
     
     def _assign_two_player_match(self, gs: 'GameState', match_index: int):
         if match_index < 0 or match_index >= len(self.matches):
-            self.logger.error("Invalid match index")
+            print("Invalid match index")
             return
         match = self.matches[match_index]
         if len(match.players) == 2:
             gs.players[match.players[0]] = gs.left
             gs.players[match.players[1]] = gs.right
         else:
-            self.logger.error("Match has invalid number of players")
+            print("Match has invalid number of players")
         
     def set_match_winner(self, match_index: int, winner: 'Player'):
         if match_index < 0 or match_index >= len(self.matches):
-            self.logger.error("Invalid match index")
+            print("Invalid match index")
             return
         if winner not in self.matches[match_index].players:
-            self.logger.error("Invalid winner for match")
+            print("Invalid winner for match")
             return
         if self.matches[match_index].winner is not None:
-            self.logger.error("Match already has a winner")
+            print("Match already has a winner")
             return
         self.matches[match_index].winner = winner
             
