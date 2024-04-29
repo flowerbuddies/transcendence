@@ -151,7 +151,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     def get_game_state(self):
         try:
             return lobby_to_gs[channel_to_lobby[self.channel_name]]
-        except:  # noqa: E722
+        except:
             return None
 
 
