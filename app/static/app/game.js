@@ -31,23 +31,65 @@ function initConn(lobbyName, playerName, key1, key2) {
         //TODO translate 'balls missed' or remove
         if (data.type == "scene") {
             data.scene.forEach((element) => {
-                if (element.type == "score" && element.side == "right")
-                    document.getElementById(
-                        "score-right"
-                    ).textContent = `balls missed: ${element.score}/3`;
-                if (element.type == "score" && element.side == "left")
-                    document.getElementById(
-                        "score-left"
-                    ).textContent = `balls missed: ${element.score}/3`;
+                let score = "eliminated";
+                if (element.type == "score" && element.score < 3)
+                    score = ` balls missed ${element.score}/3`;
+                if (
+                    element.type == "score" &&
+                    (element.side == "right" || element.side == "wall_right")
+                )
+                    if (!element.name) {
+                        document.getElementById("score-right").textContent = "";
+                    } else {
+                        document.getElementById(
+                            "score-right"
+                        ).textContent = `(right) ${element.name}: ${score}`;
+                    }
+                if (
+                    element.type == "score" &&
+                    (element.side == "left" || element.side == "wall_left")
+                )
+                    if (!element.name) {
+                        document.getElementById("score-left").textContent = "";
+                    } else {
+                        document.getElementById(
+                            "score-left"
+                        ).textContent = `(left) ${element.name}: ${score}`;
+                    }
+                if (
+                    element.type == "score" &&
+                    (element.side == "top" || element.side == "wall_top")
+                )
+                    if (!element.name) {
+                        document.getElementById("score-top").textContent = "";
+                    } else {
+                        document.getElementById(
+                            "score-top"
+                        ).textContent = `(top) ${element.name}: ${score}`;
+                    }
+                if (
+                    element.type == "score" &&
+                    (element.side == "bottom" || element.side == "wall_bottom")
+                )
+                    if (!element.name) {
+                        document.getElementById("score-bottom").textContent =
+                            "";
+                    } else {
+                        document.getElementById(
+                            "score-bottom"
+                        ).textContent = `(bottom) ${element.name}: ${score}`;
+                    }
             });
         }
         //TODO print player name not side ? and translate or remove
         if (data.type == "end") {
-            //document.getElementById("score-right").textContent = "";
-            //document.getElementById("score-left").textContent = "";
+            document.getElementById("score-right").textContent = "";
+            document.getElementById("score-left").textContent = "";
+            document.getElementById("score-top").textContent = "";
+            document.getElementById("score-bottom").textContent = "";
             document.getElementById(
                 "winner"
-            ).textContent = `${data.winner} side won woo!`;
+            ).textContent = `${data.winner} won woo!`;
             const ctx = document.getElementById("canvas").getContext("2d");
             clearCanvas(ctx);
         }

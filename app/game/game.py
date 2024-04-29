@@ -7,6 +7,11 @@ class Player:
     def __init__(self, side):
         self.side = side
         self.score = 0
+        self.name = None
+        self.paddle = Paddle(side)
+
+    def change_side(self, side):
+        self.side = side
         self.paddle = Paddle(side)
 
 
@@ -29,6 +34,10 @@ class GameState:
 
         self.players = {}
 
+    def assign_players(self):
+        for player in self.players:
+            self.players[player].name = player
+
     def players_alive(self):
         alive_count = 0
         if self.left.score < 3:
@@ -45,21 +54,22 @@ class GameState:
 
     def get_winner(self):
         if self.left.score < 3:
-            return self.left.side
+            return self.left.name
         if self.right.score < 3:
-            return self.right.side
+            return self.right.name
         if self.top.score < 3:
-            return self.top.side
-        return self.bottom.side
+            return self.top.name
+        return self.bottom.name
 
     async def game_loop(self):
         server_frame_time = 0.0
         target_frame_time = 1.0 / 60.0
+        self.assign_players()
         while self.players_alive():
             start_time = asyncio.get_event_loop().time()
 
             # update and send state
-            self.update(target_frame_time)
+            await self.update(target_frame_time)
             await self.lobby.channel_layer.group_send(
                 self.lobby.lobby_name, {"type": "scene", "scene": self.get_scene()}
             )
@@ -75,9 +85,12 @@ class GameState:
             self.lobby.lobby_name, {"type": "end", "winner": self.get_winner()}
         )
 
-    def update(self, dt):
+    async def update(self, dt):
         # check if goal scored, update score, reset ball
         self.handle_goal()
+
+        # check if players have died and make them into walls
+        await self.transform_dead_players()
 
         # move paddles
         self.left.paddle.update(dt, self.isFourPlayer)
@@ -104,6 +117,33 @@ class GameState:
         elif self.ball.y + 2 * self.ball.radius > 1.0:
             self.bottom.score += 1
             self.ball.reset()
+
+    async def transform_dead_players(self):
+        #TODO potentially refactor into two functions, where the async part is it's separate function
+        if self.left.score == 3 and self.left.side != "wall_left":
+            await self.lobby.channel_layer.send(
+                self.lobby.channel_name, {"type": "kill", "target": self.left.name}
+            )
+            if self.isFourPlayer:
+                self.left.change_side("wall_left")
+        if self.right.score == 3 and self.right.side != "wall_right":
+            await self.lobby.channel_layer.send(
+                self.lobby.channel_name, {"type": "kill", "target": self.right.name}
+            )
+            if self.isFourPlayer:
+                self.right.change_side("wall_right")
+        if not self.isFourPlayer:
+            return
+        if self.top.score == 3 and self.top.side != "wall_top":
+            await self.lobby.channel_layer.send(
+                self.lobby.channel_name, {"type": "kill", "target": self.top.name}
+            )
+            self.top.change_side("wall_top")
+        if self.bottom.score == 3 and self.bottom.side != "wall_bottom":
+            await self.lobby.channel_layer.send(
+                self.lobby.channel_name, {"type": "kill", "target": self.bottom.name}
+            )
+            self.bottom.change_side("wall_bottom")
 
     def handle_collisions(self, dt):
         # check the next ball's position for collision with paddles
@@ -177,6 +217,7 @@ class GameState:
         scene.append(
             {
                 "type": "score",
+                "name": player.name,
                 "side": player.side,
                 "score": player.score,
             }
