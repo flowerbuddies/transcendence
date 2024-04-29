@@ -23,8 +23,8 @@ class Tournament:
     def __init__(self, gamestate: "GameState", player_name_list, is_four_player):
         self.players: list[str] = player_name_list
         self.player_count = len(player_name_list)
-        self.match_count = self.player_count - 1
-        self.is_four_player = is_four_player
+        self.match_count = None
+        self.is_four_player: bool = is_four_player
         self.matches = []
         self.unassigned_players: list[str] = []
         self.winner: str = None
@@ -32,6 +32,20 @@ class Tournament:
         print("Tournament created with {} players".format(self.player_count))
 
     def get_match_count(self):
+        if self.match_count is not None:
+            return self.match_count
+        if not self.is_four_player:
+            self.match_count = self.player_count - 1
+            return self.match_count
+        # Code below calculates the number of matches required for a 4 player tournament
+        # it is valid only for player counts that are powers of 4 (4, 16, 64, 256, etc.)
+        total: int = 0
+        rolling: int = self.player_count
+        while rolling > 1:
+            rolling = rolling // 4
+            total += rolling
+        self.match_count = total
+        print("Total matches for 4 player tournament: {}".format(total))
         return self.match_count
 
     def get_match(self, index: int):
