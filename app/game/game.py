@@ -14,9 +14,13 @@ class Player:
         self.side = side
         self.paddle = Paddle(side)
 
+    def reset(self):
+        self.score = 0
+        self.name = None
+
 
 class GameState:
-    def __init__(self, isFourPlayer, lobby):
+    def __init__(self, is_four_player, lobby):
         self.lobby = lobby
         self.is_started = False
 
@@ -24,8 +28,8 @@ class GameState:
 
         self.left = Player("left")
         self.right = Player("right")
-        self.isFourPlayer = isFourPlayer
-        if isFourPlayer:
+        self.is_four_player = is_four_player
+        if is_four_player:
             self.top = Player("top")
             self.bottom = Player("bottom")
         else:
@@ -34,7 +38,7 @@ class GameState:
 
         self.players = {}
 
-    def assign_players(self):
+    def assign_player_names(self):
         for player in self.players:
             self.players[player].name = player
 
@@ -44,7 +48,7 @@ class GameState:
             alive_count += 1
         if self.right.score < 3:
             alive_count += 1
-        if not self.isFourPlayer:
+        if not self.is_four_player:
             return alive_count != 1
         if self.top.score < 3:
             alive_count += 1
@@ -64,7 +68,7 @@ class GameState:
     async def game_loop(self):
         server_frame_time = 0.0
         target_frame_time = 1.0 / 60.0
-        self.assign_players()
+        self.assign_player_names()
         while self.players_alive():
             start_time = asyncio.get_event_loop().time()
 
@@ -80,10 +84,17 @@ class GameState:
             await asyncio.sleep(sleep_time)
             # self.fps_monitor.tick()
 
-        #TODO connect side and player name so win screen can show the name of the player
         await self.lobby.channel_layer.group_send(
             self.lobby.lobby_name, {"type": "end", "winner": self.get_winner()}
         )
+        return self.get_winner()
+
+    def reset_game(self):
+        self.left.reset()
+        self.right.reset()
+        self.top.reset()
+        self.bottom.reset()
+        self.players = {}
 
     async def update(self, dt):
         # check if goal scored, update score, reset ball
@@ -93,10 +104,10 @@ class GameState:
         await self.transform_dead_players()
 
         # move paddles
-        self.left.paddle.update(dt, self.isFourPlayer)
-        self.right.paddle.update(dt, self.isFourPlayer)
-        self.top.paddle.update(dt, self.isFourPlayer)
-        self.bottom.paddle.update(dt, self.isFourPlayer)
+        self.left.paddle.update(dt, self.is_four_player)
+        self.right.paddle.update(dt, self.is_four_player)
+        self.top.paddle.update(dt, self.is_four_player)
+        self.bottom.paddle.update(dt, self.is_four_player)
 
         # set ball dx, dy according to collisions occuring next dt
         self.handle_collisions(dt)
@@ -124,15 +135,15 @@ class GameState:
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.left.name}
             )
-            if self.isFourPlayer:
+            if self.is_four_player:
                 self.left.change_side("wall_left")
         if self.right.score == 3 and self.right.side != "wall_right":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.right.name}
             )
-            if self.isFourPlayer:
+            if self.is_four_player:
                 self.right.change_side("wall_right")
-        if not self.isFourPlayer:
+        if not self.is_four_player:
             return
         if self.top.score == 3 and self.top.side != "wall_top":
             await self.lobby.channel_layer.send(
@@ -174,13 +185,13 @@ class GameState:
                 next.get_edge("left"), paddle.get_edge("bottom")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("bottom")):
                 self.ball.dy *= -1
-                self.ball.apply_accel = self.isFourPlayer
+                self.ball.apply_accel = self.is_four_player
         else:
             if ortho_intersects(
                 next.get_edge("left"), paddle.get_edge("top")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("top")):
                 self.ball.dy *= -1
-                self.ball.apply_accel = self.isFourPlayer
+                self.ball.apply_accel = self.is_four_player
 
     def get_scene(self):
         # returns an array of clientside-supported objects for displaying the gamestate

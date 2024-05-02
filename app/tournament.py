@@ -28,7 +28,7 @@ class Tournament:
         self.matches = []
         self.unassigned_players: list[str] = []
         self.winner: str = None
-        self.gamestate = gamestate
+        self.gamestate = gamestate # <-- not used? t. Noel
         print("Tournament created with {} players".format(self.player_count))
 
     def get_match_count(self):

@@ -1,8 +1,8 @@
 import asyncio
 import json
-import random
 from channels.db import database_sync_to_async
 from .game.game import GameState
+from .tournament import Tournament
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from app.models import Lobby
@@ -38,6 +38,10 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def is_match_four(self):
         return self.lobby.is_match_four
+    
+    @database_sync_to_async
+    def is_tournament(self):
+        return self.lobby.is_tournament
 
     # link the `AsyncWebsocketConsumer`'s channel_name with the db player and the game state
     @database_sync_to_async
@@ -124,29 +128,42 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(event))
 
     async def kill(self, event):
+        print("kill", event["target"]) #TODO remove
         await self.kill_by_name(event["target"])
         await self.send_players_list()
 
+    def end_game(self, _):
+        print("callback called") #TODO do something here or?
+
+    async def run_matches(self):
+        match_index = 0
+        while match_index != self.tournament.get_match_count():
+            print("match index is", match_index) #TODO remove
+            self.tournament.assign_player_positions(self.get_game_state(), match_index)
+            match_winner = await lobby_to_gs[self.lobby.name].game_loop()
+            print("match winner is", match_winner) #TODO remove
+            self.tournament.set_match_winner(match_index, match_winner)
+            lobby_to_gs[self.lobby.name].reset_game()
+            match_index += 1
+            #TODO add a little timer for in between tournament matches?
+        print("winner is", match_winner) #TODO remove
+
     async def start_game(self):
+        #TODO set win after one ball when in tournament
         if not self.get_game_state():
             lobby_to_gs[self.lobby.name] = GameState(await self.is_match_four(), self)
 
         gs = self.get_game_state()
         if not gs.is_started:
-            # TODO: this needs to run for every match
+            gs.is_started = True
+            self.last_match_winner = None
             alive_players = await self.get_alive_players()
             alive_player_names = list(map(lambda player: player.name, alive_players))
-            match_type = 4 if await self.is_match_four() else 2
-            selected_players = random.sample(alive_player_names, match_type)
-
-            gs.players[selected_players[0]] = gs.left
-            gs.players[selected_players[1]] = gs.right
-            if match_type == 4:
-                gs.players[selected_players[2]] = gs.top
-                gs.players[selected_players[3]] = gs.bottom
-
-            asyncio.create_task(lobby_to_gs[self.lobby.name].game_loop())
-            gs.is_started = True
+            self.tournament = Tournament(gs, alive_player_names, gs.is_four_player)
+            self.tournament.get_match_count()
+            self.tournament.start_tournament()
+            task = asyncio.create_task(self.run_matches())
+            task.add_done_callback(self.end_game)
 
     def get_game_state(self):
         try:
