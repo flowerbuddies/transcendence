@@ -16,7 +16,7 @@ chmod -R 755 /var/lib/nginx /var/log/nginx;
 
 USER appuser
 
-RUN pip install --user --no-cache-dir -r requirements.txt; \
+RUN pip install --user --no-cache-dir --no-warn-script-location -r requirements.txt; \
 echo "export PATH=/app/.local/bin:$PATH" >> /app/.profile; \
 sed 's/DEBUG = True/DEBUG = False/g' /app/transcendence/settings.py > /app/transcendence/settings.py.new; \
 mv /app/transcendence/settings.py.new /app/transcendence/settings.py;
