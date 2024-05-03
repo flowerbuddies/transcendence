@@ -1,8 +1,8 @@
 import asyncio
 import json
-import random
 from channels.db import database_sync_to_async
 from .game.game import GameState
+from .tournament import Tournament
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 from app.models import Lobby
@@ -38,6 +38,10 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def is_match_four(self):
         return self.lobby.is_match_four
+    
+    @database_sync_to_async
+    def is_tournament(self):
+        return self.lobby.is_tournament
 
     # link the `AsyncWebsocketConsumer`'s channel_name with the db player and the game state
     @database_sync_to_async
@@ -117,6 +121,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def players(self, event):
         await self.send(text_data=json.dumps(event))
 
+    async def time(self, event):
+        await self.send(text_data=json.dumps(event))
+
     async def scene(self, event):
         await self.send(text_data=json.dumps(event))
 
@@ -127,26 +134,42 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.kill_by_name(event["target"])
         await self.send_players_list()
 
+    def end_game(self, _):
+        pass
+
+    async def match_timer(self):
+        seconds = 3
+        while seconds != 0:
+            await self.channel_layer.group_send(
+                self.lobby_name, {"type": "time", "seconds": seconds}
+            )
+            await asyncio.sleep(1)
+            seconds -= 1
+
+    async def run_matches(self):
+        match_index = 0
+        while match_index != self.tournament.get_match_count():
+            await self.match_timer()
+            self.tournament.assign_player_positions(self.get_game_state(), match_index)
+            match_winner = await lobby_to_gs[self.lobby.name].game_loop()
+            self.tournament.set_match_winner(match_index, match_winner)
+            lobby_to_gs[self.lobby.name].reset_game()
+            match_index += 1
+
     async def start_game(self):
         if not self.get_game_state():
-            lobby_to_gs[self.lobby.name] = GameState(await self.is_match_four(), self)
+            lobby_to_gs[self.lobby.name] = GameState(await self.is_match_four(), await self.is_tournament(), self)
 
         gs = self.get_game_state()
         if not gs.is_started:
-            # TODO: this needs to run for every match
+            gs.is_started = True
             alive_players = await self.get_alive_players()
             alive_player_names = list(map(lambda player: player.name, alive_players))
-            match_type = 4 if await self.is_match_four() else 2
-            selected_players = random.sample(alive_player_names, match_type)
-
-            gs.players[selected_players[0]] = gs.left
-            gs.players[selected_players[1]] = gs.right
-            if match_type == 4:
-                gs.players[selected_players[2]] = gs.top
-                gs.players[selected_players[3]] = gs.bottom
-
-            asyncio.create_task(lobby_to_gs[self.lobby.name].game_loop())
-            gs.is_started = True
+            self.tournament = Tournament(gs, alive_player_names, gs.is_four_player)
+            self.tournament.get_match_count()
+            self.tournament.start_tournament()
+            task = asyncio.create_task(self.run_matches())
+            task.add_done_callback(self.end_game)
 
     def get_game_state(self):
         try:

@@ -82,14 +82,14 @@ def join(request: HttpRequest):
                 )
         elif game_type == "join.type.types.tournament1v1":
             is_tournament = True
-            if player_count % 2:
+            if player_count % 2: # TODO: enforce power of 2 player count
                 return HttpResponseBadRequest(
                     "Player count must be a modulo of 2 for this game mode"
                 )
         elif game_type == "join.type.types.tournament1v1v1v1":
             is_tournament = True
             is_match_four = True
-            if player_count % 4:
+            if player_count % 4: # TODO: enforce power of 4 player count
                 return HttpResponseBadRequest(
                     "Player count must be a modulo of 4 for this game mode"
                 )
