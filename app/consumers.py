@@ -135,7 +135,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.send_players_list()
 
     def end_game(self, _):
-        print("callback called") #TODO do something here or?
+        pass
 
     async def match_timer(self):
         seconds = 3
@@ -163,7 +163,6 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         gs = self.get_game_state()
         if not gs.is_started:
             gs.is_started = True
-            self.last_match_winner = None
             alive_players = await self.get_alive_players()
             alive_player_names = list(map(lambda player: player.name, alive_players))
             self.tournament = Tournament(gs, alive_player_names, gs.is_four_player)
