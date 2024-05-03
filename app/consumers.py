@@ -140,7 +140,6 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def match_timer(self):
         seconds = 3
         while seconds != 0:
-            print(seconds)
             await self.channel_layer.group_send(
                 self.lobby_name, {"type": "time", "seconds": seconds}
             )
