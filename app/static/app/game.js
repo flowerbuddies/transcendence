@@ -28,7 +28,14 @@ function initConn(lobbyName, playerName, key1, key2) {
                 }">${player.name} ${player.is_ai ? "🤖" : ""}</li>`;
             list.innerHTML = content;
         }
+        //TODO translate
+        if (data.type == "time") {
+            document.getElementById(
+                "score-top"
+            ).textContent = `match in ${data.seconds}..`;
+        }
         //TODO translate 'balls missed' or remove
+        //TODO make it be balls missed x/1 instead of x/3 for the tournament
         if (data.type == "scene") {
             data.scene.forEach((element) => {
                 let score = "eliminated";
@@ -81,7 +88,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                     }
             });
         }
-        //TODO print player name not side ? and translate or remove
+        //TODO translate
         if (data.type == "end") {
             document.getElementById("score-right").textContent = "";
             document.getElementById("score-left").textContent = "";

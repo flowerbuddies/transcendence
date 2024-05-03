@@ -121,6 +121,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def players(self, event):
         await self.send(text_data=json.dumps(event))
 
+    async def time(self, event):
+        await self.send(text_data=json.dumps(event))
+
     async def scene(self, event):
         await self.send(text_data=json.dumps(event))
 
@@ -128,30 +131,35 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(event))
 
     async def kill(self, event):
-        print("kill", event["target"]) #TODO remove
         await self.kill_by_name(event["target"])
         await self.send_players_list()
 
     def end_game(self, _):
         print("callback called") #TODO do something here or?
 
+    async def match_timer(self):
+        seconds = 3
+        while seconds != 0:
+            print(seconds)
+            await self.channel_layer.group_send(
+                self.lobby_name, {"type": "time", "seconds": seconds}
+            )
+            await asyncio.sleep(1)
+            seconds -= 1
+
     async def run_matches(self):
         match_index = 0
         while match_index != self.tournament.get_match_count():
-            print("match index is", match_index) #TODO remove
+            await self.match_timer()
             self.tournament.assign_player_positions(self.get_game_state(), match_index)
             match_winner = await lobby_to_gs[self.lobby.name].game_loop()
-            print("match winner is", match_winner) #TODO remove
             self.tournament.set_match_winner(match_index, match_winner)
             lobby_to_gs[self.lobby.name].reset_game()
             match_index += 1
-            #TODO add a little timer for in between tournament matches?
-        print("winner is", match_winner) #TODO remove
 
     async def start_game(self):
-        #TODO set win after one ball when in tournament
         if not self.get_game_state():
-            lobby_to_gs[self.lobby.name] = GameState(await self.is_match_four(), self)
+            lobby_to_gs[self.lobby.name] = GameState(await self.is_match_four(), await self.is_tournament(), self)
 
         gs = self.get_game_state()
         if not gs.is_started:

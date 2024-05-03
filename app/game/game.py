@@ -20,7 +20,7 @@ class Player:
 
 
 class GameState:
-    def __init__(self, is_four_player, lobby):
+    def __init__(self, is_four_player, is_tournament, lobby):
         self.lobby = lobby
         self.is_started = False
 
@@ -29,6 +29,9 @@ class GameState:
         self.left = Player("left")
         self.right = Player("right")
         self.is_four_player = is_four_player
+        self.score_to_lose = 3
+        if is_tournament:
+            self.score_to_lose = 1
         if is_four_player:
             self.top = Player("top")
             self.bottom = Player("bottom")
@@ -44,24 +47,24 @@ class GameState:
 
     def players_alive(self):
         alive_count = 0
-        if self.left.score < 3:
+        if self.left.score < self.score_to_lose:
             alive_count += 1
-        if self.right.score < 3:
+        if self.right.score < self.score_to_lose:
             alive_count += 1
         if not self.is_four_player:
             return alive_count != 1
-        if self.top.score < 3:
+        if self.top.score < self.score_to_lose:
             alive_count += 1
-        if self.bottom.score < 3:
+        if self.bottom.score < self.score_to_lose:
             alive_count += 1
         return alive_count != 1
 
     def get_winner(self):
-        if self.left.score < 3:
+        if self.left.score < self.score_to_lose:
             return self.left.name
-        if self.right.score < 3:
+        if self.right.score < self.score_to_lose:
             return self.right.name
-        if self.top.score < 3:
+        if self.top.score < self.score_to_lose:
             return self.top.name
         return self.bottom.name
 
@@ -131,13 +134,13 @@ class GameState:
 
     async def transform_dead_players(self):
         #TODO potentially refactor into two functions, where the async part is it's separate function
-        if self.left.score == 3 and self.left.side != "wall_left":
+        if self.left.score == self.score_to_lose and self.left.side != "wall_left":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.left.name}
             )
             if self.is_four_player:
                 self.left.change_side("wall_left")
-        if self.right.score == 3 and self.right.side != "wall_right":
+        if self.right.score == self.score_to_lose and self.right.side != "wall_right":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.right.name}
             )
@@ -145,12 +148,12 @@ class GameState:
                 self.right.change_side("wall_right")
         if not self.is_four_player:
             return
-        if self.top.score == 3 and self.top.side != "wall_top":
+        if self.top.score == self.score_to_lose and self.top.side != "wall_top":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.top.name}
             )
             self.top.change_side("wall_top")
-        if self.bottom.score == 3 and self.bottom.side != "wall_bottom":
+        if self.bottom.score == self.score_to_lose and self.bottom.side != "wall_bottom":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.bottom.name}
             )
