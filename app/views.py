@@ -62,10 +62,8 @@ def join(request: HttpRequest):
             "Player 2 name must be between 1 and 12 characters"
         )
 
-    if (fields["player-1-name"] == fields["player-2-name"]):
-        return HttpResponseBadRequest(
-            "Players 1 and 2 can't have the same name"
-        )
+    if fields["player-1-name"] == fields["player-2-name"]:
+        return HttpResponseBadRequest("Players 1 and 2 can't have the same name")
 
     is_tournament = False
     is_match_four = False
