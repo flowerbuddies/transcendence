@@ -45,6 +45,12 @@ class GameState:
         for player in self.players:
             self.players[player].name = player
 
+    async def set_up_match(self):
+        self.assign_player_names()
+        await self.lobby.channel_layer.group_send(
+            self.lobby.lobby_name, {"type": "scene", "scene": self.get_start_scene()}
+        )
+
     def players_alive(self):
         alive_count = 0
         if self.left.score < self.score_to_lose:
@@ -71,7 +77,6 @@ class GameState:
     async def game_loop(self):
         server_frame_time = 0.0
         target_frame_time = 1.0 / 60.0
-        self.assign_player_names()
         while self.players_alive():
             start_time = asyncio.get_event_loop().time()
 
@@ -202,10 +207,19 @@ class GameState:
 
         self.ball_to_scene(scene)
 
-        self.player_to_scene(self.left, scene)
-        self.player_to_scene(self.right, scene)
-        self.player_to_scene(self.top, scene)
-        self.player_to_scene(self.bottom, scene)
+        self.player_to_scene(self.left, scene, True)
+        self.player_to_scene(self.right, scene, True)
+        self.player_to_scene(self.top, scene, True)
+        self.player_to_scene(self.bottom, scene, True)
+        return scene
+
+    def get_start_scene(self):
+        scene = []
+
+        self.player_to_scene(self.left, scene, False)
+        self.player_to_scene(self.right, scene, False)
+        self.player_to_scene(self.top, scene, False)
+        self.player_to_scene(self.bottom, scene, False)
         return scene
 
     def ball_to_scene(self, scene):
@@ -227,7 +241,7 @@ class GameState:
             }
         )
 
-    def player_to_scene(self, player, scene):
+    def player_to_scene(self, player, scene, with_paddle):
         scene.append(
             {
                 "type": "score",
@@ -236,7 +250,8 @@ class GameState:
                 "score": player.score,
             }
         )
-        self.paddle_to_scene(player.paddle, scene)
+        if with_paddle:
+            self.paddle_to_scene(player.paddle, scene)
 
     def paddle_to_scene(self, paddle, scene):
         is_vertical_paddle = paddle.side == "left" or paddle.side == "right"

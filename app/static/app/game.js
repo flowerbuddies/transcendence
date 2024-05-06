@@ -30,9 +30,9 @@ function initConn(lobbyName, playerName, key1, key2) {
         }
         //TODO translate
         if (data.type == "time") {
-            document.getElementById(
-                "score-top"
-            ).textContent = `match in ${data.seconds}..`;
+            let content = "";
+            if (data.seconds != 0) content = `match in ${data.seconds}..`;
+            document.getElementById("info").textContent = content;
         }
         //TODO translate 'balls missed' or remove
         //TODO make it be balls missed x/1 instead of x/3 for the tournament

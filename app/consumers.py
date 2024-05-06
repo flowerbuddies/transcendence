@@ -151,18 +151,20 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     async def match_timer(self):
         seconds = 3
-        while seconds != 0:
+        while seconds != -1:
             await self.channel_layer.group_send(
                 self.lobby_name, {"type": "time", "seconds": seconds}
             )
-            await asyncio.sleep(1)
+            if seconds != 0:
+                await asyncio.sleep(1)
             seconds -= 1
 
     async def run_matches(self):
         match_index = 0
         while match_index != self.tournament.get_match_count():
-            await self.match_timer()
             self.tournament.assign_player_positions(self.get_game_state(), match_index)
+            await lobby_to_gs[self.lobby.name].set_up_match()
+            await self.match_timer()
             match_winner = await lobby_to_gs[self.lobby.name].game_loop()
             self.tournament.set_match_winner(match_index, match_winner)
             lobby_to_gs[self.lobby.name].reset_game()
