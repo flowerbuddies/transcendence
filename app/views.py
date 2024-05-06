@@ -1,9 +1,22 @@
 from django.utils.translation import gettext as _
 import re
+from math import log
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from app.models import Lobby
 from django.template.defaulttags import register
+
+
+def is_power_of_two(n: int) -> bool:
+    if n <= 0:
+        return False
+    return log(n, 2).is_integer()
+
+
+def is_power_of_four(n: int) -> bool:
+    if n <= 0:
+        return False
+    return log(n, 4).is_integer()
 
 
 @register.filter
@@ -49,10 +62,8 @@ def join(request: HttpRequest):
             "Player 2 name must be between 1 and 12 characters"
         )
 
-    if (fields["player-1-name"] == fields["player-2-name"]):
-        return HttpResponseBadRequest(
-            "Players 1 and 2 can't have the same name"
-        )
+    if fields["player-1-name"] == fields["player-2-name"]:
+        return HttpResponseBadRequest("Players 1 and 2 can't have the same name")
 
     is_tournament = False
     is_match_four = False
@@ -82,16 +93,16 @@ def join(request: HttpRequest):
                 )
         elif game_type == "join.type.types.tournament1v1":
             is_tournament = True
-            if player_count % 2: # TODO: enforce power of 2 player count
+            if not is_power_of_two(player_count):
                 return HttpResponseBadRequest(
-                    "Player count must be a modulo of 2 for this game mode"
+                    "Player count must be a power of 2 for this game mode"
                 )
         elif game_type == "join.type.types.tournament1v1v1v1":
             is_tournament = True
             is_match_four = True
-            if player_count % 4: # TODO: enforce power of 4 player count
+            if not is_power_of_four(player_count):
                 return HttpResponseBadRequest(
-                    "Player count must be a modulo of 4 for this game mode"
+                    "Player count must be a power of 4 for this game mode"
                 )
         else:
             return HttpResponseBadRequest("Invalid game mode")

@@ -26,6 +26,7 @@
               form="lobby-{{ forloop.counter }}"
               required
               name="type"
+              id="type-select"
               aria-label="{% trans "join.type.title" %}">
         <option value="join.type.types.tournament1v1">{% trans "join.type.types.tournament1v1" %}</option>
         <option value="join.type.types.tournament1v1v1v1">{% trans "join.type.types.tournament1v1v1v1" %}</option>
@@ -51,10 +52,11 @@
               form="lobby-{{ forloop.counter }}"
               required
               name="players"
+              id="players-select"
               aria-label="{% trans "join.players.player_slots" %}">
-        <option value="2">2</option>
-        <option value="4">4</option>
-        <option value="8">8</option>
+        <option value="2">2 (fallback)</option>
+        <option value="4">4 (fallback)</option>
+        <option value="8">8 (fallback)</option>
       </select>
     {% endif %}
   </td>

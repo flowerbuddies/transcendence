@@ -1,7 +1,9 @@
 import { registerJoinForms } from '/static/app/join.js';
+import { registerPlayerOptionsUpdate } from "/static/app/options.js";
 
 history.replaceState('join', null);
 registerJoinForms();
+registerPlayerOptionsUpdate();
 
 const closeWSConnsEvent = new Event('closeWSConns');
 
