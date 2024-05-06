@@ -1,6 +1,6 @@
 {% load i18n %}
 <main>
-  <div class="join">
+  <div id="join">
   <table class="table">
     <thead>
       <tr>

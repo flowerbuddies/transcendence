@@ -142,9 +142,17 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def end(self, event):
         await self.send(text_data=json.dumps(event))
 
+    async def winner(self, event):
+        await self.send(text_data=json.dumps(event))
+
     async def kill(self, event):
         await self.kill_by_name(event["target"])
         await self.send_players_list()
+
+    async def send_tournament_winner(self, name):
+        await self.channel_layer.group_send(
+            self.lobby_name, {"type": "winner", "winner": name}
+        )
 
     def end_game(self, _):
         pass
@@ -169,6 +177,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             self.tournament.set_match_winner(match_index, match_winner)
             lobby_to_gs[self.lobby.name].reset_game()
             match_index += 1
+        if await self.is_tournament():
+            await self.send_tournament_winner(match_winner)
 
     async def start_game(self):
         if not self.get_game_state():

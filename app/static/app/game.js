@@ -96,9 +96,14 @@ function initConn(lobbyName, playerName, key1, key2) {
             document.getElementById("score-bottom").textContent = "";
             document.getElementById(
                 "winner"
-            ).textContent = `${data.winner} won woo!`;
+            ).textContent = `${data.winner} won the match woo!`;
             const ctx = document.getElementById("canvas").getContext("2d");
             clearCanvas(ctx);
+        }
+        if (data.type == "winner") {
+            document.getElementById(
+                "winner"
+            ).textContent = `${data.winner} won the tournament wowieee!!`;
         }
     };
 
