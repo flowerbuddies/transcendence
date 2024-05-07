@@ -154,6 +154,18 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             self.lobby_name, {"type": "winner", "winner": name}
         )
 
+    async def update_next_match_info(self, index):
+        players = []
+        match = self.tournament.get_match(index)
+        print(index)
+        if match:
+            for player in match.players:
+                players = player
+                print(player)
+        # await self.channel_layer.group_send(
+        #     self.lobby_name, {"type": "next_match", "players": players}
+        # )
+
     def end_game(self, _):
         pass
 
@@ -171,12 +183,15 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         match_index = 0
         while match_index != self.tournament.get_match_count():
             self.tournament.assign_player_positions(self.get_game_state(), match_index)
+            await self.update_next_match_info(match_index + 1)
             await lobby_to_gs[self.lobby.name].set_up_match()
             await self.match_timer()
             match_winner = await lobby_to_gs[self.lobby.name].game_loop()
             self.tournament.set_match_winner(match_index, match_winner)
+            await self.update_next_match_info(match_index + 1)
             lobby_to_gs[self.lobby.name].reset_game()
             match_index += 1
+            
         if await self.is_tournament():
             await self.send_tournament_winner(match_winner)
 
