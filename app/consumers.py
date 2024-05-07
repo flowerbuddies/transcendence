@@ -55,12 +55,13 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     def is_ready_to_start(self):
         return len(self.lobby.players.all()) == self.lobby.max_players
 
-    # eliminate a player
+    # mark player as disconnected
     @database_sync_to_async
-    def eliminate_player(self):
+    def disconnect_player(self):
         player = self.lobby.players.filter(channel_name=self.channel_name).first()
-        if not player or player.is_eliminated:
+        if not player or player.is_disconnected:
             return
+        player.is_disconnected = True
         player.is_eliminated = True
         player.save()
 
@@ -71,6 +72,14 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             return
         player.is_eliminated = True
         player.save()
+
+    @database_sync_to_async
+    def is_lobby_empty(self):
+       return len(self.lobby.players.filter(is_disconnected=False)) == 0
+
+    @database_sync_to_async
+    def delete_lobby(self):
+       self.lobby.delete()
 
     async def send_players_list(self):
         players, max_players = await self.get_players()
@@ -90,9 +99,12 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.send_players_list()
 
     async def disconnect(self, _):
-        await self.eliminate_player()
+        await self.disconnect_player()
         await self.channel_layer.group_discard(self.lobby_name, self.channel_name)
-        await self.send_players_list()
+        if await self.is_lobby_empty():
+           await self.delete_lobby()
+        else:
+            await self.send_players_list()
 
     async def receive(self, text_data):
         data = json.loads(text_data)
