@@ -37,10 +37,19 @@ function initConn(lobbyName, playerName, key1, key2) {
         //TODO translate 'balls missed' or remove
         //TODO make it be balls missed x/1 instead of x/3 for the tournament
         if (data.type == "scene") {
+            document.getElementById("score-right").textContent = "";
+            document.getElementById("score-left").textContent = "";
+            document.getElementById("score-top").textContent = "";
+            document.getElementById("score-bottom").textContent = "";
             data.scene.forEach((element) => {
-                let score = "eliminated";
-                if (element.type == "score" && element.score < 3)
-                    score = ` balls missed ${element.score}/3`;
+                let score = ": eliminated";
+                if (data.is_tournament && element.score < 1) score = "";
+                else if (
+                    !data.is_tournament &&
+                    element.type == "score" &&
+                    element.score < 3
+                )
+                    score = `: balls missed ${element.score}/3`;
                 if (
                     element.type == "score" &&
                     (element.side == "right" || element.side == "wall_right")
@@ -50,7 +59,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                     } else {
                         document.getElementById(
                             "score-right"
-                        ).textContent = `(right) ${element.name}: ${score}`;
+                        ).textContent = `(right) ${element.name}${score}`;
                     }
                 if (
                     element.type == "score" &&
@@ -61,7 +70,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                     } else {
                         document.getElementById(
                             "score-left"
-                        ).textContent = `(left) ${element.name}: ${score}`;
+                        ).textContent = `(left) ${element.name}${score}`;
                     }
                 if (
                     element.type == "score" &&
@@ -72,7 +81,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                     } else {
                         document.getElementById(
                             "score-top"
-                        ).textContent = `(top) ${element.name}: ${score}`;
+                        ).textContent = `(top) ${element.name}${score}`;
                     }
                 if (
                     element.type == "score" &&
@@ -84,7 +93,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                     } else {
                         document.getElementById(
                             "score-bottom"
-                        ).textContent = `(bottom) ${element.name}: ${score}`;
+                        ).textContent = `(bottom) ${element.name}${score}`;
                     }
             });
         }
@@ -108,10 +117,6 @@ function initConn(lobbyName, playerName, key1, key2) {
         }
         //TODO translate
         if (data.type == "end") {
-            document.getElementById("score-right").textContent = "";
-            document.getElementById("score-left").textContent = "";
-            document.getElementById("score-top").textContent = "";
-            document.getElementById("score-bottom").textContent = "";
             document.getElementById(
                 "winner"
             ).textContent = `${data.winner} won the match woo!`;

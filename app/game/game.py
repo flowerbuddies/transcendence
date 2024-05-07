@@ -29,6 +29,7 @@ class GameState:
         self.left = Player("left")
         self.right = Player("right")
         self.is_four_player = is_four_player
+        self.is_tournament = is_tournament
         self.score_to_lose = 3
         if is_tournament:
             self.score_to_lose = 1
@@ -48,7 +49,7 @@ class GameState:
     async def set_up_match(self):
         self.assign_player_names()
         await self.lobby.channel_layer.group_send(
-            self.lobby.lobby_name, {"type": "scene", "scene": self.get_start_scene()}
+            self.lobby.lobby_name, {"type": "scene", "scene": self.get_start_scene(), "is_tournament": self.is_tournament}
         )
 
     def players_alive(self):
@@ -83,7 +84,7 @@ class GameState:
             # update and send state
             await self.update(target_frame_time)
             await self.lobby.channel_layer.group_send(
-                self.lobby.lobby_name, {"type": "scene", "scene": self.get_scene()}
+                self.lobby.lobby_name, {"type": "scene", "scene": self.get_scene(), "is_tournament": self.is_tournament}
             )
 
             # sleep to maintain client refresh rate
