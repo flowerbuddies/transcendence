@@ -211,8 +211,16 @@ function initScene() {
 }
 
 export function joinLobby(lobbyName, player1Name, player2Name) {
+    document.getElementById(
+        "player-one-keys"
+    ).textContent = `${player1Name} controls: ↑ ↓`;
     initConn(lobbyName, player1Name, "ArrowUp", "ArrowDown");
-    if (player2Name) initConn(lobbyName, player2Name, "q", "a");
+    if (player2Name) {
+        document.getElementById(
+            "player-two-keys"
+        ).textContent = `${player2Name} controls: Q A`;
+        initConn(lobbyName, player2Name, "q", "a");
+    }
     initScene();
 }
 
