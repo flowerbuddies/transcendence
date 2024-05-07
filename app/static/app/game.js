@@ -88,6 +88,24 @@ function initConn(lobbyName, playerName, key1, key2) {
                     }
             });
         }
+        if (data.type == "next_match") {
+            let content = "";
+            if (data.players.length > 0) {
+                content = "next match: ";
+                for (let i = 0; i < data.amount; i++) {
+                    if (data.players.length <= i) {
+                        content += "???";
+                    } else {
+                        content += data.players[i];
+                        data.players[i];
+                    }
+                    if (i + 1 != data.amount) {
+                        content += " vs. ";
+                    }
+                }
+            }
+            document.getElementById("next-match").textContent = content;
+        }
         //TODO translate
         if (data.type == "end") {
             document.getElementById("score-right").textContent = "";

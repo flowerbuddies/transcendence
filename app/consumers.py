@@ -145,6 +145,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def winner(self, event):
         await self.send(text_data=json.dumps(event))
 
+    async def next_match(self, event):
+        await self.send(text_data=json.dumps(event))
+
     async def kill(self, event):
         await self.kill_by_name(event["target"])
         await self.send_players_list()
@@ -155,16 +158,17 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         )
 
     async def update_next_match_info(self, index):
+        amount = 2
+        if await self.is_match_four():
+            amount = 4
         players = []
         match = self.tournament.get_match(index)
-        print(index)
         if match:
             for player in match.players:
-                players = player
-                print(player)
-        # await self.channel_layer.group_send(
-        #     self.lobby_name, {"type": "next_match", "players": players}
-        # )
+                players.append(player)
+        await self.channel_layer.group_send(
+            self.lobby_name, {"type": "next_match", "players": players, "amount": amount}
+        )
 
     def end_game(self, _):
         pass

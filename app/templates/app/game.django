@@ -1,7 +1,8 @@
 {% load i18n %}
 <main class="row align-items-center vh-100">
   <div class="col-3">
-    <p id="info" class="text-center">waiting on players..</p>
+    <p id="info">waiting on players..</p>
+    <p id="next-match"></p>
     <p id="players-connected"></p>
     <ul id="players-list" class="list-group">
     </ul>
