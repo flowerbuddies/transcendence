@@ -14,9 +14,17 @@ class Player:
         self.side = side
         self.paddle = Paddle(side)
 
-    def reset(self):
+    def reset(self, is_four_player):
         self.score = 0
         self.name = None
+        if self.side == "wall_right":
+            self.change_side("right")
+        if self.side == "wall_left":
+            self.change_side("left")
+        if self.side == "wall_top" and is_four_player:
+            self.change_side("top")
+        if self.side == "wall_bottom" and is_four_player:
+            self.change_side("bottom")
 
 
 class GameState:
@@ -99,10 +107,10 @@ class GameState:
         return self.get_winner()
 
     def reset_game(self):
-        self.left.reset()
-        self.right.reset()
-        self.top.reset()
-        self.bottom.reset()
+        self.left.reset(self.is_four_player)
+        self.right.reset(self.is_four_player)
+        self.top.reset(self.is_four_player)
+        self.bottom.reset(self.is_four_player)
         self.players = {}
 
     async def update(self, dt):
