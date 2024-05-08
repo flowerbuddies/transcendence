@@ -40,6 +40,7 @@ function copy_env_file_if_not_exists() {
         echo "$variable variable (or more) is missing in .env file, copying .env.example file to .env."
         rm .env
         cp .env.example .env
+        touch .flag_reset_db
         break
       fi
     done
