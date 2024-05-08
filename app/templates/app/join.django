@@ -1,5 +1,6 @@
 {% load i18n %}
 <main>
+  <div id="join">
   <table class="table">
     <thead>
       <tr>
@@ -18,6 +19,7 @@
       {% include "app/join_row.django" %}
     </tbody>
   </table>
+  </div>
 </main>
 {% comment %} language selector {% endcomment %}
 <footer class="fixed-bottom">

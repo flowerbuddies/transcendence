@@ -84,7 +84,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def send_players_list(self):
         players, max_players = await self.get_players()
         await self.channel_layer.group_send(
-            self.lobby_name, {"type": "players", "players": players, "max": max_players}
+            self.lobby_name, {"type": "players", "players": sorted(players, key=lambda item: item["is_eliminated"]), "max": max_players}
         )
 
     async def connect(self):
@@ -142,31 +142,62 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def end(self, event):
         await self.send(text_data=json.dumps(event))
 
+    async def winner(self, event):
+        await self.send(text_data=json.dumps(event))
+
+    async def next_match(self, event):
+        await self.send(text_data=json.dumps(event))
+
     async def kill(self, event):
         await self.kill_by_name(event["target"])
         await self.send_players_list()
+
+    async def send_tournament_winner(self, name):
+        await self.channel_layer.group_send(
+            self.lobby_name, {"type": "winner", "winner": name}
+        )
+
+    async def update_next_match_info(self, index):
+        amount = 2
+        if await self.is_match_four():
+            amount = 4
+        players = []
+        match = self.tournament.get_match(index)
+        if match:
+            for player in match.players:
+                players.append(player)
+        await self.channel_layer.group_send(
+            self.lobby_name, {"type": "next_match", "players": players, "amount": amount}
+        )
 
     def end_game(self, _):
         pass
 
     async def match_timer(self):
         seconds = 3
-        while seconds != 0:
+        while seconds != -1:
             await self.channel_layer.group_send(
                 self.lobby_name, {"type": "time", "seconds": seconds}
             )
-            await asyncio.sleep(1)
+            if seconds != 0:
+                await asyncio.sleep(1)
             seconds -= 1
 
     async def run_matches(self):
         match_index = 0
         while match_index != self.tournament.get_match_count():
-            await self.match_timer()
             self.tournament.assign_player_positions(self.get_game_state(), match_index)
+            await self.update_next_match_info(match_index + 1)
+            await lobby_to_gs[self.lobby.name].set_up_match()
+            await self.match_timer()
             match_winner = await lobby_to_gs[self.lobby.name].game_loop()
             self.tournament.set_match_winner(match_index, match_winner)
+            await self.update_next_match_info(match_index + 1)
             lobby_to_gs[self.lobby.name].reset_game()
             match_index += 1
+            
+        if await self.is_tournament():
+            await self.send_tournament_winner(match_winner)
 
     async def start_game(self):
         if not self.get_game_state():
