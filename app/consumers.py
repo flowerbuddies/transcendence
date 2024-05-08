@@ -84,7 +84,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def send_players_list(self):
         players, max_players = await self.get_players()
         await self.channel_layer.group_send(
-            self.lobby_name, {"type": "players", "players": players, "max": max_players}
+            self.lobby_name, {"type": "players", "players": sorted(players, key=lambda item: item["is_eliminated"]), "max": max_players}
         )
 
     async def connect(self):
