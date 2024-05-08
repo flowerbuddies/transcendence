@@ -32,6 +32,7 @@ function copy_env_file_if_not_exists() {
                         "DJANGO_SUPERUSER_USERNAME" \
                         "DJANGO_SUPERUSER_PASSWORD" \
                         "HOST_DOMAIN" \
+                        "DJANGO_ALLOWED_HOSTS" \
                         "DJANGO_SECRET_KEY")
     for variable in "${required_variables[@]}"; do
       if ! grep -q "$variable" .env; then

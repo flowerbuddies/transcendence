@@ -31,9 +31,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # This is automatically set to False when deploying with Docker Compose and our Dockerfile
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "*",
-]
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS").split(",")
 
 # Necessary for Django to work behind a reverse proxy with HTTPS
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
