@@ -2,8 +2,15 @@ import { setBody } from "/static/app/index.js";
 let data = {};
 
 function initConn(lobbyName, playerName, key1, key2) {
+    const gameSocketProtocol =
+        window.location.protocol === "https:" ? "wss:" : "ws:";
     const gameSocket = new WebSocket(
-        "ws://" + window.location.host + "/ws/lobby/" + lobbyName + "/"
+        gameSocketProtocol +
+            "//" +
+            window.location.host +
+            "/ws/lobby/" +
+            lobbyName +
+            "/"
     );
 
     gameSocket.onopen = () => {

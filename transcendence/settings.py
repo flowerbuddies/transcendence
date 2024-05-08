@@ -35,6 +35,9 @@ ALLOWED_HOSTS = [
     "*",
 ]
 
+# Necessary for Django to work behind a reverse proxy with HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 
 # Application definition
 

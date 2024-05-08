@@ -5,12 +5,12 @@ WORKDIR /app
 COPY . .
 
 RUN \
-apk add --no-cache python3 python3-dev py3-pip gettext tini build-base libffi-dev nginx; \
+apk add --no-cache python3 python3-dev py3-pip gettext tini build-base libffi-dev nginx envsubst openssl; \
 pip install --no-cache-dir --upgrade --break-system-packages pip setuptools-scm; \
 addgroup -g 1000 appuser; \
 adduser -u 1000 -G appuser -D -h /app appuser; \
 chmod +x /app/docker-entrypoint.sh; \
-mkdir -p /var/lib/nginx/tmp /var/log/nginx /app/logs; \
+mkdir -p /var/lib/nginx/tmp /var/log/nginx /app/logs /app/templates /app/certs; \
 chown -R appuser:appuser /var/lib/nginx /var/log/nginx /app; \
 chmod -R 755 /var/lib/nginx /var/log/nginx;
 
