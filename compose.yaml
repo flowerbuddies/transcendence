@@ -2,9 +2,13 @@
 services:
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-    - "8080:8080"
+      - "8443:8443"
+    volumes:
+      - ./nginx.conf:/app/templates/nginx.conf:ro
     depends_on:
       db:
         condition: service_healthy

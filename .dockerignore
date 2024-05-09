@@ -9,3 +9,4 @@ pgdata
 __pycache__
 *.mo
 Dockerfile
+nginx.conf
