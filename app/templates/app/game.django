@@ -32,8 +32,8 @@
         <p class="d-inline-block" id="score-left"></p>
       </div>
       <div class="col-md-6 text-end">
-        <p class="d-inline-block me-2 row" id="score-bottom"></p>
-        <svg class="row" width="24" height="24" id="bottom-icon">
+        <p class="d-inline-block me-2" id="score-bottom"></p>
+        <svg width="24" height="24" id="bottom-icon">
         </svg>
       </div>
     </div>
