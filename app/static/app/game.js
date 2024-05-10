@@ -1,4 +1,5 @@
 import { setBody } from "/static/app/index.js";
+import { leftIcon, rightIcon, topIcon, bottomIcon } from "/static/app/icons.js";
 let data = {};
 
 function initConn(lobbyName, playerName, key1, key2) {
@@ -61,9 +62,9 @@ function initConn(lobbyName, playerName, key1, key2) {
                     element.type == "score" &&
                     (element.side == "right" || element.side == "wall_right")
                 )
-                    if (!element.name) {
-                        document.getElementById("score-right").textContent = "";
-                    } else {
+                    if (element.name) {
+                        document.getElementById("right-icon").innerHTML =
+                            rightIcon;
                         document.getElementById(
                             "score-right"
                         ).textContent = `(right) ${element.name}${score}`;
@@ -72,9 +73,9 @@ function initConn(lobbyName, playerName, key1, key2) {
                     element.type == "score" &&
                     (element.side == "left" || element.side == "wall_left")
                 )
-                    if (!element.name) {
-                        document.getElementById("score-left").textContent = "";
-                    } else {
+                    if (element.name) {
+                        document.getElementById("left-icon").innerHTML =
+                            leftIcon;
                         document.getElementById(
                             "score-left"
                         ).textContent = `(left) ${element.name}${score}`;
@@ -83,9 +84,8 @@ function initConn(lobbyName, playerName, key1, key2) {
                     element.type == "score" &&
                     (element.side == "top" || element.side == "wall_top")
                 )
-                    if (!element.name) {
-                        document.getElementById("score-top").textContent = "";
-                    } else {
+                    if (element.name) {
+                        document.getElementById("top-icon").innerHTML = topIcon;
                         document.getElementById(
                             "score-top"
                         ).textContent = `(top) ${element.name}${score}`;
@@ -94,10 +94,9 @@ function initConn(lobbyName, playerName, key1, key2) {
                     element.type == "score" &&
                     (element.side == "bottom" || element.side == "wall_bottom")
                 )
-                    if (!element.name) {
-                        document.getElementById("score-bottom").textContent =
-                            "";
-                    } else {
+                    if (element.name) {
+                        document.getElementById("bottom-icon").innerHTML =
+                            bottomIcon;
                         document.getElementById(
                             "score-bottom"
                         ).textContent = `(bottom) ${element.name}${score}`;

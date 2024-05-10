@@ -12,13 +12,17 @@
   <div class="col-9 h-80 fs-4">
     <div class="row ms-0 w-inherit">
       <!--TODO translate-->
+      <svg id="top-icon"></svg>
       <p id="score-top" class="col ps-0"></p>
+      <svg id="right-icon"></svg>
       <p id="score-right" class="col pe-0 text-right"></p>
     </div>
     <canvas class="w-inherit" id="canvas"></canvas>
     <div class="row ms-0 w-inherit">
       <!--TODO translate-->
+      <svg id="left-icon"></svg>
       <p id="score-left" class="col ps-0"></p>
+      <svg id="bottom-icon"></svg>
       <p id="score-bottom" class="col pe-0 text-right"></p>
     </div>
     <p id="winner" class="w-inherit text-center"></p>
