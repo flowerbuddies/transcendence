@@ -1,10 +1,13 @@
+import json
 from django.utils.translation import gettext as _
 import re
 from math import log
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
 from app.models import Lobby
 from django.template.defaulttags import register
+from django.core import serializers
+from django.forms.models import model_to_dict
 
 
 def is_power_of_two(n: int) -> bool:
@@ -24,11 +27,30 @@ def qset_length(qset):
     return len(qset.all())
 
 
-def index(request):
+def index(request: HttpRequest):
+    if request.META.get("HTTP_ACCEPT") == "application/json":
+        json_lobbies = json.loads(serializers.serialize("json", Lobby.objects.all()))
+        return JsonResponse(
+            {"lobbies": list(map(lambda lobby: lobby["fields"]["name"], json_lobbies))}
+        )
+
     return render(request, "app/index.django", {"lobbies": Lobby.objects.all()})
 
 
-def game(request):
+def game(request: HttpRequest):
+    if request.META.get("HTTP_ACCEPT") == "application/json":
+        lobby_name = request.GET.get("name")
+        if lobby_name == None:
+            return JsonResponse({"error": "No name specified"}, status=400)
+
+        first_lobby = Lobby.objects.filter(name=lobby_name).first()
+        if first_lobby == None:
+            return JsonResponse(
+                {"error": f"Lobby {lobby_name} doesn't exist"}, status=400
+            )
+
+        return JsonResponse(model_to_dict(first_lobby))
+
     return render(request, "app/game.django")
 
 
