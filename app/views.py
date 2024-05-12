@@ -108,7 +108,12 @@ def join(request: HttpRequest):
             return HttpResponseBadRequest("Invalid game mode")
 
     except ValueError:
-        pass  # If it's not an int, it just means the user is trying to join an existing game
+        # if the last player of a lobby disconnects, the lobby is deleted.
+        # but if a player got the join view with this lobby not full yet,
+        # the request will be wrongly formatted, we account for this here and will return not doesn't exist
+        if not Lobby.objects.filter(name=fields["lobby-name"]).exists():
+            return HttpResponseBadRequest("Lobby no longer exists")
+        # if it's not an int, it just means the user is trying to join an existing game
 
     lobby, created = Lobby.objects.get_or_create(
         name=fields["lobby-name"],
