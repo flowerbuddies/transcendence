@@ -82,7 +82,6 @@
           id="lobby-{{ forloop.counter }}"
           action=""
           method="post">
-      {% csrf_token %}
       <button class="btn btn-primary"
               type="submit"
               {% if exists and lobby.players|qset_length == lobby.max_players %}disabled{% endif %}>
