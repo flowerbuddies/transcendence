@@ -16,6 +16,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.lobby = None
+        self.task = None
 
     @database_sync_to_async
     def get_lobby(self):
@@ -107,8 +108,11 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.lobby_name, self.channel_name)
         if await self.is_lobby_empty():
            await self.delete_lobby()
+           if self.task:
+               self.task.cancel()
         else:
             await self.send_players_list()
+        channel_to_lobby.pop(self.channel_name)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -175,7 +179,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         )
 
     def end_game(self, _):
-        pass
+        if lobby_to_gs[self.lobby.name]:
+           lobby_to_gs.pop(self.lobby.name)
 
     async def mark_ai(self, gs):
         ai_players = await self.get_ai_players()
@@ -221,8 +226,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             self.tournament = Tournament(gs, alive_player_names, gs.is_four_player)
             self.tournament.get_match_count()
             self.tournament.start_tournament()
-            task = asyncio.create_task(self.run_matches())
-            task.add_done_callback(self.end_game)
+            self.task = asyncio.create_task(self.run_matches())
+            self.task.add_done_callback(self.end_game)
 
     def get_game_state(self):
         try:
