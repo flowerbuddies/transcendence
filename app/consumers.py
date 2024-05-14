@@ -7,6 +7,7 @@ from .tournament import Tournament
 from channels.generic.websocket import AsyncWebsocketConsumer
 from app.models import Lobby
 from django.core.serializers import serialize
+from django.utils.translation import gettext as _
 
 channel_to_lobby = {}
 lobby_to_gs = {}  # gs stands for game state
@@ -176,8 +177,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     async def match_timer(self):
         seconds = 3
         while seconds != -1:
+            message = _("match in %(seconds)s..") % {"seconds": seconds}
             await self.channel_layer.group_send(
-                self.lobby_name, {"type": "time", "seconds": seconds}
+                self.lobby_name, {"type": "time", "seconds": seconds, "string": message}
             )
             if seconds != 0:
                 await asyncio.sleep(1)

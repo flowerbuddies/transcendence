@@ -35,10 +35,9 @@ function initConn(lobbyName, playerName, key1, key2) {
                 }">${player.name} ${player.is_ai ? "🤖" : ""}</li>`;
             list.innerHTML = content;
         }
-        //TODO translate
         if (data.type == "time") {
             let content = "";
-            if (data.seconds != 0) content = `match in ${data.seconds}..`;
+            if (data.seconds != 0) content = `${data.string}`;
             document.getElementById("info").textContent = content;
         }
         //TODO translate 'balls missed' or remove
