@@ -39,11 +39,20 @@ function compile_translation_files() {
   django-admin compilemessages
 }
 
+function reset_database_if_flag_exists() {
+  if [ -f .flag_reset_db ]; then
+    echo "Resetting the database due to .flag_reset_db file (env variables might have changed)."
+    python manage.py flush --no-input
+    rm .flag_reset_db
+  fi
+}
+
 function main() {
   check_if_project_root_exists
   cd $PROJECT_ROOT
   source .env
   install_python_requirements
+  reset_database_if_flag_exists
   migrate_database
   create_superuser
   compile_translation_files

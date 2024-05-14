@@ -1,0 +1,12 @@
+.env
+.env.example
+.github
+.vscode
+.devcontainer
+compose.yaml
+pgdata
+*.md
+__pycache__
+*.mo
+Dockerfile
+nginx.conf

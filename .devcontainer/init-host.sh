@@ -20,13 +20,36 @@ function check_if_project_root_exists() {
 
 function copy_env_file_if_not_exists() {
   if [ ! -f .env ]; then
+    echo ".env file does not exist, copying .env.example file to .env."
     cp .env.example .env
+  else
+    # Check if .env has the required variables, if not, copy the example file
+    required_variables=("POSTGRES_HOST" \
+                        "POSTGRES_USER" \
+                        "POSTGRES_DB" \
+                        "POSTGRES_PASSWORD" \
+                        "DJANGO_SUPERUSER_EMAIL" \
+                        "DJANGO_SUPERUSER_USERNAME" \
+                        "DJANGO_SUPERUSER_PASSWORD" \
+                        "HOST_DOMAIN" \
+                        "DJANGO_ALLOWED_HOSTS" \
+                        "DJANGO_PRODUCTION" \
+                        "DJANGO_SECRET_KEY")
+    for variable in "${required_variables[@]}"; do
+      if ! grep -q "$variable" .env; then
+        echo "$variable variable (or more) is missing in .env file, copying .env.example file to .env."
+        rm .env
+        cp .env.example .env
+        touch .flag_reset_db
+        break
+      fi
+    done
   fi
 }
 
 main() {
-    check_if_project_root_exists
-    copy_env_file_if_not_exists
+  check_if_project_root_exists
+  copy_env_file_if_not_exists
 }
 
 main

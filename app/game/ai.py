@@ -43,7 +43,7 @@ class BehaviorTree:
         previous_accumulated_scores = self.accumulated_scores
         self.accumulated_scores = self.gs.left.score
         self.accumulated_scores += self.gs.right.score
-        if self.gs.isFourPlayer:
+        if self.gs.is_four_player:
             self.accumulated_scores += self.gs.top.score
             self.accumulated_scores += self.gs.bottom.score
         return previous_accumulated_scores != self.accumulated_scores

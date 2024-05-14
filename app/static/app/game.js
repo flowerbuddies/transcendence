@@ -1,31 +1,139 @@
+import { setBody } from "/static/app/index.js";
 let data = {};
 
 function initConn(lobbyName, playerName, key1, key2) {
+    const gameSocketProtocol =
+        window.location.protocol === "https:" ? "wss:" : "ws:";
     const gameSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/lobby/' + lobbyName + '/'
+        gameSocketProtocol +
+            "//" +
+            window.location.host +
+            "/ws/lobby/" +
+            lobbyName +
+            "/"
     );
 
     gameSocket.onopen = () => {
-        gameSocket.send(JSON.stringify({ type: 'init', player: playerName }));
+        gameSocket.send(JSON.stringify({ type: "init", player: playerName }));
     };
 
     gameSocket.onmessage = (e) => {
         data = JSON.parse(e.data);
 
-        if (data.type == 'players') {
+        if (data.type == "players") {
             // players connected
             document.getElementById(
-                'players-connected'
+                "players-connected"
             ).textContent = `${data.players.length} / ${data.max}`;
 
             // players list
-            const list = document.getElementById('players-list');
-            let content = '';
+            const list = document.getElementById("players-list");
+            let content = "";
             for (const player of data.players)
                 content += `<li class="list-group-item list-group-item-${
-                    player.is_eliminated ? 'danger' : 'success'
-                }">${player.name} ${player.is_ai ? '🤖' : ''}</li>`;
+                    player.is_eliminated ? "danger" : "success"
+                }">${player.name} ${player.is_ai ? "🤖" : ""}</li>`;
             list.innerHTML = content;
+        }
+        //TODO translate
+        if (data.type == "time") {
+            let content = "";
+            if (data.seconds != 0) content = `match in ${data.seconds}..`;
+            document.getElementById("info").textContent = content;
+        }
+        //TODO translate 'balls missed' or remove
+        //TODO make it be balls missed x/1 instead of x/3 for the tournament
+        if (data.type == "scene") {
+            document.getElementById("score-right").textContent = "";
+            document.getElementById("score-left").textContent = "";
+            document.getElementById("score-top").textContent = "";
+            document.getElementById("score-bottom").textContent = "";
+            data.scene.forEach((element) => {
+                let score = ": eliminated";
+                if (data.is_tournament && element.score < 1) score = "";
+                else if (
+                    !data.is_tournament &&
+                    element.type == "score" &&
+                    element.score < 3
+                )
+                    score = `: balls missed ${element.score}/3`;
+                if (
+                    element.type == "score" &&
+                    (element.side == "right" || element.side == "wall_right")
+                )
+                    if (!element.name) {
+                        document.getElementById("score-right").textContent = "";
+                    } else {
+                        document.getElementById(
+                            "score-right"
+                        ).textContent = `(right) ${element.name}${score}`;
+                    }
+                if (
+                    element.type == "score" &&
+                    (element.side == "left" || element.side == "wall_left")
+                )
+                    if (!element.name) {
+                        document.getElementById("score-left").textContent = "";
+                    } else {
+                        document.getElementById(
+                            "score-left"
+                        ).textContent = `(left) ${element.name}${score}`;
+                    }
+                if (
+                    element.type == "score" &&
+                    (element.side == "top" || element.side == "wall_top")
+                )
+                    if (!element.name) {
+                        document.getElementById("score-top").textContent = "";
+                    } else {
+                        document.getElementById(
+                            "score-top"
+                        ).textContent = `(top) ${element.name}${score}`;
+                    }
+                if (
+                    element.type == "score" &&
+                    (element.side == "bottom" || element.side == "wall_bottom")
+                )
+                    if (!element.name) {
+                        document.getElementById("score-bottom").textContent =
+                            "";
+                    } else {
+                        document.getElementById(
+                            "score-bottom"
+                        ).textContent = `(bottom) ${element.name}${score}`;
+                    }
+            });
+        }
+        if (data.type == "next_match") {
+            let content = "";
+            if (data.players.length > 0) {
+                content = "next match: ";
+                for (let i = 0; i < data.amount; i++) {
+                    if (data.players.length <= i) {
+                        content += "???";
+                    } else {
+                        content += data.players[i];
+                        data.players[i];
+                    }
+                    if (i + 1 != data.amount) {
+                        content += " vs. ";
+                    }
+                }
+            }
+            document.getElementById("next-match").textContent = content;
+        }
+        //TODO translate
+        if (data.type == "end") {
+            document.getElementById(
+                "winner"
+            ).textContent = `${data.winner} won the match woo!`;
+            const ctx = document.getElementById("canvas").getContext("2d");
+            clearCanvas(ctx);
+        }
+        if (data.type == "winner") {
+            document.getElementById(
+                "winner"
+            ).textContent = `${data.winner} won the tournament wowieee!!`;
         }
     };
 
@@ -38,7 +146,7 @@ function initConn(lobbyName, playerName, key1, key2) {
             if (!isKey1Pressed)
                 gameSocket.send(
                     JSON.stringify({
-                        type: 'key',
+                        type: "key",
                         key: 1,
                         player: playerName,
                     })
@@ -49,7 +157,7 @@ function initConn(lobbyName, playerName, key1, key2) {
             if (!isKey2Pressed)
                 gameSocket.send(
                     JSON.stringify({
-                        type: 'key',
+                        type: "key",
                         key: 2,
                         player: playerName,
                     })
@@ -62,7 +170,7 @@ function initConn(lobbyName, playerName, key1, key2) {
         if (ev.key === key1) {
             gameSocket.send(
                 JSON.stringify({
-                    type: 'key',
+                    type: "key",
                     key: 1,
                     player: playerName,
                 })
@@ -71,24 +179,34 @@ function initConn(lobbyName, playerName, key1, key2) {
         } else if (ev.key === key2) {
             gameSocket.send(
                 JSON.stringify({
-                    type: 'key',
+                    type: "key",
                     key: 2,
                     player: playerName,
                 })
             );
             isKey2Pressed = false;
+        } else if (ev.key === "Escape") {
+            closeGameConnection();
         }
+    }
+
+    async function closeGameConnection() {
+        document.removeEventListener("keydown", keyPressed);
+        document.removeEventListener("keyup", keyReleased);
+        document.removeEventListener("closeWSConns", () => gameSocket.close());
+        gameSocket.close();
+        await setBody("/join");
     }
 
     // we send the same event for both `keydown` and `keyup`
     // depending on the previous state, the server will be able to understand what's happening
-    document.addEventListener('keydown', keyPressed);
-    document.addEventListener('keyup', keyReleased);
-    document.addEventListener('closeWSConns', () => gameSocket.close());
+    document.addEventListener("keydown", keyPressed);
+    document.addEventListener("keyup", keyReleased);
+    document.addEventListener("closeWSConns", () => gameSocket.close());
 }
 
 function initScene() {
-    const ctx = document.getElementById('canvas').getContext('2d');
+    const ctx = document.getElementById("canvas").getContext("2d");
 
     window.requestAnimationFrame(renderLoop);
 
@@ -100,13 +218,21 @@ function initScene() {
 }
 
 export function joinLobby(lobbyName, player1Name, player2Name) {
-    initConn(lobbyName, player1Name, 'ArrowUp', 'ArrowDown');
-    if (player2Name) initConn(lobbyName, player2Name, 'q', 'a');
+    document.getElementById(
+        "player-one-keys"
+    ).textContent = `${player1Name} controls: ↑ ↓`;
+    initConn(lobbyName, player1Name, "ArrowUp", "ArrowDown");
+    if (player2Name) {
+        document.getElementById(
+            "player-two-keys"
+        ).textContent = `${player2Name} controls: Q A`;
+        initConn(lobbyName, player2Name, "q", "a");
+    }
     initScene();
 }
 
 function clearCanvas(ctx) {
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = "black";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }
 
@@ -116,7 +242,7 @@ function drawScene(scene, ctx) {
         if (element.color) {
             ctx.fillStyle = element.color;
         } else {
-            ctx.fillStyle = 'white';
+            ctx.fillStyle = "white";
         }
         ctx.fillRect(
             ctx.canvas.width * element.x,
@@ -137,7 +263,7 @@ function updateFPS() {
     const delta = currentTime - startTime;
 
     if (delta >= 1000) {
-        console.log('FPS:', frames);
+        console.log("FPS:", frames);
         frames = 0;
         startTime = currentTime;
     }

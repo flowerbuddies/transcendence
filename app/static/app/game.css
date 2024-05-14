@@ -1,15 +1,30 @@
 .h-80 {
-  height: 80%;
+    height: 80%;
 }
 
 .text-right {
-  text-align: right;
+    text-align: right;
 }
 
 .w-inherit {
-  width: inherit;
+    width: inherit;
 }
 
 #canvas {
-  aspect-ratio: 1/1;
+    aspect-ratio: 1/1;
+}
+
+#join {
+    margin-bottom: 60px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+}
+
+.language-selector {
+    margin: 10px 10px 10px 10px;
 }

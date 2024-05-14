@@ -1,13 +1,15 @@
-import { registerJoinForms } from '/static/app/join.js';
+import { registerJoinForms } from "/static/app/join.js";
+import { registerPlayerOptionsUpdate } from "/static/app/options.js";
 
-history.replaceState('join', null);
+history.replaceState("join", null);
 registerJoinForms();
+registerPlayerOptionsUpdate();
 
-const closeWSConnsEvent = new Event('closeWSConns');
+const closeWSConnsEvent = new Event("closeWSConns");
 
 window.onpopstate = async (event) => {
-    if (event.state === 'join') {
-        await setBody('/join');
+    if (event.state === "join") {
+        await setBody("/join");
         registerJoinForms();
         document.dispatchEvent(closeWSConnsEvent);
     }
