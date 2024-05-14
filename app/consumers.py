@@ -36,6 +36,10 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         return list(self.lobby.players.filter(is_eliminated=False))
 
     @database_sync_to_async
+    def get_ai_players(self):
+        return list(self.lobby.players.filter(is_ai=True))
+
+    @database_sync_to_async
     def is_match_four(self):
         return self.lobby.is_match_four
     
@@ -173,6 +177,11 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     def end_game(self, _):
         pass
 
+    async def mark_ai(self, gs):
+        ai_players = await self.get_ai_players()
+        ai_player_names = list(map(lambda player: player.name, ai_players))
+        gs.mark_ai(ai_player_names)
+
     async def match_timer(self):
         seconds = 3
         while seconds != -1:
@@ -189,6 +198,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             self.tournament.assign_player_positions(self.get_game_state(), match_index)
             await self.update_next_match_info(match_index + 1)
             await lobby_to_gs[self.lobby.name].set_up_match()
+            await self.mark_ai(lobby_to_gs[self.lobby.name])
             await self.match_timer()
             match_winner = await lobby_to_gs[self.lobby.name].game_loop()
             self.tournament.set_match_winner(match_index, match_winner)

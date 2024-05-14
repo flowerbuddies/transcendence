@@ -1,13 +1,14 @@
 import asyncio
 from .ball import Ball
 from .paddle import Paddle
-
+from .ai import BehaviorTree
 
 class Player:
     def __init__(self, side):
         self.side = side
         self.score = 0
         self.name = None
+        self.ai = None
         self.paddle = Paddle(side)
 
     def change_side(self, side):
@@ -17,6 +18,7 @@ class Player:
     def reset(self, is_four_player):
         self.score = 0
         self.name = None
+        self.ai = None
         if self.side == "wall_right":
             self.change_side("right")
         if self.side == "wall_left":
@@ -54,6 +56,27 @@ class GameState:
         for player in self.players:
             self.players[player].name = player
 
+    def mark_ai(self, names):
+        for name in names:
+            if self.left.name == name:
+                self.left.ai = BehaviorTree(self, self.left)
+            elif self.right.name == name:
+                self.right.ai = BehaviorTree(self, self.right)
+            elif self.top.name == name:
+                self.top.ai = BehaviorTree(self, self.top)
+            elif self.bottom.name == name:
+                self.bottom.ai = BehaviorTree(self, self.bottom)
+
+    def update_ai_players(self):
+        if self.left.ai:
+            self.left.ai.update()
+        if self.right.ai:
+            self.right.ai.update()
+        if self.top.ai:
+            self.top.ai.update()
+        if self.bottom.ai:
+            self.bottom.ai.update()
+
     async def set_up_match(self):
         self.assign_player_names()
         await self.lobby.channel_layer.group_send(
@@ -90,6 +113,7 @@ class GameState:
             start_time = asyncio.get_event_loop().time()
 
             # update and send state
+            self.update_ai_players()
             await self.update(target_frame_time)
             await self.lobby.channel_layer.group_send(
                 self.lobby.lobby_name, {"type": "scene", "scene": self.get_scene(), "is_tournament": self.is_tournament}
@@ -99,7 +123,6 @@ class GameState:
             server_frame_time = asyncio.get_event_loop().time() - start_time
             sleep_time = max(0, target_frame_time - server_frame_time)
             await asyncio.sleep(sleep_time)
-            # self.fps_monitor.tick()
 
         await self.lobby.channel_layer.group_send(
             self.lobby.lobby_name, {"type": "end", "winner": self.get_winner()}

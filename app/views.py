@@ -151,10 +151,10 @@ def join(request: HttpRequest):
     # when creating a lobby with AI players, add them already
     if created:
         if game_type == "join.type.types.game1vAI":
-            lobby.players.create(name="AI", is_ai=True)
+            lobby.players.create(name="AI", is_ai=True, is_disconnected=True)
         elif game_type == "join.type.types.game1v1vAIvAI":
-            lobby.players.create(name="AI 1", is_ai=True)
-            lobby.players.create(name="AI 2", is_ai=True)
+            lobby.players.create(name="AI 1", is_ai=True, is_disconnected=True)
+            lobby.players.create(name="AI 2", is_ai=True, is_disconnected=True)
 
     if len(lobby.players.all()) == lobby.max_players:
         return HttpResponseBadRequest("The lobby is full")
