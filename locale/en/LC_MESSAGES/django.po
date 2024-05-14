@@ -20,7 +20,6 @@ msgstr ""
 
 #: app/consumers.py:180
 #, fuzzy, python-format
-#| msgid "Match in %(seconds)s.."
 msgid "match in %(seconds)s.."
 msgstr "match in %(seconds)s.."
 
