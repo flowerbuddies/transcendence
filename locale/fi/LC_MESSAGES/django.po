@@ -16,76 +16,75 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 #: app/templates/app/join.django:7 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11
 msgid "join.lobbyName.title"
-msgstr "Nom du lobby"
+msgstr ""
 
 #: app/templates/app/join.django:8 app/templates/app/join_row.django:22
 #: app/templates/app/join_row.django:30
 msgid "join.type.title"
-msgstr "Mode de jeu"
+msgstr ""
 
 #: app/templates/app/join.django:9
 msgid "join.players.title"
-msgstr "Joueur.ses"
+msgstr ""
 
 #: app/templates/app/join.django:10 app/templates/app/join.django:11
 #: app/templates/app/join_row.django:69 app/templates/app/join_row.django:70
 #: app/templates/app/join_row.django:77 app/templates/app/join_row.django:78
 msgid "join.playerName.title"
-msgstr "Nom du/de la joueur.se"
+msgstr ""
 
 #: app/templates/app/join.django:12
 msgid "join.action.title"
-msgstr "Action"
+msgstr ""
 
 #: app/templates/app/join.django:40
 msgid "language.go"
-msgstr "Go"
+msgstr ""
 
 #: app/templates/app/join_row.django:31
 msgid "join.type.types.tournament1v1"
-msgstr "Tournoi 1vs1"
+msgstr ""
 
 #: app/templates/app/join_row.django:32
 msgid "join.type.types.tournament1v1v1v1"
-msgstr "Tournoi 1vs1vs1vs1"
+msgstr ""
 
 #: app/templates/app/join_row.django:33
 msgid "join.type.types.game1v1"
-msgstr "Partie 1vs1"
+msgstr ""
 
 #: app/templates/app/join_row.django:34
 msgid "join.type.types.game1vAI"
-msgstr "Partie 1vsIA"
+msgstr ""
 
 #: app/templates/app/join_row.django:35
 msgid "join.type.types.game1v1v1v1"
-msgstr "Partie 1vs1vs1vs1"
+msgstr ""
 
 #: app/templates/app/join_row.django:36
 msgid "join.type.types.game1v1vAIvAI"
-msgstr "Partie 1vs1vsIAvsIA"
+msgstr ""
 
 #: app/templates/app/join_row.django:48
 msgid "join.players.connected_players"
-msgstr "Joueur.ses connecté.es"
+msgstr ""
 
 #: app/templates/app/join_row.django:56
 msgid "join.players.player_slots"
-msgstr "Nombre de joueur.ses"
+msgstr ""
 
 #: app/templates/app/join_row.django:89
 msgid "join.action.full"
-msgstr "Complet"
+msgstr ""
 
 #: app/templates/app/join_row.django:91
 msgid "join.action.join"
-msgstr "Rejoindre"
+msgstr ""
 
 #: app/templates/app/join_row.django:93
 msgid "join.action.create"
-msgstr "Créer"
+msgstr ""

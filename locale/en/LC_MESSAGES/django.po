@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-15 16:04+0000\n"
+"POT-Creation-Date: 2024-05-14 08:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,82 +18,74 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/templates/app/game.django:15
-msgid "game.playWith"
-msgstr "Play with"
-
-#: app/templates/app/game.django:15
-msgid "game.and"
-msgstr "and"
-
-#: app/templates/app/join.django:5 app/templates/app/join_row.django:10
+#: app/templates/app/join.django:7 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11
 msgid "join.lobbyName.title"
 msgstr "Lobby name"
 
-#: app/templates/app/join.django:6 app/templates/app/join_row.django:22
-#: app/templates/app/join_row.django:29
+#: app/templates/app/join.django:8 app/templates/app/join_row.django:22
+#: app/templates/app/join_row.django:30
 msgid "join.type.title"
 msgstr "Game mode"
 
-#: app/templates/app/join.django:7
+#: app/templates/app/join.django:9
 msgid "join.players.title"
 msgstr "Players"
 
-#: app/templates/app/join.django:8 app/templates/app/join.django:9
-#: app/templates/app/join_row.django:67 app/templates/app/join_row.django:68
-#: app/templates/app/join_row.django:75 app/templates/app/join_row.django:76
+#: app/templates/app/join.django:10 app/templates/app/join.django:11
+#: app/templates/app/join_row.django:69 app/templates/app/join_row.django:70
+#: app/templates/app/join_row.django:77 app/templates/app/join_row.django:78
 msgid "join.playerName.title"
 msgstr "Player name"
 
-#: app/templates/app/join.django:10
+#: app/templates/app/join.django:12
 msgid "join.action.title"
 msgstr "Action"
 
-#: app/templates/app/join.django:36
+#: app/templates/app/join.django:40
 msgid "language.go"
 msgstr "Go"
 
-#: app/templates/app/join_row.django:30
+#: app/templates/app/join_row.django:31
 msgid "join.type.types.tournament1v1"
 msgstr "Tournament 1v1"
 
-#: app/templates/app/join_row.django:31
+#: app/templates/app/join_row.django:32
 msgid "join.type.types.tournament1v1v1v1"
 msgstr "Tournament 1v1v1v1"
 
-#: app/templates/app/join_row.django:32
+#: app/templates/app/join_row.django:33
 msgid "join.type.types.game1v1"
 msgstr "Game 1v1"
 
-#: app/templates/app/join_row.django:33
+#: app/templates/app/join_row.django:34
 msgid "join.type.types.game1vAI"
 msgstr "Game 1vAI"
 
-#: app/templates/app/join_row.django:34
+#: app/templates/app/join_row.django:35
 msgid "join.type.types.game1v1v1v1"
 msgstr "Game 1v1v1v1"
 
-#: app/templates/app/join_row.django:35
+#: app/templates/app/join_row.django:36
 msgid "join.type.types.game1v1vAIvAI"
 msgstr "Game 1v1vAIvAI"
 
-#: app/templates/app/join_row.django:47
+#: app/templates/app/join_row.django:48
 msgid "join.players.connected_players"
 msgstr "Connected players"
 
-#: app/templates/app/join_row.django:54
+#: app/templates/app/join_row.django:56
 msgid "join.players.player_slots"
 msgstr "Player slots"
 
-#: app/templates/app/join_row.django:88
+#: app/templates/app/join_row.django:89
 msgid "join.action.full"
 msgstr "Full"
 
-#: app/templates/app/join_row.django:90
+#: app/templates/app/join_row.django:91
 msgid "join.action.join"
 msgstr "Join"
 
-#: app/templates/app/join_row.django:92
+#: app/templates/app/join_row.django:93
 msgid "join.action.create"
 msgstr "Create"
