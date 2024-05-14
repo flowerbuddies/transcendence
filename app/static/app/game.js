@@ -67,7 +67,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                             rightIcon;
                         document.getElementById(
                             "score-right"
-                        ).textContent = `(right) ${element.name}${score}`;
+                        ).textContent = ` ${element.name}${score}`;
                     }
                 if (
                     element.type == "score" &&
@@ -78,7 +78,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                             leftIcon;
                         document.getElementById(
                             "score-left"
-                        ).textContent = `(left) ${element.name}${score}`;
+                        ).textContent = `${element.name}${score}`;
                     }
                 if (
                     element.type == "score" &&
@@ -88,7 +88,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                         document.getElementById("top-icon").innerHTML = topIcon;
                         document.getElementById(
                             "score-top"
-                        ).textContent = `(top) ${element.name}${score}`;
+                        ).textContent = `${element.name}${score}`;
                     }
                 if (
                     element.type == "score" &&
@@ -99,7 +99,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                             bottomIcon;
                         document.getElementById(
                             "score-bottom"
-                        ).textContent = `(bottom) ${element.name}${score}`;
+                        ).textContent = `${element.name}${score}`;
                     }
             });
         }
