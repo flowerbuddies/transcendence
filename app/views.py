@@ -1,10 +1,13 @@
+import json
 from django.utils.translation import gettext as _
 import re
 from math import log
-from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
 from app.models import Lobby
 from django.template.defaulttags import register
+from django.core import serializers
+from django.forms.models import model_to_dict
 
 
 def is_power_of_two(n: int) -> bool:
@@ -24,11 +27,30 @@ def qset_length(qset):
     return len(qset.all())
 
 
-def index(request):
+def index(request: HttpRequest):
+    if request.META.get("HTTP_ACCEPT") == "application/json":
+        json_lobbies = json.loads(serializers.serialize("json", Lobby.objects.all()))
+        return JsonResponse(
+            {"lobbies": list(map(lambda lobby: lobby["fields"]["name"], json_lobbies))}
+        )
+
     return render(request, "app/index.django", {"lobbies": Lobby.objects.all()})
 
 
-def game(request):
+def game(request: HttpRequest):
+    if request.META.get("HTTP_ACCEPT") == "application/json":
+        lobby_name = request.GET.get("name")
+        if lobby_name == None:
+            return JsonResponse({"error": "No name specified"}, status=400)
+
+        first_lobby = Lobby.objects.filter(name=lobby_name).first()
+        if first_lobby == None:
+            return JsonResponse(
+                {"error": f"Lobby {lobby_name} doesn't exist"}, status=400
+            )
+
+        return JsonResponse(model_to_dict(first_lobby))
+
     return render(request, "app/game.django")
 
 
@@ -36,7 +58,7 @@ def join(request: HttpRequest):
     if request.method == "GET":
         return render(request, "app/join.django", {"lobbies": Lobby.objects.all()})
 
-    fields = request.POST.dict()
+    fields = request.GET.dict()
 
     # check that the request has all the mandatory fields
     if not all(
@@ -108,7 +130,12 @@ def join(request: HttpRequest):
             return HttpResponseBadRequest("Invalid game mode")
 
     except ValueError:
-        pass  # If it's not an int, it just means the user is trying to join an existing game
+        # if the last player of a lobby disconnects, the lobby is deleted.
+        # but if a player got the join view with this lobby not full yet,
+        # the request will be wrongly formatted, we account for this here and will return not doesn't exist
+        if not Lobby.objects.filter(name=fields["lobby-name"]).exists():
+            return HttpResponseBadRequest("Lobby no longer exists")
+        # if it's not an int, it just means the user is trying to join an existing game
 
     lobby, created = Lobby.objects.get_or_create(
         name=fields["lobby-name"],
