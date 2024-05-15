@@ -21,42 +21,42 @@ msgstr ""
 #: app/consumers.py:166
 #, python-format
 msgid "%(player)s won the tournament wowieee!!"
-msgstr ""
+msgstr "%(player)s à gagné le tournoi"
 
 #: app/consumers.py:186
 msgid "next match"
-msgstr ""
+msgstr "prochain match"
 
 #: app/consumers.py:196
 #, python-format
 msgid "match in %(seconds)s.."
-msgstr "%(seconds)s"
+msgstr "match dans %(seconds)s.."
 
 #: app/game/game.py:118
 #, python-format
 msgid "%(player)s won the match woo!"
-msgstr ""
+msgstr "%(player)s à gagné le match"
 
 #: app/game/game.py:276
 msgid "eliminated"
-msgstr ""
+msgstr "éliminé"
 
 #: app/game/game.py:277
 #, python-format
 msgid "balls missed %(score)s/3"
-msgstr ""
+msgstr "balles perdues %(score)s/3"
 
 #: app/templates/app/game.django:4
 msgid "game.info.waiting"
-msgstr ""
+msgstr "attente de joueurs.."
 
 #: app/templates/app/game.django:24
 msgid "game.info.press"
-msgstr ""
+msgstr "presse"
 
 #: app/templates/app/game.django:24
 msgid "game.info.to_exit"
-msgstr ""
+msgstr "sortie"
 
 #: app/templates/app/join.django:7 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11
