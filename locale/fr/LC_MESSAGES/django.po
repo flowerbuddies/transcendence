@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-14 08:50+0000\n"
+"POT-Creation-Date: 2024-05-15 07:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#TODO translate these
+# TODO translate these
 #: app/consumers.py:180
 #, python-format
 msgid "match in %(seconds)s.."
 msgstr "%(seconds)s"
+
+#: app/game/game.py:272
+#, python-format
+msgid "balls missed %(score)s/3"
+msgstr ""
+
+#: app/templates/app/game.django:4
+msgid "game.info.waiting"
+msgstr ""
+
+#: app/templates/app/game.django:24
+msgid "game.info.press"
+msgstr ""
+
+#: app/templates/app/game.django:24
+msgid "game.info.to_exit"
+msgstr ""
 
 #: app/templates/app/join.django:7 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11

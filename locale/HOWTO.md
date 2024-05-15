@@ -6,6 +6,7 @@
 LANGUAGES = [
     ("en", "English"),
     ("fr", "French"),
+    ("fi", "Finnish"),
     # here
 ]
 ```

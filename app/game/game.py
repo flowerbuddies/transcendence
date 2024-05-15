@@ -1,6 +1,7 @@
 import asyncio
 from .ball import Ball
 from .paddle import Paddle
+from django.utils.translation import gettext as _
 
 
 class Player:
@@ -57,7 +58,12 @@ class GameState:
     async def set_up_match(self):
         self.assign_player_names()
         await self.lobby.channel_layer.group_send(
-            self.lobby.lobby_name, {"type": "scene", "scene": self.get_start_scene(), "is_tournament": self.is_tournament}
+            self.lobby.lobby_name,
+            {
+                "type": "scene",
+                "scene": self.get_start_scene(),
+                "is_tournament": self.is_tournament,
+            },
         )
 
     def players_alive(self):
@@ -92,7 +98,12 @@ class GameState:
             # update and send state
             await self.update(target_frame_time)
             await self.lobby.channel_layer.group_send(
-                self.lobby.lobby_name, {"type": "scene", "scene": self.get_scene(), "is_tournament": self.is_tournament}
+                self.lobby.lobby_name,
+                {
+                    "type": "scene",
+                    "scene": self.get_scene(),
+                    "is_tournament": self.is_tournament,
+                },
             )
 
             # sleep to maintain client refresh rate
@@ -147,7 +158,7 @@ class GameState:
             self.ball.reset()
 
     async def transform_dead_players(self):
-        #TODO potentially refactor into two functions, where the async part is it's separate function
+        # TODO potentially refactor into two functions, where the async part is it's separate function
         if self.left.score == self.score_to_lose and self.left.side != "wall_left":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.left.name}
@@ -167,7 +178,10 @@ class GameState:
                 self.lobby.channel_name, {"type": "kill", "target": self.top.name}
             )
             self.top.change_side("wall_top")
-        if self.bottom.score == self.score_to_lose and self.bottom.side != "wall_bottom":
+        if (
+            self.bottom.score == self.score_to_lose
+            and self.bottom.side != "wall_bottom"
+        ):
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.bottom.name}
             )
@@ -255,6 +269,7 @@ class GameState:
             {
                 "type": "score",
                 "name": player.name,
+                "string": _("balls missed %(score)s/3") % {"score": player.score},
                 "side": player.side,
                 "score": player.score,
             }
