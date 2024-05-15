@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-15 07:06+0000\n"
+"POT-Creation-Date: 2024-05-15 07:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,12 +18,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/consumers.py:180
+#: app/consumers.py:166
+#, python-format
+msgid "%(player)s won the tournament wowieee!!"
+msgstr "%(player)s voitti turnauksen vautsivauu!!"
+
+#: app/consumers.py:186
+msgid "next match"
+msgstr "seuraava matsi"
+
+#: app/consumers.py:196
 #, python-format
 msgid "match in %(seconds)s.."
 msgstr "matsi alkaa %(seconds)s.."
 
-#: app/game/game.py:272
+#: app/game/game.py:118
+#, python-format
+msgid "%(player)s won the match woo!"
+msgstr "%(player)s voitti matsin vautsii!"
+
+#: app/game/game.py:276
+msgid "eliminated"
+msgstr "eliminoitu"
+
+#: app/game/game.py:277
 #, python-format
 msgid "balls missed %(score)s/3"
 msgstr "läpi menneet pallot %(score)s/3"

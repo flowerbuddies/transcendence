@@ -39,7 +39,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def is_match_four(self):
         return self.lobby.is_match_four
-    
+
     @database_sync_to_async
     def is_tournament(self):
         return self.lobby.is_tournament
@@ -76,16 +76,21 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def is_lobby_empty(self):
-       return len(self.lobby.players.filter(is_disconnected=False)) == 0
+        return len(self.lobby.players.filter(is_disconnected=False)) == 0
 
     @database_sync_to_async
     def delete_lobby(self):
-       self.lobby.delete()
+        self.lobby.delete()
 
     async def send_players_list(self):
         players, max_players = await self.get_players()
         await self.channel_layer.group_send(
-            self.lobby_name, {"type": "players", "players": sorted(players, key=lambda item: item["is_eliminated"]), "max": max_players}
+            self.lobby_name,
+            {
+                "type": "players",
+                "players": sorted(players, key=lambda item: item["is_eliminated"]),
+                "max": max_players,
+            },
         )
 
     async def connect(self):
@@ -103,7 +108,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.disconnect_player()
         await self.channel_layer.group_discard(self.lobby_name, self.channel_name)
         if await self.is_lobby_empty():
-           await self.delete_lobby()
+            await self.delete_lobby()
         else:
             await self.send_players_list()
 
@@ -155,7 +160,12 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     async def send_tournament_winner(self, name):
         await self.channel_layer.group_send(
-            self.lobby_name, {"type": "winner", "winner": name}
+            self.lobby_name,
+            {
+                "type": "winner",
+                "winner": _("%(player)s won the tournament wowieee!!")
+                % {"player": name},
+            },
         )
 
     async def update_next_match_info(self, index):
@@ -168,7 +178,13 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             for player in match.players:
                 players.append(player)
         await self.channel_layer.group_send(
-            self.lobby_name, {"type": "next_match", "players": players, "amount": amount}
+            self.lobby_name,
+            {
+                "type": "next_match",
+                "players": players,
+                "amount": amount,
+                "string": _("next match"),
+            },
         )
 
     def end_game(self, _):
@@ -197,13 +213,15 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             await self.update_next_match_info(match_index + 1)
             lobby_to_gs[self.lobby.name].reset_game()
             match_index += 1
-            
+
         if await self.is_tournament():
             await self.send_tournament_winner(match_winner)
 
     async def start_game(self):
         if not self.get_game_state():
-            lobby_to_gs[self.lobby.name] = GameState(await self.is_match_four(), await self.is_tournament(), self)
+            lobby_to_gs[self.lobby.name] = GameState(
+                await self.is_match_four(), await self.is_tournament(), self
+            )
 
         gs = self.get_game_state()
         if not gs.is_started:

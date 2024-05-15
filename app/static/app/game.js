@@ -40,7 +40,6 @@ function initConn(lobbyName, playerName, key1, key2) {
             if (data.seconds != 0) content = `${data.string}`;
             document.getElementById("info").textContent = content;
         }
-        //TODO translate 'balls missed' or remove
         if (data.type == "scene") {
             document.getElementById("score-right").textContent = "";
             document.getElementById("score-left").textContent = "";
@@ -49,11 +48,11 @@ function initConn(lobbyName, playerName, key1, key2) {
             data.scene.forEach((element) => {
                 if (element.type != "score")
                     return;
-                let score = ": eliminated";
+                let score = `: ${element.elimination_msg}`;
                 if (data.is_tournament && element.score < 1) {
                     score = "";
                 } else if (!data.is_tournament && element.score < 3)
-                    score = `: ${element.string}`;
+                    score = `: ${element.ball_msg}`;
                 if (element.side == "right" || element.side == "wall_right")
                     if (!element.name) {
                         ;
@@ -88,11 +87,10 @@ function initConn(lobbyName, playerName, key1, key2) {
                     }
             });
         }
-        //TODO translate
         if (data.type == "next_match") {
             let content = "";
             if (data.players.length > 0) {
-                content = "next match: ";
+                content = `${data.string}: `;
                 for (let i = 0; i < data.amount; i++) {
                     if (data.players.length <= i) {
                         content += "???";
@@ -107,19 +105,19 @@ function initConn(lobbyName, playerName, key1, key2) {
             }
             document.getElementById("next-match").textContent = content;
         }
-        //TODO translate
         if (data.type == "end") {
             document.getElementById(
                 "winner"
-            ).textContent = `${data.winner} won the match woo!`;
+            ).textContent = `${data.winner}`;
             const ctx = document.getElementById("canvas").getContext("2d");
             clearCanvas(ctx);
         }
         //TODO translate
         if (data.type == "winner") {
+            console.log(data.winner)
             document.getElementById(
                 "winner"
-            ).textContent = `${data.winner} won the tournament wowieee!!`;
+            ).textContent = `${data.winner}`;
         }
     };
 

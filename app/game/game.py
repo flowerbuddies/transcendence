@@ -111,9 +111,13 @@ class GameState:
             sleep_time = max(0, target_frame_time - server_frame_time)
             await asyncio.sleep(sleep_time)
             # self.fps_monitor.tick()
-
         await self.lobby.channel_layer.group_send(
-            self.lobby.lobby_name, {"type": "end", "winner": self.get_winner()}
+            self.lobby.lobby_name,
+            {
+                "type": "end",
+                "winner": _("%(player)s won the match woo!")
+                % {"player": self.get_winner()},
+            },
         )
         return self.get_winner()
 
@@ -269,7 +273,8 @@ class GameState:
             {
                 "type": "score",
                 "name": player.name,
-                "string": _("balls missed %(score)s/3") % {"score": player.score},
+                "elimination_msg": _("eliminated"),
+                "ball_msg": _("balls missed %(score)s/3") % {"score": player.score},
                 "side": player.side,
                 "score": player.score,
             }
