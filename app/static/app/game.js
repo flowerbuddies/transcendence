@@ -41,61 +41,46 @@ function initConn(lobbyName, playerName, key1, key2) {
             document.getElementById("info").textContent = content;
         }
         //TODO translate 'balls missed' or remove
-        //TODO make it be balls missed x/1 instead of x/3 for the tournament
         if (data.type == "scene") {
             document.getElementById("score-right").textContent = "";
             document.getElementById("score-left").textContent = "";
             document.getElementById("score-top").textContent = "";
             document.getElementById("score-bottom").textContent = "";
             data.scene.forEach((element) => {
+                if (element.type != "score")
+                    return;
                 let score = ": eliminated";
-                if (data.is_tournament && element.score < 1) score = "";
-                else if (
-                    !data.is_tournament &&
-                    element.type == "score" &&
-                    element.score < 3
-                )
-                    score = `: balls missed ${element.score}/3`;
-                if (
-                    element.type == "score" &&
-                    (element.side == "right" || element.side == "wall_right")
-                )
+                if (data.is_tournament && element.score < 1) {
+                    score = "";
+                } else if (!data.is_tournament && element.score < 3)
+                    score = `: ${element.string}`;
+                if (element.side == "right" || element.side == "wall_right")
                     if (!element.name) {
-                        document.getElementById("score-right").textContent = "";
+                        ;
                     } else {
                         document.getElementById(
                             "score-right"
                         ).textContent = `(right) ${element.name}${score}`;
                     }
-                if (
-                    element.type == "score" &&
-                    (element.side == "left" || element.side == "wall_left")
-                )
+                if (element.side == "left" || element.side == "wall_left")
                     if (!element.name) {
-                        document.getElementById("score-left").textContent = "";
+                        ;
                     } else {
                         document.getElementById(
                             "score-left"
                         ).textContent = `(left) ${element.name}${score}`;
                     }
-                if (
-                    element.type == "score" &&
-                    (element.side == "top" || element.side == "wall_top")
-                )
+                if (element.side == "top" || element.side == "wall_top")
                     if (!element.name) {
-                        document.getElementById("score-top").textContent = "";
+                        ;
                     } else {
                         document.getElementById(
                             "score-top"
                         ).textContent = `(top) ${element.name}${score}`;
                     }
-                if (
-                    element.type == "score" &&
-                    (element.side == "bottom" || element.side == "wall_bottom")
-                )
+                if (element.side == "bottom" || element.side == "wall_bottom")
                     if (!element.name) {
-                        document.getElementById("score-bottom").textContent =
-                            "";
+                        ;
                     } else {
                         document.getElementById(
                             "score-bottom"
@@ -103,6 +88,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                     }
             });
         }
+        //TODO translate
         if (data.type == "next_match") {
             let content = "";
             if (data.players.length > 0) {
@@ -129,6 +115,7 @@ function initConn(lobbyName, playerName, key1, key2) {
             const ctx = document.getElementById("canvas").getContext("2d");
             clearCanvas(ctx);
         }
+        //TODO translate
         if (data.type == "winner") {
             document.getElementById(
                 "winner"
@@ -216,6 +203,7 @@ function initScene() {
     }
 }
 
+//TODO translate
 export function joinLobby(lobbyName, player1Name, player2Name) {
     document.getElementById(
         "player-one-keys"
