@@ -27,7 +27,6 @@ msgstr ""
 msgid "next match"
 msgstr ""
 
-# TODO translate these
 #: app/consumers.py:196
 #, python-format
 msgid "match in %(seconds)s.."

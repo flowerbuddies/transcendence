@@ -46,8 +46,7 @@ function initConn(lobbyName, playerName, key1, key2) {
             document.getElementById("score-top").textContent = "";
             document.getElementById("score-bottom").textContent = "";
             data.scene.forEach((element) => {
-                if (element.type != "score")
-                    return;
+                if (element.type != "score") return;
                 let score = `: ${element.elimination_msg}`;
                 if (data.is_tournament && element.score < 1) {
                     score = "";
@@ -55,7 +54,6 @@ function initConn(lobbyName, playerName, key1, key2) {
                     score = `: ${element.ball_msg}`;
                 if (element.side == "right" || element.side == "wall_right")
                     if (!element.name) {
-                        ;
                     } else {
                         document.getElementById(
                             "score-right"
@@ -63,7 +61,6 @@ function initConn(lobbyName, playerName, key1, key2) {
                     }
                 if (element.side == "left" || element.side == "wall_left")
                     if (!element.name) {
-                        ;
                     } else {
                         document.getElementById(
                             "score-left"
@@ -71,7 +68,6 @@ function initConn(lobbyName, playerName, key1, key2) {
                     }
                 if (element.side == "top" || element.side == "wall_top")
                     if (!element.name) {
-                        ;
                     } else {
                         document.getElementById(
                             "score-top"
@@ -79,7 +75,6 @@ function initConn(lobbyName, playerName, key1, key2) {
                     }
                 if (element.side == "bottom" || element.side == "wall_bottom")
                     if (!element.name) {
-                        ;
                     } else {
                         document.getElementById(
                             "score-bottom"
@@ -106,18 +101,13 @@ function initConn(lobbyName, playerName, key1, key2) {
             document.getElementById("next-match").textContent = content;
         }
         if (data.type == "end") {
-            document.getElementById(
-                "winner"
-            ).textContent = `${data.winner}`;
+            document.getElementById("winner").textContent = `${data.winner}`;
             const ctx = document.getElementById("canvas").getContext("2d");
             clearCanvas(ctx);
         }
-        //TODO translate
         if (data.type == "winner") {
-            console.log(data.winner)
-            document.getElementById(
-                "winner"
-            ).textContent = `${data.winner}`;
+            console.log(data.winner);
+            document.getElementById("winner").textContent = `${data.winner}`;
         }
     };
 
@@ -205,12 +195,12 @@ function initScene() {
 export function joinLobby(lobbyName, player1Name, player2Name) {
     document.getElementById(
         "player-one-keys"
-    ).textContent = `${player1Name} controls: ↑ ↓`;
+    ).textContent = `${player1Name}: ↑ ↓`;
     initConn(lobbyName, player1Name, "ArrowUp", "ArrowDown");
     if (player2Name) {
         document.getElementById(
             "player-two-keys"
-        ).textContent = `${player2Name} controls: Q A`;
+        ).textContent = `${player2Name}: Q A`;
         initConn(lobbyName, player2Name, "q", "a");
     }
     initScene();
