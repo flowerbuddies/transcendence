@@ -21,7 +21,7 @@ msgstr ""
 #: app/consumers.py:166
 #, python-format
 msgid "%(player)s won the tournament wowieee!!"
-msgstr "%(player)s a gagné le tournoi oh la la!!"
+msgstr "%(player)s a gagné le tournoi oh là là!!"
 
 #: app/consumers.py:186
 msgid "next match"
