@@ -21,7 +21,7 @@ msgstr ""
 #: app/consumers.py:166
 #, python-format
 msgid "%(player)s won the tournament wowieee!!"
-msgstr "%(player)s à gagné le tournoi oh là là!!"
+msgstr "%(player)s a gagné le tournoi oh la la!!"
 
 #: app/consumers.py:186
 msgid "next match"
@@ -35,7 +35,7 @@ msgstr "match dans %(seconds)s.."
 #: app/game/game.py:118
 #, python-format
 msgid "%(player)s won the match woo!"
-msgstr "%(player)s à gagné le match waouh!"
+msgstr "%(player)s a gagné le match waouh!"
 
 #: app/game/game.py:276
 msgid "eliminated"
