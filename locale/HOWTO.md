@@ -6,6 +6,7 @@
 LANGUAGES = [
     ("en", "English"),
     ("fr", "French"),
+    ("fi", "Finnish"),
     # here
 ]
 ```
@@ -16,7 +17,7 @@ LANGUAGES = [
 
 ## After adding a new `{% trans %}`
 
-`django-admin makemessages -a -e django`
+`django-admin makemessages -a -e django -e py`
 
 ## After translating the new string
 
