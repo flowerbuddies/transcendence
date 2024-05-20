@@ -67,9 +67,9 @@ def join(request: HttpRequest):
         return HttpResponseBadRequest("Not all fields specified")
 
     # check the `lobby-name` field
-    if not bool(re.compile(r"^[\w\-\.]{1,100}$").match(fields["lobby-name"])):
+    if not bool(re.compile(r"^[a-zA-Z0-9\_\-\.]{1,99}$").match(fields["lobby-name"])):
         return HttpResponseBadRequest(
-            "Lobby name must be a valid unicode string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods"
+            "Lobby name must be a string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods"
         )
 
     # check the `player-1-name` field
