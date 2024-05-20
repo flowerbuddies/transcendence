@@ -48,15 +48,15 @@ msgstr "balles perdues %(score)s/3"
 
 #: app/templates/app/game.django:4
 msgid "game.info.waiting"
-msgstr "attente de joueurs.."
+msgstr "en attente de joueurs.."
 
 #: app/templates/app/game.django:24
 msgid "game.info.press"
-msgstr "presse"
+msgstr "appuyer"
 
 #: app/templates/app/game.django:24
 msgid "game.info.to_exit"
-msgstr "sortie"
+msgstr "partir"
 
 #: app/templates/app/join.django:7 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11
