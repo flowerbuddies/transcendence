@@ -21,111 +21,111 @@ msgstr ""
 #: app/consumers.py:166
 #, python-format
 msgid "%(player)s won the tournament wowieee!!"
-msgstr "%(player)s won the tournament wowieee!!"
+msgstr "%(player)s voitti turnauksen vautsivau!!"
 
 #: app/consumers.py:186
 msgid "next match"
-msgstr "next match"
+msgstr "seuraava matsi"
 
 #: app/consumers.py:196
 #, python-format
 msgid "match in %(seconds)s.."
-msgstr "match in %(seconds)s.."
+msgstr "matsi alkaa %(seconds)s.."
 
 #: app/game/game.py:118
 #, python-format
 msgid "%(player)s won the match woo!"
-msgstr "%(player)s won the match woo!"
+msgstr "%(player)s voitti matsin vautsi!"
 
 #: app/game/game.py:276
 msgid "eliminated"
-msgstr "eliminated"
+msgstr "eliminoitu"
 
 #: app/game/game.py:277
 #, python-format
 msgid "balls missed %(score)s/3"
-msgstr "balls missed %(score)s/3"
+msgstr "läpi menneet pallot %(score)s/3"
 
 #: app/templates/app/game.django:4
 msgid "game.info.waiting"
-msgstr "waiting for players.."
+msgstr "odotetaan pelaajia.."
 
 #: app/templates/app/game.django:24
 msgid "game.info.press"
-msgstr "press"
+msgstr "paina"
 
 #: app/templates/app/game.django:24
 msgid "game.info.to_exit"
-msgstr "to exit"
+msgstr "poistuaksesi"
 
 #: app/templates/app/join.django:7 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11
 msgid "join.lobbyName.title"
-msgstr "Lobby name"
+msgstr "Palvelimen nimi"
 
 #: app/templates/app/join.django:8 app/templates/app/join_row.django:22
 #: app/templates/app/join_row.django:30
 msgid "join.type.title"
-msgstr "Game mode"
+msgstr "Pelityyppi"
 
 #: app/templates/app/join.django:9
 msgid "join.players.title"
-msgstr "Players"
+msgstr "Pelaajat"
 
 #: app/templates/app/join.django:10 app/templates/app/join.django:11
 #: app/templates/app/join_row.django:69 app/templates/app/join_row.django:70
 #: app/templates/app/join_row.django:77 app/templates/app/join_row.django:78
 msgid "join.playerName.title"
-msgstr "Player name"
+msgstr "Pelaajan nimi"
 
 #: app/templates/app/join.django:12
 msgid "join.action.title"
-msgstr "Action"
+msgstr "Toiminto"
 
 #: app/templates/app/join.django:40
 msgid "language.go"
-msgstr "Go"
+msgstr "Aseta"
 
 #: app/templates/app/join_row.django:31
 msgid "join.type.types.tournament1v1"
-msgstr "Tournament 1v1"
+msgstr "Turnaus 1v1"
 
 #: app/templates/app/join_row.django:32
 msgid "join.type.types.tournament1v1v1v1"
-msgstr "Tournament 1v1v1v1"
+msgstr "Turnaus 1v1v1v1"
 
 #: app/templates/app/join_row.django:33
 msgid "join.type.types.game1v1"
-msgstr "Game 1v1"
+msgstr "Peli 1v1"
 
 #: app/templates/app/join_row.django:34
 msgid "join.type.types.game1vAI"
-msgstr "Game 1vAI"
+msgstr "Peli 1vAI"
 
 #: app/templates/app/join_row.django:35
 msgid "join.type.types.game1v1v1v1"
-msgstr "Game 1v1v1v1"
+msgstr "Peli 1v1v1v1"
 
 #: app/templates/app/join_row.django:36
 msgid "join.type.types.game1v1vAIvAI"
-msgstr "Game 1v1vAIvAI"
+msgstr "Peli 1v1vAIvAI"
 
 #: app/templates/app/join_row.django:48
 msgid "join.players.connected_players"
-msgstr "Connected players"
+msgstr "Liittyneet pelaajat"
 
 #: app/templates/app/join_row.django:56
 msgid "join.players.player_slots"
-msgstr "Player slots"
+msgstr "Pelaajien määrä"
 
 #: app/templates/app/join_row.django:89
 msgid "join.action.full"
-msgstr "Full"
+msgstr "Täynnä"
 
 #: app/templates/app/join_row.django:91
 msgid "join.action.join"
-msgstr "Join"
+msgstr "Liity"
 
 #: app/templates/app/join_row.django:93
 msgid "join.action.create"
-msgstr "Create"
+msgstr "Luo"
