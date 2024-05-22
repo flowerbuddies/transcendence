@@ -56,7 +56,8 @@ function initConn(lobbyName, playerName, key1, key2) {
                 if (element.side == "right" || element.side == "wall_right")
                     if (!element.name) {
                     } else {
-                      document.getElementById("right-icon").innerHTML = rightIcon;
+                        document.getElementById("right-icon").innerHTML =
+                            rightIcon;
                         document.getElementById(
                             "score-right"
                         ).textContent = ` ${element.name}${score}`;
@@ -64,7 +65,8 @@ function initConn(lobbyName, playerName, key1, key2) {
                 if (element.side == "left" || element.side == "wall_left")
                     if (!element.name) {
                     } else {
-                        document.getElementById("left-icon").innerHTML = leftIcon;
+                        document.getElementById("left-icon").innerHTML =
+                            leftIcon;
                         document.getElementById(
                             "score-left"
                         ).textContent = `${element.name}${score}`;
@@ -80,7 +82,8 @@ function initConn(lobbyName, playerName, key1, key2) {
                 if (element.side == "bottom" || element.side == "wall_bottom")
                     if (!element.name) {
                     } else {
-                        document.getElementById("bottom-icon").innerHTML = bottomIcon;
+                        document.getElementById("bottom-icon").innerHTML =
+                            bottomIcon;
                         document.getElementById(
                             "score-bottom"
                         ).textContent = `${element.name}${score}`;
