@@ -36,67 +36,51 @@ function initConn(lobbyName, playerName, key1, key2) {
                 }">${player.name} ${player.is_ai ? "🤖" : ""}</li>`;
             list.innerHTML = content;
         }
-        //TODO translate
         if (data.type == "time") {
             let content = "";
-            if (data.seconds != 0) content = `match in ${data.seconds}..`;
+            if (data.seconds != 0) content = `${data.string}`;
             document.getElementById("info").textContent = content;
         }
-        //TODO translate 'balls missed' or remove
-        //TODO make it be balls missed x/1 instead of x/3 for the tournament
         if (data.type == "scene") {
             document.getElementById("score-right").textContent = "";
             document.getElementById("score-left").textContent = "";
             document.getElementById("score-top").textContent = "";
             document.getElementById("score-bottom").textContent = "";
             data.scene.forEach((element) => {
-                let score = ": eliminated";
-                if (data.is_tournament && element.score < 1) score = "";
-                else if (
-                    !data.is_tournament &&
-                    element.type == "score" &&
-                    element.score < 3
-                )
-                    score = `: balls missed ${element.score}/3`;
-                if (
-                    element.type == "score" &&
-                    (element.side == "right" || element.side == "wall_right")
-                )
-                    if (element.name) {
-                        document.getElementById("right-icon").innerHTML =
-                            rightIcon;
+                if (element.type != "score") return;
+                let score = `: ${element.elimination_msg}`;
+                if (data.is_tournament && element.score < 1) {
+                    score = "";
+                } else if (!data.is_tournament && element.score < 3)
+                    score = `: ${element.ball_msg}`;
+                if (element.side == "right" || element.side == "wall_right")
+                    if (!element.name) {
+                    } else {
+                      document.getElementById("right-icon").innerHTML = rightIcon;
                         document.getElementById(
                             "score-right"
                         ).textContent = ` ${element.name}${score}`;
                     }
-                if (
-                    element.type == "score" &&
-                    (element.side == "left" || element.side == "wall_left")
-                )
-                    if (element.name) {
-                        document.getElementById("left-icon").innerHTML =
-                            leftIcon;
+                if (element.side == "left" || element.side == "wall_left")
+                    if (!element.name) {
+                    } else {
+                        document.getElementById("left-icon").innerHTML = leftIcon;
                         document.getElementById(
                             "score-left"
                         ).textContent = `${element.name}${score}`;
                     }
-                if (
-                    element.type == "score" &&
-                    (element.side == "top" || element.side == "wall_top")
-                )
-                    if (element.name) {
+                if (element.side == "top" || element.side == "wall_top")
+                    if (!element.name) {
+                    } else {
                         document.getElementById("top-icon").innerHTML = topIcon;
                         document.getElementById(
                             "score-top"
                         ).textContent = `${element.name}${score}`;
                     }
-                if (
-                    element.type == "score" &&
-                    (element.side == "bottom" || element.side == "wall_bottom")
-                )
-                    if (element.name) {
-                        document.getElementById("bottom-icon").innerHTML =
-                            bottomIcon;
+                if (element.side == "bottom" || element.side == "wall_bottom")
+                    if (!element.name) {
+                    } else {
+                        document.getElementById("bottom-icon").innerHTML = bottomIcon;
                         document.getElementById(
                             "score-bottom"
                         ).textContent = `${element.name}${score}`;
@@ -106,7 +90,7 @@ function initConn(lobbyName, playerName, key1, key2) {
         if (data.type == "next_match") {
             let content = "";
             if (data.players.length > 0) {
-                content = "next match: ";
+                content = `${data.string}: `;
                 for (let i = 0; i < data.amount; i++) {
                     if (data.players.length <= i) {
                         content += "???";
@@ -121,18 +105,14 @@ function initConn(lobbyName, playerName, key1, key2) {
             }
             document.getElementById("next-match").textContent = content;
         }
-        //TODO translate
         if (data.type == "end") {
-            document.getElementById(
-                "winner"
-            ).textContent = `${data.winner} won the match woo!`;
+            document.getElementById("winner").textContent = `${data.winner}`;
             const ctx = document.getElementById("canvas").getContext("2d");
             clearCanvas(ctx);
         }
         if (data.type == "winner") {
-            document.getElementById(
-                "winner"
-            ).textContent = `${data.winner} won the tournament wowieee!!`;
+            console.log(data.winner);
+            document.getElementById("winner").textContent = `${data.winner}`;
         }
     };
 
@@ -216,15 +196,16 @@ function initScene() {
     }
 }
 
+//TODO translate
 export function joinLobby(lobbyName, player1Name, player2Name) {
     document.getElementById(
         "player-one-keys"
-    ).textContent = `${player1Name} controls: ↑ ↓`;
+    ).textContent = `${player1Name}: ↑ ↓`;
     initConn(lobbyName, player1Name, "ArrowUp", "ArrowDown");
     if (player2Name) {
         document.getElementById(
             "player-two-keys"
-        ).textContent = `${player2Name} controls: Q A`;
+        ).textContent = `${player2Name}: Q A`;
         initConn(lobbyName, player2Name, "q", "a");
     }
     initScene();
