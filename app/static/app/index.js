@@ -11,6 +11,7 @@ window.onpopstate = async (event) => {
     if (event.state === "join") {
         await setBody("/join");
         registerJoinForms();
+        registerPlayerOptionsUpdate();
         document.dispatchEvent(closeWSConnsEvent);
     }
 };
