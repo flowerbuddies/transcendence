@@ -176,7 +176,6 @@ function initConn(lobbyName, playerName, key1, key2) {
 
     async function goBackToJoin() {
         await setBody("/join");
-        history.replaceState("join", null);
         registerJoinForms();
         registerPlayerOptionsUpdate();
     }
