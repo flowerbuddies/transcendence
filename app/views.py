@@ -37,6 +37,7 @@ def index(request: HttpRequest):
     return render(request, "app/index.django", {"lobbies": Lobby.objects.all()})
 
 
+# TODO ? do these need to be translated?
 def game(request: HttpRequest):
     if request.META.get("HTTP_ACCEPT") == "application/json":
         lobby_name = request.GET.get("name")
@@ -64,28 +65,22 @@ def join(request: HttpRequest):
     if not all(
         key in fields for key in {"lobby-name", "type", "players", "player-1-name"}
     ):
-        return HttpResponseBadRequest("Not all fields specified")
+        return HttpResponseBadRequest(_("views.fields.empty"))
 
     # check the `lobby-name` field
     if not bool(re.compile(r"^[a-zA-Z0-9\_\-\.]{1,99}$").match(fields["lobby-name"])):
-        return HttpResponseBadRequest(
-            "Lobby name must be a string with length < 100 containing only ASCII alphanumerics, hyphens, underscores, or periods"
-        )
+        return HttpResponseBadRequest(_("input.group_name.incorrect_characters"))
 
     # check the `player-1-name` field
     if not (1 <= len(fields["player-1-name"]) <= 12):
-        return HttpResponseBadRequest(
-            "Player 1 name must be between 1 and 12 characters"
-        )
+        return HttpResponseBadRequest(_("input.player_name.length"))
 
     # check the `player-2-name` field
     if fields["player-2-name"] and not (1 <= len(fields["player-2-name"]) <= 12):
-        return HttpResponseBadRequest(
-            "Player 2 name must be between 1 and 12 characters"
-        )
+        return HttpResponseBadRequest(_("input.player_name.length"))
 
     if fields["player-1-name"] == fields["player-2-name"]:
-        return HttpResponseBadRequest("Players 1 and 2 can't have the same name")
+        return HttpResponseBadRequest(_("input.player_name.same"))
 
     is_tournament = False
     is_match_four = False
@@ -101,40 +96,32 @@ def join(request: HttpRequest):
 
         if game_type in ["join.type.types.game1v1", "join.type.types.game1vAI"]:
             if player_count != 2:
-                return HttpResponseBadRequest(
-                    "Player count must be 2 for this game mode"
-                )
+                return HttpResponseBadRequest(_("input.game1v1.count"))
         elif game_type in [
             "join.type.types.game1v1v1v1",
             "join.type.types.game1v1vAIvAI",
         ]:
             is_match_four = True
             if player_count != 4:
-                return HttpResponseBadRequest(
-                    "Player count must be 4 for this game mode"
-                )
+                return HttpResponseBadRequest(_("input.game1v1v1v1.count"))
         elif game_type == "join.type.types.tournament1v1":
             is_tournament = True
             if not is_power_of_two(player_count):
-                return HttpResponseBadRequest(
-                    "Player count must be a power of 2 for this game mode"
-                )
+                return HttpResponseBadRequest(_("input.tournament1v1.count"))
         elif game_type == "join.type.types.tournament1v1v1v1":
             is_tournament = True
             is_match_four = True
             if not is_power_of_four(player_count):
-                return HttpResponseBadRequest(
-                    "Player count must be a power of 4 for this game mode"
-                )
+                return HttpResponseBadRequest(_("input.tournament1v1v1v1.count"))
         else:
-            return HttpResponseBadRequest("Invalid game mode")
+            return HttpResponseBadRequest(_("input.game_mode.invalid"))
 
     except ValueError:
         # if the last player of a lobby disconnects, the lobby is deleted.
         # but if a player got the join view with this lobby not full yet,
         # the request will be wrongly formatted, we account for this here and will return not doesn't exist
         if not Lobby.objects.filter(name=fields["lobby-name"]).exists():
-            return HttpResponseBadRequest("Lobby no longer exists")
+            return HttpResponseBadRequest(_("input.lobby.nonexistent"))
         # if it's not an int, it just means the user is trying to join an existing game
 
     lobby, created = Lobby.objects.get_or_create(
@@ -157,16 +144,16 @@ def join(request: HttpRequest):
             lobby.players.create(name="AI 2", is_ai=True, is_disconnected=True)
 
     if len(lobby.players.all()) == lobby.max_players:
-        return HttpResponseBadRequest("The lobby is full")
+        return HttpResponseBadRequest(_("input.lobby.full"))
     if fields["player-2-name"] and len(lobby.players.all()) + 1 == lobby.max_players:
-        return HttpResponseBadRequest("Only one spot left")
+        return HttpResponseBadRequest(_("input.lobby.one_spot"))
     if lobby.players.filter(name=fields["player-1-name"]).exists():
-        return HttpResponseBadRequest("Player 1 name already taken")
+        return HttpResponseBadRequest(_("input.player_name.one_taken"))
     if (
         fields["player-2-name"]
         and lobby.players.filter(name=fields["player-2-name"]).exists()
     ):
-        return HttpResponseBadRequest("Player 2 name already taken")
+        return HttpResponseBadRequest(_("input.player_name.two_taken"))
     lobby.players.create(name=fields["player-1-name"])
     if fields["player-2-name"]:
         lobby.players.create(name=fields["player-2-name"])
