@@ -1,4 +1,6 @@
 import { setBody } from "/static/app/index.js";
+import { registerJoinForms } from "/static/app/join.js";
+import { registerPlayerOptionsUpdate } from "/static/app/options.js";
 let data = {};
 
 function initConn(lobbyName, playerName, key1, key2) {
@@ -161,22 +163,28 @@ function initConn(lobbyName, playerName, key1, key2) {
             isKey2Pressed = false;
         } else if (ev.key === "Escape") {
             closeGameConnection();
+            goBackToJoin();
         }
     }
 
-    async function closeGameConnection() {
+    function closeGameConnection() {
         document.removeEventListener("keydown", keyPressed);
         document.removeEventListener("keyup", keyReleased);
         document.removeEventListener("closeWSConns", () => gameSocket.close());
         gameSocket.close();
+    }
+
+    async function goBackToJoin() {
         await setBody("/join");
+        registerJoinForms();
+        registerPlayerOptionsUpdate();
     }
 
     // we send the same event for both `keydown` and `keyup`
     // depending on the previous state, the server will be able to understand what's happening
     document.addEventListener("keydown", keyPressed);
     document.addEventListener("keyup", keyReleased);
-    document.addEventListener("closeWSConns", () => gameSocket.close());
+    document.addEventListener("closeWSConns", closeGameConnection);
 }
 
 function initScene() {
