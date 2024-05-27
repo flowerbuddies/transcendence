@@ -37,7 +37,6 @@ def index(request: HttpRequest):
     return render(request, "app/index.django", {"lobbies": Lobby.objects.all()})
 
 
-# TODO ? do these need to be translated?
 def game(request: HttpRequest):
     if request.META.get("HTTP_ACCEPT") == "application/json":
         lobby_name = request.GET.get("name")
