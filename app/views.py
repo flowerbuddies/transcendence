@@ -58,7 +58,7 @@ def join(request: HttpRequest):
     if request.method == "GET":
         return render(request, "app/join.django", {"lobbies": Lobby.objects.all()})
 
-    fields = request.GET.dict()
+    fields = request.POST.dict()
 
     # check that the request has all the mandatory fields
     if not all(

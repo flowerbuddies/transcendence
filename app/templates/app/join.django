@@ -25,6 +25,7 @@
 <footer class="fixed-bottom">
   <div class="col-2 ms-4 mb-4 language-selector">
     <form class="input-group" action="{% url 'set_language' %}" method="post">
+      {% csrf_token %}
       <select class="form-select" name="language">
         {% get_current_language as LANGUAGE_CODE %}
         {% get_available_languages as LANGUAGES %}
