@@ -146,7 +146,7 @@ msgstr "Le nom du/de la joueur.se doit être entre 1 et 12 caractères"
 
 #: app/views.py:78 app/views.py:85
 msgid "input.player_name.whitespace"
-msgstr ""
+msgstr "Le nom du/de la joueur.se ne peut pas pas contenir d'espaces"
 
 #: app/views.py:88
 msgid "input.player_name.same"
