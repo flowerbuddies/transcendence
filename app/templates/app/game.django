@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static %}
 <main class="row align-items-center vh-100">
   <div class="col-3">
     <p id="info">{% trans "game.info.waiting" %}</p>
@@ -11,26 +12,24 @@
   </div>
   <div class="col-9 h-80 fs-4">
     <div class="d-flex flex-row w-inherit justify-content-between">
-      <!--TODO translate-->
       <div class="d-flex align-items-center">
-        <svg class="me-2 overflow-visible" width="24" height="24" id="top-icon" />
+        <img src="{% static "top_icon.svg" %}" alt="top icon" class="me-2 overflow-visible d-none" width="24" height="24" id="top-icon" />
         <span class="text-start align-middle" id="score-top"></span>
       </div>
       <div class="d-flex align-items-center">
         <span class="text-end align-middle" id="score-right"></span>
-        <svg class="ms-2 overflow-visible" width="24" height="24" id="right-icon" />
+        <img src="{% static "right_icon.svg" %}" alt="right icon"  class="ms-2 overflow-visible d-none" width="24" height="24" id="right-icon" />
       </div>
     </div>
     <canvas class="w-inherit" id="canvas"></canvas>
     <div class="d-flex flex-row w-inherit justify-content-between">
-      <!--TODO translate-->
       <div class="d-flex align-items-center">
-        <svg class="me-2 overflow-visible" width="24" height="24" id="left-icon" />
+        <img src="{% static "left_icon.svg" %}" alt="left icon"  class="me-2 overflow-visible d-none" width="24" height="24" id="left-icon" />
         <span class="text-start align-middle" id="score-left"></span>
       </div>
       <div class="d-flex align-items-center">
         <span class="text-end align-middle" id="score-bottom"></span>
-        <svg class="ms-2 overflow-visible" width="24" height="24" id="bottom-icon" />
+        <img src="{% static "bottom_icon.svg" %}" alt="bottom icon"  class="ms-2 overflow-visible d-none" width="24" height="24" id="bottom-icon" />
       </div>
     </div>
     <p id="winner" class="w-inherit text-center"></p>

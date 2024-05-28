@@ -1,0 +1,40 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="23"
+    height="22"
+    viewBox="0 0 23 22"
+    fill="none"
+>
+    <line
+        x1="2.22792"
+        y1="21.2856"
+        x2="2.22792"
+        y2="1.28563"
+        stroke="black"
+        stroke-width="2.65843"
+    />
+    <line
+        x1="20.6775"
+        y1="21.2856"
+        x2="20.6775"
+        y2="2.06082"
+        stroke="black"
+        stroke-width="2.65843"
+    />
+    <line
+        x1="1.85168"
+        y1="19.9564"
+        x2="22.0067"
+        y2="19.9564"
+        stroke="black"
+        stroke-width="2.65843"
+    />
+    <line
+        x1="0.77612"
+        y1="1.50682"
+        x2="22.0164"
+        y2="1.66186"
+        stroke="red"
+        stroke-width="2.65843"
+    />
+</svg>
