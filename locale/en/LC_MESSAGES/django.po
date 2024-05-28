@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 14:06+0000\n"
+"POT-Creation-Date: 2024-05-28 14:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,43 +130,49 @@ msgstr "Join"
 msgid "join.action.create"
 msgstr "Create"
 
-#: app/views.py:68
+#: app/views.py:67
 msgid "views.fields.empty"
 msgstr "Not all fields specified"
 
 #: app/views.py:71
 msgid "input.group_name.incorrect_characters"
-msgstr "Lobby name must be under 100 characters and contain only ASCII alphanumerics, hyphens, underscores, or periods"
+msgstr ""
+"Lobby name must be under 100 characters and contain only ASCII "
+"alphanumerics, hyphens, underscores, or periods"
 
-#: app/views.py:75 app/views.py:79
+#: app/views.py:75 app/views.py:82
 msgid "input.player_name.length"
 msgstr "Player name must be between 1 and 12 characters"
 
-#: app/views.py:82
+#: app/views.py:78 app/views.py:85
+msgid "input.player_name.whitespace"
+msgstr "Players name can't be purely whitespace"
+
+#: app/views.py:88
 msgid "input.player_name.same"
 msgstr "Players 1 and 2 can't have the same name"
 
-#: app/views.py:98
+#: app/views.py:104
 msgid "input.game1v1.count"
 msgstr "Player count must be 2 for this game mode"
 
-#: app/views.py:106
+#: app/views.py:111
 msgid "input.game1v1v1v1.count"
 msgstr "Player count must be 4 for this game mode"
 
-#: app/views.py:111
+#: app/views.py:115
 msgid "input.tournament1v1.count"
 msgstr "Player count must be a power of 2 for this game mode"
 
-#: app/views.py:117
+#: app/views.py:120
 msgid "input.tournament1v1v1v1.count"
 msgstr "Player count must be a power of 4 for this game mode"
 
-#: app/views.py:119
+#: app/views.py:122
 msgid "input.game_mode.invalid"
 msgstr "Invalid game mode"
 
-#: app/views.py:128
+#: app/views.py:129
 msgid "input.lobby.nonexistent"
 msgstr "Lobby no longer exists"
 
@@ -174,14 +180,14 @@ msgstr "Lobby no longer exists"
 msgid "input.lobby.full"
 msgstr "The lobby is full"
 
-#: app/views.py:155
+#: app/views.py:154
 msgid "input.lobby.one_spot"
 msgstr "Only one spot left"
 
-#: app/views.py:158
+#: app/views.py:156
 msgid "input.player_name.one_taken"
 msgstr "Player 1 name already taken"
 
-#: app/views.py:163
+#: app/views.py:161
 msgid "input.player_name.two_taken"
 msgstr "Player 2 name already taken"
