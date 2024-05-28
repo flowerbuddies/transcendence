@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-15 07:39+0000\n"
+"POT-Creation-Date: 2024-05-25 14:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,30 +18,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/consumers.py:166
+#: app/consumers.py:185
 #, python-format
 msgid "%(player)s won the tournament wowieee!!"
 msgstr "%(player)s voitti turnauksen vautsivau!!"
 
-#: app/consumers.py:186
+#: app/consumers.py:205
 msgid "next match"
 msgstr "seuraava matsi"
 
-#: app/consumers.py:196
+#: app/consumers.py:221
 #, python-format
 msgid "match in %(seconds)s.."
 msgstr "matsi alkaa %(seconds)s.."
 
-#: app/game/game.py:118
+#: app/game/game.py:142
 #, python-format
 msgid "%(player)s won the match woo!"
 msgstr "%(player)s voitti matsin vautsi!"
 
-#: app/game/game.py:276
+#: app/game/game.py:300
 msgid "eliminated"
 msgstr "eliminoitu"
 
-#: app/game/game.py:277
+#: app/game/game.py:301
 #, python-format
 msgid "balls missed %(score)s/3"
 msgstr "läpi menneet pallot %(score)s/3"
@@ -129,3 +129,59 @@ msgstr "Liity"
 #: app/templates/app/join_row.django:93
 msgid "join.action.create"
 msgstr "Luo"
+
+#: app/views.py:68
+msgid "views.fields.empty"
+msgstr "Kaikkia kenttiä ei ole täytetty"
+
+#: app/views.py:71
+msgid "input.group_name.incorrect_characters"
+msgstr "Palvelimen nimen pitää olla pituudeltaan alle 100 merkkiä ja sisältää ainoastaan ASCII kirjaimia, numeroita, väliviivoja, pisteitä tai alaviivoja"
+
+#: app/views.py:75 app/views.py:79
+msgid "input.player_name.length"
+msgstr "Pelaajan nimen pituuden pitää olla 1 ja 12 merkin välillä"
+
+#: app/views.py:82
+msgid "input.player_name.same"
+msgstr "Pelaajilla 1 ja 2 ei saa olla samaa nimeä"
+
+#: app/views.py:98
+msgid "input.game1v1.count"
+msgstr "Pelaajien määrän pitää olla 2 tässä pelityypissä"
+
+#: app/views.py:106
+msgid "input.game1v1v1v1.count"
+msgstr "Pelaajien määrän pitää olla 4 tässä pelityypissä"
+
+#: app/views.py:111
+msgid "input.tournament1v1.count"
+msgstr "Pelaajien määrän pitää olla 2. potenssi tässä pelityypissä"
+
+#: app/views.py:117
+msgid "input.tournament1v1v1v1.count"
+msgstr "Pelaajien määrän pitää olla 4. potenssi tässä pelityypissä"
+
+#: app/views.py:119
+msgid "input.game_mode.invalid"
+msgstr "Virheellinen pelityyppi"
+
+#: app/views.py:128
+msgid "input.lobby.nonexistent"
+msgstr "Palvelinta ei ole enää olemassa"
+
+#: app/views.py:152
+msgid "input.lobby.full"
+msgstr "Palvelin on täynnä"
+
+#: app/views.py:155
+msgid "input.lobby.one_spot"
+msgstr "Vain yksi paikka jäljellä"
+
+#: app/views.py:158
+msgid "input.player_name.one_taken"
+msgstr "Pelaajan 1 nimi on jo otettu"
+
+#: app/views.py:163
+msgid "input.player_name.two_taken"
+msgstr "Pelaajan 2 nimi on jo otettu"
