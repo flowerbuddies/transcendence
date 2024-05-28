@@ -70,14 +70,23 @@ def join(request: HttpRequest):
     if not bool(re.compile(r"^[a-zA-Z0-9\_\-\.]{1,99}$").match(fields["lobby-name"])):
         return HttpResponseBadRequest(_("input.group_name.incorrect_characters"))
 
-    # check the `player-1-name` field
+    # check the `player-1-name` field length
     if not (1 <= len(fields["player-1-name"]) <= 12):
         return HttpResponseBadRequest(_("input.player_name.length"))
 
-    # check the `player-2-name` field
+    # check if the `player-1-name` field is purely whitespace
+    if fields["player-1-name"] and fields["player-1-name"].isspace():
+        return HttpResponseBadRequest(_("input.player_name.whitespace"))
+
+    # check the `player-2-name` field length
     if fields["player-2-name"] and not (1 <= len(fields["player-2-name"]) <= 12):
         return HttpResponseBadRequest(_("input.player_name.length"))
 
+    # check if the `player-2-name` field is purely whitespace
+    if fields["player-2-name"] and fields["player-2-name"].isspace():
+        return HttpResponseBadRequest(_("input.player_name.whitespace"))
+
+    # check that `player-1-name` and `player-2-name` fields are not the same value
     if fields["player-1-name"] == fields["player-2-name"]:
         return HttpResponseBadRequest(_("input.player_name.same"))
 

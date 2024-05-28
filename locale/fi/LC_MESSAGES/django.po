@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 14:06+0000\n"
+"POT-Creation-Date: 2024-05-28 14:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,43 +130,49 @@ msgstr "Liity"
 msgid "join.action.create"
 msgstr "Luo"
 
-#: app/views.py:68
+#: app/views.py:67
 msgid "views.fields.empty"
 msgstr "Kaikkia kenttiä ei ole täytetty"
 
 #: app/views.py:71
 msgid "input.group_name.incorrect_characters"
-msgstr "Palvelimen nimen pitää olla pituudeltaan alle 100 merkkiä ja sisältää ainoastaan ASCII kirjaimia, numeroita, väliviivoja, pisteitä tai alaviivoja"
+msgstr ""
+"Palvelimen nimen pitää olla pituudeltaan alle 100 merkkiä ja sisältää "
+"ainoastaan ASCII kirjaimia, numeroita, väliviivoja, pisteitä tai alaviivoja"
 
-#: app/views.py:75 app/views.py:79
+#: app/views.py:75 app/views.py:82
 msgid "input.player_name.length"
 msgstr "Pelaajan nimen pituuden pitää olla 1 ja 12 merkin välillä"
 
-#: app/views.py:82
+#: app/views.py:78 app/views.py:85
+msgid "input.player_name.whitespace"
+msgstr "Pelaajan nimi ei saa sisältää yksistään tyhjätilamerkkejä"
+
+#: app/views.py:88
 msgid "input.player_name.same"
 msgstr "Pelaajilla 1 ja 2 ei saa olla samaa nimeä"
 
-#: app/views.py:98
+#: app/views.py:104
 msgid "input.game1v1.count"
 msgstr "Pelaajien määrän pitää olla 2 tässä pelityypissä"
 
-#: app/views.py:106
+#: app/views.py:111
 msgid "input.game1v1v1v1.count"
 msgstr "Pelaajien määrän pitää olla 4 tässä pelityypissä"
 
-#: app/views.py:111
+#: app/views.py:115
 msgid "input.tournament1v1.count"
 msgstr "Pelaajien määrän pitää olla 2. potenssi tässä pelityypissä"
 
-#: app/views.py:117
+#: app/views.py:120
 msgid "input.tournament1v1v1v1.count"
 msgstr "Pelaajien määrän pitää olla 4. potenssi tässä pelityypissä"
 
-#: app/views.py:119
+#: app/views.py:122
 msgid "input.game_mode.invalid"
 msgstr "Virheellinen pelityyppi"
 
-#: app/views.py:128
+#: app/views.py:129
 msgid "input.lobby.nonexistent"
 msgstr "Palvelinta ei ole enää olemassa"
 
@@ -174,14 +180,14 @@ msgstr "Palvelinta ei ole enää olemassa"
 msgid "input.lobby.full"
 msgstr "Palvelin on täynnä"
 
-#: app/views.py:155
+#: app/views.py:154
 msgid "input.lobby.one_spot"
 msgstr "Vain yksi paikka jäljellä"
 
-#: app/views.py:158
+#: app/views.py:156
 msgid "input.player_name.one_taken"
 msgstr "Pelaajan 1 nimi on jo otettu"
 
-#: app/views.py:163
+#: app/views.py:161
 msgid "input.player_name.two_taken"
 msgstr "Pelaajan 2 nimi on jo otettu"

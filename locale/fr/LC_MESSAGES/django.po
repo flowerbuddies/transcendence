@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-25 14:06+0000\n"
+"POT-Creation-Date: 2024-05-28 14:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -130,43 +130,51 @@ msgstr "Rejoindre"
 msgid "join.action.create"
 msgstr "Créer"
 
-#: app/views.py:68
+#: app/views.py:67
 msgid "views.fields.empty"
 msgstr "Tous les champs n'ont pas été spécifiés"
 
 #: app/views.py:71
 msgid "input.group_name.incorrect_characters"
-msgstr "Le nom du lobby ne peut dépasser les 100 caractères, ils doivent être des caractères ASCII, des tirets (du 6 ou 8), ou des des points"
+msgstr ""
+"Le nom du lobby ne peut dépasser les 100 caractères, ils doivent être des "
+"caractères ASCII, des tirets (du 6 ou 8), ou des des points"
 
-#: app/views.py:75 app/views.py:79
+#: app/views.py:75 app/views.py:82
 msgid "input.player_name.length"
 msgstr "Le nom du/de la joueur.se doit être entre 1 et 12 caractères"
 
-#: app/views.py:82
+#: app/views.py:78 app/views.py:85
+msgid "input.player_name.whitespace"
+msgstr "Le nom du/de la joueur.se ne peut pas pas contenir d'espaces"
+
+#: app/views.py:88
 msgid "input.player_name.same"
 msgstr "Les noms des joueur.ses ne peuvent pas être les mêmes"
 
-#: app/views.py:98
+#: app/views.py:104
 msgid "input.game1v1.count"
 msgstr "Le nombre de joueur.ses doit être de 2 pour ce mode de jeu."
 
-#: app/views.py:106
+#: app/views.py:111
 msgid "input.game1v1v1v1.count"
 msgstr "Le nombre de joueur.ses doit être de 4 pour ce mode de jeu."
 
-#: app/views.py:111
+#: app/views.py:115
 msgid "input.tournament1v1.count"
-msgstr "Le nombre de joueur.ses doit être une puissance de 2 pour ce mode de jeu."
+msgstr ""
+"Le nombre de joueur.ses doit être une puissance de 2 pour ce mode de jeu."
 
-#: app/views.py:117
+#: app/views.py:120
 msgid "input.tournament1v1v1v1.count"
-msgstr "Le nombre de joueur.ses doit être une puissance de 4 pour ce mode de jeu."
+msgstr ""
+"Le nombre de joueur.ses doit être une puissance de 4 pour ce mode de jeu."
 
-#: app/views.py:119
+#: app/views.py:122
 msgid "input.game_mode.invalid"
 msgstr "Mode de jeu invalide"
 
-#: app/views.py:128
+#: app/views.py:129
 msgid "input.lobby.nonexistent"
 msgstr "Le lobby n'existe plus"
 
@@ -174,14 +182,14 @@ msgstr "Le lobby n'existe plus"
 msgid "input.lobby.full"
 msgstr "Le lobby est plein"
 
-#: app/views.py:155
+#: app/views.py:154
 msgid "input.lobby.one_spot"
 msgstr "Seulement une place est disponible"
 
-#: app/views.py:158
+#: app/views.py:156
 msgid "input.player_name.one_taken"
 msgstr "Le nom du/de la joueur.se 1 est déjà prit"
 
-#: app/views.py:163
+#: app/views.py:161
 msgid "input.player_name.two_taken"
 msgstr "Le nom du/de la joueur.se 2 est déjà prit"
