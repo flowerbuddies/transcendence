@@ -161,6 +161,7 @@ function initConn(lobbyName, playerName, key1, key2) {
             );
             isKey2Pressed = false;
         } else if (ev.key === "Escape") {
+            data = {};
             closeGameConnection();
             goBackToJoin();
         }
