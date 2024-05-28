@@ -18,6 +18,10 @@
     margin-bottom: 60px;
 }
 
+#game {
+    overflow-y: hidden;
+}
+
 footer {
     position: absolute;
     bottom: 0;
