@@ -8,11 +8,10 @@ export function registerJoinForms() {
             ev.preventDefault();
 
             // register the join/create
-            const formData = new URLSearchParams(
-                [...el.elements].map((el) => [el.name, el.value])
-            );
-            const joinRes = await fetch(`/join?${formData}`, {
+            const formData = new FormData(ev.target);
+            const joinRes = await fetch("/join", {
                 method: "POST",
+                body: formData,
             });
             if (joinRes.status != 200) return alert(await joinRes.text());
 
