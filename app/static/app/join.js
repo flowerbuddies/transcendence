@@ -16,8 +16,12 @@ export function registerJoinForms() {
             });
             if (joinRes.status != 200) return alert(await joinRes.text());
 
+            let is_history = history.state;
+            if (!is_history) history.replaceState("join", null);
             // switch to game view
             await setBody("/game");
+            if (!is_history) history.pushState("game", null);
+            if (history.state === "join") history.forward();
             joinLobby(
                 formData.get("lobby-name"),
                 formData.get("player-1-name"),
