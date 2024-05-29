@@ -1,8 +1,10 @@
 import asyncio
+from django.utils.translation import gettext as _
+import math
 from .ball import Ball
 from .paddle import Paddle
 from .ai import BehaviorTree
-from django.utils.translation import gettext as _
+
 
 class Player:
     def __init__(self, side):
@@ -186,7 +188,6 @@ class GameState:
             self.ball.reset()
 
     async def transform_dead_players(self):
-        # TODO potentially refactor into two functions, where the async part is it's separate function
         if self.left.score == self.score_to_lose and self.left.side != "wall_left":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.left.name}
@@ -216,41 +217,63 @@ class GameState:
             self.bottom.change_side("wall_bottom")
 
     def handle_collisions(self, dt):
-        # check the next ball's position for collision with paddles
-        next = self.ball.next_position(dt)
-        self.handle_paddle_collision(next, self.left.paddle)
-        self.handle_paddle_collision(next, self.right.paddle)
-        self.handle_paddle_collision(next, self.top.paddle)
-        self.handle_paddle_collision(next, self.bottom.paddle)
+        next = self.ball.next_position(self.ball.dx, self.ball.dy, dt)
+        speed = self.ball.get_speed()
+        if speed == 0.0:
+            speed = 0.001
+
+        if self.was_collision(next):
+            print(f"collision, speed: {speed}")
+        # TODO: make sure you do at least one collision check...
+        # for inter in range(0, math.floor(speed)):
+        #     # maybe "invert" so that you check next position first, then move towards current ball
+        #     amount = inter / speed
+        #     intermediate_dx = lerp(self.ball.x, next.x, amount)
+        #     intermediate_dy = lerp(self.ball.y, next.y, amount)
+        #     intermediate = self.ball.next_position(intermediate_dx, intermediate_dy, dt)
+
+    def was_collision(self, next):
+        return (
+            self.handle_paddle_collision(next, self.left.paddle)
+            or self.handle_paddle_collision(next, self.right.paddle)
+            or self.handle_paddle_collision(next, self.top.paddle)
+            or self.handle_paddle_collision(next, self.bottom.paddle)
+        )
 
     def handle_paddle_collision(self, next, paddle):
         # depending on the direction of the ball, check the paddle's ball-facing edge
         # check one edge of the paddle against both orthogonal edges of the ball
         # if a collision occurs, invert the orthogonal velocity and set next update to apply acceleration
+        # return True if a collision occurs, else False
         if self.ball.dx < 0.0:
             if ortho_intersects(
                 paddle.get_edge("right"), next.get_edge("top")
             ) or ortho_intersects(paddle.get_edge("right"), next.get_edge("bottom")):
                 self.ball.dx *= -1
                 self.ball.apply_accel = True
+                return True
         else:
             if ortho_intersects(
                 paddle.get_edge("left"), next.get_edge("top")
             ) or ortho_intersects(paddle.get_edge("left"), next.get_edge("bottom")):
                 self.ball.dx *= -1
                 self.ball.apply_accel = True
+                return True
         if self.ball.dy < 0.0:
             if ortho_intersects(
                 next.get_edge("left"), paddle.get_edge("bottom")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("bottom")):
                 self.ball.dy *= -1
                 self.ball.apply_accel = self.is_four_player
+                return True
         else:
             if ortho_intersects(
                 next.get_edge("left"), paddle.get_edge("top")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("top")):
                 self.ball.dy *= -1
                 self.ball.apply_accel = self.is_four_player
+                return True
+        return False
 
     def get_scene(self):
         # returns an array of clientside-supported objects for displaying the gamestate
@@ -325,3 +348,8 @@ def ortho_intersects(vertical, horizontal):
     vx, vy1, _, vy2 = vertical
     hx1, hy, hx2, _ = horizontal
     return hx1 <= vx <= hx2 and vy1 <= hy <= vy2
+
+
+# linearly interpolate by an amount between start and end
+def lerp(start, end, amount):
+    return start + amount * (end - start)

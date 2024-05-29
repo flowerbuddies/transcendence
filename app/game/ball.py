@@ -1,4 +1,5 @@
 import random
+import math
 
 
 class Ball:
@@ -39,12 +40,12 @@ class Ball:
         if len(self.trail) > self.max_trail_len:
             self.trail.pop()
 
-    def next_position(self, dt):
+    def next_position(self, dx, dy, dt):
         next = Ball()
         next.x = self.x
         next.y = self.y
-        next.dx = self.dx
-        next.dy = self.dy
+        next.dx = dx
+        next.dy = dy
         next.update(dt)
         return next
 
@@ -67,6 +68,11 @@ class Ball:
                 self.x + self.radius,
                 self.y + self.radius,
             )
+
+    def get_speed(self):
+        ddx = self.ball.dx - self.ball.x
+        ddy = self.ball.dy - self.ball.y
+        return math.sqrt(ddx * ddx + ddy * ddy)
 
 
 # return a random float between '-max_value' and 'max_value' with magnitude greater than min_value
