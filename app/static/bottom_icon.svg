@@ -9,7 +9,7 @@
         x1="21.5316"
         x2="21.5316"
         y2="22.3529"
-        stroke="black"
+        stroke="#AFF69D"
         stroke-width="2.93688"
     />
     <line
@@ -17,7 +17,7 @@
         y1="1.46844"
         x2="21.8579"
         y2="1.46844"
-        stroke="black"
+        stroke="#AFF69D"
         stroke-width="2.93688"
     />
     <line
@@ -25,7 +25,7 @@
         y1="1.14212"
         x2="2.27866"
         y2="22.3529"
-        stroke="black"
+        stroke="#AFF69D"
         stroke-width="2.93688"
     />
     <line
@@ -33,7 +33,7 @@
         y1="20.8845"
         x2="23"
         y2="20.8845"
-        stroke="red"
+        stroke="black"
         stroke-width="2.93688"
     />
 </svg>

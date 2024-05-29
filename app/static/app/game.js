@@ -118,7 +118,6 @@ function initConn(lobbyName, playerName, key1, key2) {
             clearCanvas(ctx);
         }
         if (data.type == "winner") {
-            console.log(data.winner);
             document.getElementById("winner").textContent = `${data.winner}`;
         }
     };

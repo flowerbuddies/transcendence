@@ -9,14 +9,14 @@
         y1="2.27975"
         x2="20"
         y2="2.27975"
-        stroke="black"
+        stroke="#AFF69D"
         stroke-width="3.0219"
     />
     <line
         y1="20.7294"
         x2="19.2248"
         y2="20.7294"
-        stroke="black"
+        stroke="#AFF69D"
         stroke-width="3.0219"
     />
     <line
@@ -24,7 +24,7 @@
         y1="2.08527"
         x2="1.51095"
         y2="22.2403"
-        stroke="black"
+        stroke="#AFF69D"
         stroke-width="3.0219"
     />
     <line
@@ -32,7 +32,7 @@
         y1="1.01103"
         x2="19.8055"
         y2="22.2513"
-        stroke="red"
+        stroke="black"
         stroke-width="3.0219"
     />
 </svg>
