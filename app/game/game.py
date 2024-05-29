@@ -328,7 +328,12 @@ class GameState:
             self.paddle_to_scene(player.paddle, scene)
 
     def paddle_to_scene(self, paddle, scene):
-        is_vertical_paddle = paddle.side == "left" or paddle.side == "right"
+        is_vertical_paddle = (
+            paddle.side == "left"
+            or paddle.side == "right"
+            or paddle.side == "wall_left"
+            or paddle.side == "wall_right"
+        )
         scene.append(
             {
                 "type": "paddle",
