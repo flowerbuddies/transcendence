@@ -1,7 +1,6 @@
 import { registerJoinForms } from "/static/app/join.js";
 import { registerPlayerOptionsUpdate } from "/static/app/options.js";
 
-history.replaceState("join", null);
 registerJoinForms();
 registerPlayerOptionsUpdate();
 
@@ -11,6 +10,7 @@ window.onpopstate = async (event) => {
     if (event.state === "join") {
         await setBody("/join");
         registerJoinForms();
+        registerPlayerOptionsUpdate();
         document.dispatchEvent(closeWSConnsEvent);
     }
 };

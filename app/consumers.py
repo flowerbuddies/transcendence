@@ -17,6 +17,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.lobby = None
+        self.task = None
 
     @database_sync_to_async
     def get_lobby(self):
@@ -53,6 +54,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     def init_player(self, player_name):
         player = self.lobby.players.filter(name=player_name).first()
         player.channel_name = self.channel_name
+        player.is_disconnected = False
         player.save()
         channel_to_lobby[self.channel_name] = player.lobby.name
 
@@ -63,6 +65,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
     # mark player as disconnected
     @database_sync_to_async
     def disconnect_player(self):
+        if not self.lobby:
+            return
         player = self.lobby.players.filter(channel_name=self.channel_name).first()
         if not player or player.is_disconnected:
             return
@@ -84,7 +88,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def delete_lobby(self):
-        self.lobby.delete()
+       if self.lobby:
+           self.lobby.delete()
 
     async def send_players_list(self):
         players, max_players = await self.get_players()
@@ -106,15 +111,25 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         # when a player connect to a lobby, send the list players to all connected players
-        await self.send_players_list()
+        try:
+            await self.send_players_list()
+        except:
+            pass
 
     async def disconnect(self, _):
         await self.disconnect_player()
         await self.channel_layer.group_discard(self.lobby_name, self.channel_name)
-        if await self.is_lobby_empty():
-            await self.delete_lobby()
+        if not self.lobby or await self.is_lobby_empty():
+           await self.delete_lobby()
+           if self.task:
+               self.task.cancel()
         else:
-            await self.send_players_list()
+            try:
+                await self.send_players_list()
+            except:
+                pass
+        if self.channel_name in channel_to_lobby.keys():
+            channel_to_lobby.pop(self.channel_name)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -192,7 +207,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         )
 
     def end_game(self, _):
-        pass
+        if self.lobby.name in lobby_to_gs.keys():
+           lobby_to_gs.pop(self.lobby.name)
 
     async def mark_ai(self, gs):
         ai_players = await self.get_ai_players()
@@ -241,8 +257,11 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             self.tournament = Tournament(gs, alive_player_names, gs.is_four_player)
             self.tournament.get_match_count()
             self.tournament.start_tournament()
-            task = asyncio.create_task(self.run_matches())
-            task.add_done_callback(self.end_game)
+            try:
+                self.task = asyncio.create_task(self.run_matches())
+            except:
+                pass
+            self.task.add_done_callback(self.end_game)
 
     def get_game_state(self):
         try:

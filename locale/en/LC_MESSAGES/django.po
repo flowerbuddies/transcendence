@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-15 07:39+0000\n"
+"POT-Creation-Date: 2024-05-28 14:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,30 +18,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/consumers.py:166
+#: app/consumers.py:185
 #, python-format
 msgid "%(player)s won the tournament wowieee!!"
 msgstr "%(player)s won the tournament wowieee!!"
 
-#: app/consumers.py:186
+#: app/consumers.py:205
 msgid "next match"
 msgstr "next match"
 
-#: app/consumers.py:196
+#: app/consumers.py:221
 #, python-format
 msgid "match in %(seconds)s.."
 msgstr "match in %(seconds)s.."
 
-#: app/game/game.py:118
+#: app/game/game.py:142
 #, python-format
 msgid "%(player)s won the match woo!"
 msgstr "%(player)s won the match woo!"
 
-#: app/game/game.py:276
+#: app/game/game.py:300
 msgid "eliminated"
 msgstr "eliminated"
 
-#: app/game/game.py:277
+#: app/game/game.py:301
 #, python-format
 msgid "balls missed %(score)s/3"
 msgstr "balls missed %(score)s/3"
@@ -129,3 +129,65 @@ msgstr "Join"
 #: app/templates/app/join_row.django:93
 msgid "join.action.create"
 msgstr "Create"
+
+#: app/views.py:67
+msgid "views.fields.empty"
+msgstr "Not all fields specified"
+
+#: app/views.py:71
+msgid "input.group_name.incorrect_characters"
+msgstr ""
+"Lobby name must be under 100 characters and contain only ASCII "
+"alphanumerics, hyphens, underscores, or periods"
+
+#: app/views.py:75 app/views.py:82
+msgid "input.player_name.length"
+msgstr "Player name must be between 1 and 12 characters"
+
+#: app/views.py:78 app/views.py:85
+msgid "input.player_name.whitespace"
+msgstr "Players name can't be purely whitespace"
+
+#: app/views.py:88
+msgid "input.player_name.same"
+msgstr "Players 1 and 2 can't have the same name"
+
+#: app/views.py:104
+msgid "input.game1v1.count"
+msgstr "Player count must be 2 for this game mode"
+
+#: app/views.py:111
+msgid "input.game1v1v1v1.count"
+msgstr "Player count must be 4 for this game mode"
+
+#: app/views.py:115
+msgid "input.tournament1v1.count"
+msgstr "Player count must be a power of 2 for this game mode"
+
+#: app/views.py:120
+msgid "input.tournament1v1v1v1.count"
+msgstr "Player count must be a power of 4 for this game mode"
+
+#: app/views.py:122
+msgid "input.game_mode.invalid"
+msgstr "Invalid game mode"
+
+#: app/views.py:129
+msgid "input.lobby.nonexistent"
+msgstr "Lobby no longer exists"
+
+#: app/views.py:152
+msgid "input.lobby.full"
+msgstr "The lobby is full"
+
+#: app/views.py:154
+msgid "input.lobby.one_spot"
+msgstr "Only one spot left"
+
+#: app/views.py:156
+msgid "input.player_name.one_taken"
+msgstr "Player 1 name already taken"
+
+#: app/views.py:161
+msgid "input.player_name.two_taken"
+msgstr "Player 2 name already taken"

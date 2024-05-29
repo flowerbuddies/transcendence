@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load static %}
-<main class="row align-items-center vh-100">
+<main class="row align-items-center vh-100" id="game">
   <div class="col-3">
     <p id="info">{% trans "game.info.waiting" %}</p>
     <p id="player-one-keys"></p>
