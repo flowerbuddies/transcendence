@@ -2,6 +2,8 @@ import { setBody } from "/static/app/index.js";
 import { registerJoinForms } from "/static/app/join.js";
 import { registerPlayerOptionsUpdate } from "/static/app/options.js";
 let data = {};
+let playerOneName;
+let playerTwoName;
 
 function initConn(lobbyName, playerName, key1, key2) {
     const gameSocketProtocol =
@@ -43,10 +45,6 @@ function initConn(lobbyName, playerName, key1, key2) {
             document.getElementById("info").textContent = content;
         }
         if (data.type == "scene") {
-            document.getElementById("score-right").textContent = "";
-            document.getElementById("score-left").textContent = "";
-            document.getElementById("score-top").textContent = "";
-            document.getElementById("score-bottom").textContent = "";
             data.scene.forEach((element) => {
                 if (element.type != "score") return;
                 let score = `: ${element.elimination_msg}`;
@@ -199,16 +197,21 @@ function initScene() {
     }
 }
 
-//TODO translate
 export function joinLobby(lobbyName, player1Name, player2Name) {
+    document.getElementById("score-right").textContent = "";
+    document.getElementById("score-left").textContent = "";
+    document.getElementById("score-top").textContent = "";
+    document.getElementById("score-bottom").textContent = "";
     document.getElementById(
         "player-one-keys"
     ).textContent = `${player1Name}: ↑ ↓`;
+    playerOneName = player1Name;
     initConn(lobbyName, player1Name, "ArrowUp", "ArrowDown");
     if (player2Name) {
         document.getElementById(
             "player-two-keys"
         ).textContent = `${player2Name}: Q A`;
+        playerTwoName = player2Name;
         initConn(lobbyName, player2Name, "q", "a");
     }
     initScene();

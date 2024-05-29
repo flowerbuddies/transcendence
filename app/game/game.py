@@ -4,9 +4,11 @@ from .paddle import Paddle
 from .ai import BehaviorTree
 from django.utils.translation import gettext as _
 
+
 class Player:
     def __init__(self, side):
         self.side = side
+        self.ready = False
         self.score = 0
         self.name = None
         self.ai = None
