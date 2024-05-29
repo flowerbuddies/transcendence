@@ -218,19 +218,13 @@ class GameState:
 
     def handle_collisions(self, dt):
         next = self.ball.next_position(self.ball.dx, self.ball.dy, dt)
-        speed = self.ball.get_speed()
-        if speed == 0.0:
-            speed = 0.001
-
         if self.was_collision(next):
-            print(f"collision, speed: {speed}")
-        # TODO: make sure you do at least one collision check...
-        # for inter in range(0, math.floor(speed)):
-        #     # maybe "invert" so that you check next position first, then move towards current ball
-        #     amount = inter / speed
-        #     intermediate_dx = lerp(self.ball.x, next.x, amount)
-        #     intermediate_dy = lerp(self.ball.y, next.y, amount)
-        #     intermediate = self.ball.next_position(intermediate_dx, intermediate_dy, dt)
+            return
+        intermediate_dx = lerp(self.ball.x, next.x, 0.5)
+        intermediate_dy = lerp(self.ball.y, next.y, 0.5)
+        intermediate = self.ball.next_position(intermediate_dx, intermediate_dy, dt)
+        if self.was_collision(intermediate):
+            return
 
     def was_collision(self, next):
         return (
@@ -297,21 +291,25 @@ class GameState:
         return scene
 
     def ball_to_scene(self, scene):
+        speed = self.ball.get_speed()
+        diminished = 255 - 255 * speed / self.ball.max_speed
+        # add ball trail to scene
         for index, segment in enumerate(self.ball.trail):
             segment["type"] = "trail"
             segment["width"] = 2 * self.ball.radius
             segment["height"] = 2 * self.ball.radius
             alpha = 1 - index / self.ball.max_trail_len
-            segment["color"] = f"rgba(255, 255, 255, {alpha})"
+            segment["color"] = f"rgba(255, {diminished}, {diminished}, {alpha})"
             scene.append(segment)
 
+        # add ball to scene
         scene.append(
             {
                 "type": "ball",
                 "x": self.ball.x,
                 "y": self.ball.y,
-                "width": self.ball.radius * 2,
-                "height": self.ball.radius * 2,
+                "width": 2 * self.ball.radius,
+                "height": 2 * self.ball.radius,
             }
         )
 
