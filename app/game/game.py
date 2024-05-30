@@ -1,8 +1,10 @@
 import asyncio
+from django.utils.translation import gettext as _
+import math
 from .ball import Ball
 from .paddle import Paddle
 from .ai import BehaviorTree
-from django.utils.translation import gettext as _
+
 
 class Player:
     def __init__(self, side):
@@ -186,7 +188,6 @@ class GameState:
             self.ball.reset()
 
     async def transform_dead_players(self):
-        # TODO potentially refactor into two functions, where the async part is it's separate function
         if self.left.score == self.score_to_lose and self.left.side != "wall_left":
             await self.lobby.channel_layer.send(
                 self.lobby.channel_name, {"type": "kill", "target": self.left.name}
@@ -216,41 +217,57 @@ class GameState:
             self.bottom.change_side("wall_bottom")
 
     def handle_collisions(self, dt):
-        # check the next ball's position for collision with paddles
-        next = self.ball.next_position(dt)
-        self.handle_paddle_collision(next, self.left.paddle)
-        self.handle_paddle_collision(next, self.right.paddle)
-        self.handle_paddle_collision(next, self.top.paddle)
-        self.handle_paddle_collision(next, self.bottom.paddle)
+        next = self.ball.next_position(self.ball.dx, self.ball.dy, dt)
+        if self.was_collision(next):
+            return
+        intermediate_dx = lerp(self.ball.x, next.x, 0.5)
+        intermediate_dy = lerp(self.ball.y, next.y, 0.5)
+        intermediate = self.ball.next_position(intermediate_dx, intermediate_dy, dt)
+        if self.was_collision(intermediate):
+            return
+
+    def was_collision(self, next):
+        return (
+            self.handle_paddle_collision(next, self.left.paddle)
+            or self.handle_paddle_collision(next, self.right.paddle)
+            or self.handle_paddle_collision(next, self.top.paddle)
+            or self.handle_paddle_collision(next, self.bottom.paddle)
+        )
 
     def handle_paddle_collision(self, next, paddle):
         # depending on the direction of the ball, check the paddle's ball-facing edge
         # check one edge of the paddle against both orthogonal edges of the ball
         # if a collision occurs, invert the orthogonal velocity and set next update to apply acceleration
+        # return True if a collision occurs, else False
         if self.ball.dx < 0.0:
             if ortho_intersects(
                 paddle.get_edge("right"), next.get_edge("top")
             ) or ortho_intersects(paddle.get_edge("right"), next.get_edge("bottom")):
                 self.ball.dx *= -1
                 self.ball.apply_accel = True
+                return True
         else:
             if ortho_intersects(
                 paddle.get_edge("left"), next.get_edge("top")
             ) or ortho_intersects(paddle.get_edge("left"), next.get_edge("bottom")):
                 self.ball.dx *= -1
                 self.ball.apply_accel = True
+                return True
         if self.ball.dy < 0.0:
             if ortho_intersects(
                 next.get_edge("left"), paddle.get_edge("bottom")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("bottom")):
                 self.ball.dy *= -1
                 self.ball.apply_accel = self.is_four_player
+                return True
         else:
             if ortho_intersects(
                 next.get_edge("left"), paddle.get_edge("top")
             ) or ortho_intersects(next.get_edge("right"), paddle.get_edge("top")):
                 self.ball.dy *= -1
                 self.ball.apply_accel = self.is_four_player
+                return True
+        return False
 
     def get_scene(self):
         # returns an array of clientside-supported objects for displaying the gamestate
@@ -274,21 +291,25 @@ class GameState:
         return scene
 
     def ball_to_scene(self, scene):
+        speed = self.ball.get_speed()
+        diminished = 255 - 255 * speed / self.ball.max_speed
+        # add ball trail to scene
         for index, segment in enumerate(self.ball.trail):
             segment["type"] = "trail"
             segment["width"] = 2 * self.ball.radius
             segment["height"] = 2 * self.ball.radius
             alpha = 1 - index / self.ball.max_trail_len
-            segment["color"] = f"rgba(255, 255, 255, {alpha})"
+            segment["color"] = f"rgba(255, {diminished}, {diminished}, {alpha})"
             scene.append(segment)
 
+        # add ball to scene
         scene.append(
             {
                 "type": "ball",
                 "x": self.ball.x,
                 "y": self.ball.y,
-                "width": self.ball.radius * 2,
-                "height": self.ball.radius * 2,
+                "width": 2 * self.ball.radius,
+                "height": 2 * self.ball.radius,
             }
         )
 
@@ -307,7 +328,12 @@ class GameState:
             self.paddle_to_scene(player.paddle, scene)
 
     def paddle_to_scene(self, paddle, scene):
-        is_vertical_paddle = paddle.side == "left" or paddle.side == "right"
+        is_vertical_paddle = (
+            paddle.side == "left"
+            or paddle.side == "right"
+            or paddle.side == "wall_left"
+            or paddle.side == "wall_right"
+        )
         scene.append(
             {
                 "type": "paddle",
@@ -325,3 +351,8 @@ def ortho_intersects(vertical, horizontal):
     vx, vy1, _, vy2 = vertical
     hx1, hy, hx2, _ = horizontal
     return hx1 <= vx <= hx2 and vy1 <= hy <= vy2
+
+
+# linearly interpolate by an amount between start and end
+def lerp(start, end, amount):
+    return start + amount * (end - start)
