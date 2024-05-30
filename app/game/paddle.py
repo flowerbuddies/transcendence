@@ -28,12 +28,10 @@ class Paddle:
             self.y = 1 - self.margin - self.depth
             self.length = 1.0
         elif side == "wall_left":
-            self.side = "left"
             self.x = self.margin
             self.y = 0.0
             self.length = 1.0
         elif side == "wall_right":
-            self.side = "right"
             self.x = 1 - self.margin - self.depth
             self.y = 0.0
             self.length = 1.0
@@ -63,12 +61,22 @@ class Paddle:
 
     def get_edge(self, edge):
         if edge == "left":
-            if self.side == "left" or self.side == "right":
+            if (
+                self.side == "left"
+                or self.side == "right"
+                or self.side == "wall_left"
+                or self.side == "wall_right"
+            ):
                 return (self.x, self.y, self.x, self.y + self.length)
             else:
                 return (self.x, self.y, self.x, self.y + self.depth)
         elif edge == "right":
-            if self.side == "left" or self.side == "right":
+            if (
+                self.side == "left"
+                or self.side == "right"
+                or self.side == "wall_left"
+                or self.side == "wall_right"
+            ):
                 return (
                     self.x + self.depth,
                     self.y,
@@ -83,12 +91,22 @@ class Paddle:
                     self.y + self.depth,
                 )
         elif edge == "top":
-            if self.side == "left" or self.side == "right":
+            if (
+                self.side == "left"
+                or self.side == "right"
+                or self.side == "wall_left"
+                or self.side == "wall_right"
+            ):
                 return (self.x, self.y, self.x + self.depth, self.y)
             else:
                 return (self.x, self.y, self.x + self.length, self.y)
         elif edge == "bottom":
-            if self.side == "left" or self.side == "right":
+            if (
+                self.side == "left"
+                or self.side == "right"
+                or self.side == "wall_left"
+                or self.side == "wall_right"
+            ):
                 return (
                     self.x,
                     self.y + self.length,

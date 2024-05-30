@@ -230,9 +230,13 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         return players_ready
 
     async def match_timer(self):
+<<<<<<< HEAD
         while not await self.players_not_ready():
             await asyncio.sleep(0.4)
         seconds = 3
+=======
+        seconds = 7
+>>>>>>> main
         while seconds != -1:
             message = _("match in %(seconds)s..") % {"seconds": seconds}
             await self.channel_layer.group_send(

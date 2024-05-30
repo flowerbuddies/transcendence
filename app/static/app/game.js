@@ -55,30 +55,42 @@ function initConn(lobbyName, playerName, key1, key2) {
                 if (element.side == "right" || element.side == "wall_right")
                     if (!element.name) {
                     } else {
+                        document
+                            .getElementById("right-icon")
+                            .classList.remove("d-none");
                         document.getElementById(
                             "score-right"
-                        ).textContent = `(right) ${element.name}${score}`;
+                        ).textContent = ` ${element.name}${score}`;
                     }
                 if (element.side == "left" || element.side == "wall_left")
                     if (!element.name) {
                     } else {
+                        document
+                            .getElementById("left-icon")
+                            .classList.remove("d-none");
                         document.getElementById(
                             "score-left"
-                        ).textContent = `(left) ${element.name}${score}`;
+                        ).textContent = `${element.name}${score}`;
                     }
                 if (element.side == "top" || element.side == "wall_top")
                     if (!element.name) {
                     } else {
+                        document
+                            .getElementById("top-icon")
+                            .classList.remove("d-none");
                         document.getElementById(
                             "score-top"
-                        ).textContent = `(top) ${element.name}${score}`;
+                        ).textContent = `${element.name}${score}`;
                     }
                 if (element.side == "bottom" || element.side == "wall_bottom")
                     if (!element.name) {
                     } else {
+                        document
+                            .getElementById("bottom-icon")
+                            .classList.remove("d-none");
                         document.getElementById(
                             "score-bottom"
-                        ).textContent = `(bottom) ${element.name}${score}`;
+                        ).textContent = `${element.name}${score}`;
                     }
             });
         }
