@@ -216,7 +216,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         gs.mark_ai(ai_player_names)
 
     async def match_timer(self):
-        seconds = 3
+        seconds = 7
         while seconds != -1:
             message = _("match in %(seconds)s..") % {"seconds": seconds}
             await self.channel_layer.group_send(
