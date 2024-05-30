@@ -8,12 +8,13 @@ class BehaviorTree:
         self.player = player
         self.difficulty = 0.0
         self.accumulated_scores = 0
-        self.hesitation_seconds = 1
+        self.hesitation_seconds = 0.3
         self.hesitation_start = asyncio.get_event_loop().time()
-        self.inaccuracy_max = 0.0
+        self.inaccuracy_max = 0.25 * self.player.paddle.length
         self.inaccuracy = 0.0
         self.predict_x = 0.5
         self.predict_y = 0.5
+        self.handicap = asyncio.get_event_loop().time()
 
     # called once per frame
     def update(self):
@@ -21,22 +22,16 @@ class BehaviorTree:
             self.hesitation_start = asyncio.get_event_loop().time()
             return
         if self.did_scores_change():
-            self.set_difficulty()
-            self.apply_difficulty()
-        self.predict()
+            self.apply_inaccuracy()
+        current_time = asyncio.get_event_loop().time()
+        if current_time - self.handicap > 1.0:
+            self.handicap = asyncio.get_event_loop().time()
+            self.predict()
         if not self.is_hesitating():
             self.move_to_prediction()
 
-    # TODO: depends on score/life implementation
-    # set difficulty using gs, e.g. scores
-    def set_difficulty(self):
-        # something = equation(self.player.score, self.accumulated_scores)
-        # self.inaccuracy_max = something * {0, 1}
-        # self.hesitation_seconds = something * {0, max_seconds}
-        pass
-
     # using difficulty, set hesitation and inaccuracy
-    def apply_difficulty(self):
+    def apply_inaccuracy(self):
         self.inaccuracy = random.uniform(-self.inaccuracy_max, self.inaccuracy_max)
 
     def did_scores_change(self):
