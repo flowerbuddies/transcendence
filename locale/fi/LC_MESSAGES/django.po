@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-31 15:38+0300\n"
+"POT-Creation-Date: 2024-05-31 16:08+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/consumers.py:160
+#: app/consumers.py:160 app/game/game.py:102
 msgid "ready"
 msgstr "valmis"
 
@@ -36,32 +36,32 @@ msgstr "seuraava matsi"
 msgid "match in %(seconds)s.."
 msgstr "matsi alkaa %(seconds)s.."
 
-#: app/game/game.py:110
+#: app/game/game.py:88
 msgid "not ready"
 msgstr "ei valmis"
 
-#: app/game/game.py:111
+#: app/game/game.py:89
 msgid "press"
 msgstr "paina"
 
-#: app/game/game.py:112
+#: app/game/game.py:90
 msgid "or"
 msgstr "tai"
 
-#: app/game/game.py:113
+#: app/game/game.py:91
 msgid "waiting for players to be ready.."
 msgstr "odotetaan että pelaajat ovat valmiita.."
 
-#: app/game/game.py:168
+#: app/game/game.py:178
 #, python-format
 msgid "%(player)s won the match woo!"
 msgstr "%(player)s voitti matsin vautsi!"
 
-#: app/game/game.py:345
+#: app/game/game.py:355
 msgid "eliminated"
 msgstr "eliminoitu"
 
-#: app/game/game.py:346
+#: app/game/game.py:356
 #, python-format
 msgid "balls missed %(score)s/3"
 msgstr "läpi menneet pallot %(score)s/3"
