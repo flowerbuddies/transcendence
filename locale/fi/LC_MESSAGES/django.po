@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-28 14:19+0000\n"
+"POT-Creation-Date: 2024-05-31 15:38+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,71 +18,91 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: app/consumers.py:185
+#: app/consumers.py:160
+msgid "ready"
+msgstr "valmis"
+
+#: app/consumers.py:200
 #, python-format
 msgid "%(player)s won the tournament wowieee!!"
 msgstr "%(player)s voitti turnauksen vautsivau!!"
 
-#: app/consumers.py:205
+#: app/consumers.py:220
 msgid "next match"
 msgstr "seuraava matsi"
 
-#: app/consumers.py:221
+#: app/consumers.py:248
 #, python-format
 msgid "match in %(seconds)s.."
 msgstr "matsi alkaa %(seconds)s.."
 
-#: app/game/game.py:142
+#: app/game/game.py:110
+msgid "not ready"
+msgstr "ei valmis"
+
+#: app/game/game.py:111
+msgid "press"
+msgstr "paina"
+
+#: app/game/game.py:112
+msgid "or"
+msgstr "tai"
+
+#: app/game/game.py:113
+msgid "waiting for players to be ready.."
+msgstr "odotetaan että pelaajat ovat valmiita.."
+
+#: app/game/game.py:168
 #, python-format
 msgid "%(player)s won the match woo!"
 msgstr "%(player)s voitti matsin vautsi!"
 
-#: app/game/game.py:300
+#: app/game/game.py:345
 msgid "eliminated"
 msgstr "eliminoitu"
 
-#: app/game/game.py:301
+#: app/game/game.py:346
 #, python-format
 msgid "balls missed %(score)s/3"
 msgstr "läpi menneet pallot %(score)s/3"
 
-#: app/templates/app/game.django:4
+#: app/templates/app/game.django:5
 msgid "game.info.waiting"
 msgstr "odotetaan pelaajia.."
 
-#: app/templates/app/game.django:24
+#: app/templates/app/game.django:37
 msgid "game.info.press"
 msgstr "paina"
 
-#: app/templates/app/game.django:24
+#: app/templates/app/game.django:37
 msgid "game.info.to_exit"
 msgstr "poistuaksesi"
 
-#: app/templates/app/join.django:7 app/templates/app/join_row.django:10
+#: app/templates/app/join.django:6 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11
 msgid "join.lobbyName.title"
 msgstr "Palvelimen nimi"
 
-#: app/templates/app/join.django:8 app/templates/app/join_row.django:22
+#: app/templates/app/join.django:7 app/templates/app/join_row.django:22
 #: app/templates/app/join_row.django:30
 msgid "join.type.title"
 msgstr "Pelityyppi"
 
-#: app/templates/app/join.django:9
+#: app/templates/app/join.django:8
 msgid "join.players.title"
 msgstr "Pelaajat"
 
-#: app/templates/app/join.django:10 app/templates/app/join.django:11
+#: app/templates/app/join.django:9 app/templates/app/join.django:10
 #: app/templates/app/join_row.django:69 app/templates/app/join_row.django:70
 #: app/templates/app/join_row.django:77 app/templates/app/join_row.django:78
 msgid "join.playerName.title"
 msgstr "Pelaajan nimi"
 
-#: app/templates/app/join.django:12
+#: app/templates/app/join.django:11
 msgid "join.action.title"
 msgstr "Toiminto"
 
-#: app/templates/app/join.django:40
+#: app/templates/app/join.django:39
 msgid "language.go"
 msgstr "Aseta"
 
@@ -118,15 +138,15 @@ msgstr "Liittyneet pelaajat"
 msgid "join.players.player_slots"
 msgstr "Pelaajien määrä"
 
-#: app/templates/app/join_row.django:89
+#: app/templates/app/join_row.django:90
 msgid "join.action.full"
 msgstr "Täynnä"
 
-#: app/templates/app/join_row.django:91
+#: app/templates/app/join_row.django:92
 msgid "join.action.join"
 msgstr "Liity"
 
-#: app/templates/app/join_row.django:93
+#: app/templates/app/join_row.django:94
 msgid "join.action.create"
 msgstr "Luo"
 
@@ -140,54 +160,54 @@ msgstr ""
 "Palvelimen nimen pitää olla pituudeltaan alle 100 merkkiä ja sisältää "
 "ainoastaan ASCII kirjaimia, numeroita, väliviivoja, pisteitä tai alaviivoja"
 
-#: app/views.py:75 app/views.py:82
+#: app/views.py:75 app/views.py:83
 msgid "input.player_name.length"
 msgstr "Pelaajan nimen pituuden pitää olla 1 ja 12 merkin välillä"
 
-#: app/views.py:78 app/views.py:85
+#: app/views.py:79 app/views.py:87
 msgid "input.player_name.whitespace"
 msgstr "Pelaajan nimi ei saa sisältää yksistään tyhjätilamerkkejä"
 
-#: app/views.py:88
+#: app/views.py:91
 msgid "input.player_name.same"
 msgstr "Pelaajilla 1 ja 2 ei saa olla samaa nimeä"
 
-#: app/views.py:104
+#: app/views.py:107
 msgid "input.game1v1.count"
 msgstr "Pelaajien määrän pitää olla 2 tässä pelityypissä"
 
-#: app/views.py:111
+#: app/views.py:114
 msgid "input.game1v1v1v1.count"
 msgstr "Pelaajien määrän pitää olla 4 tässä pelityypissä"
 
-#: app/views.py:115
+#: app/views.py:118
 msgid "input.tournament1v1.count"
 msgstr "Pelaajien määrän pitää olla 2. potenssi tässä pelityypissä"
 
-#: app/views.py:120
+#: app/views.py:123
 msgid "input.tournament1v1v1v1.count"
 msgstr "Pelaajien määrän pitää olla 4. potenssi tässä pelityypissä"
 
-#: app/views.py:122
+#: app/views.py:125
 msgid "input.game_mode.invalid"
 msgstr "Virheellinen pelityyppi"
 
-#: app/views.py:129
+#: app/views.py:132
 msgid "input.lobby.nonexistent"
 msgstr "Palvelinta ei ole enää olemassa"
 
-#: app/views.py:152
+#: app/views.py:155
 msgid "input.lobby.full"
 msgstr "Palvelin on täynnä"
 
-#: app/views.py:154
+#: app/views.py:157
 msgid "input.lobby.one_spot"
 msgstr "Vain yksi paikka jäljellä"
 
-#: app/views.py:156
+#: app/views.py:159
 msgid "input.player_name.one_taken"
 msgstr "Pelaajan 1 nimi on jo otettu"
 
-#: app/views.py:161
+#: app/views.py:164
 msgid "input.player_name.two_taken"
 msgstr "Pelaajan 2 nimi on jo otettu"

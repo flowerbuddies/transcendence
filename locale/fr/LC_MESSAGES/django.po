@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-28 14:19+0000\n"
+"POT-Creation-Date: 2024-05-31 15:38+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,71 +18,91 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: app/consumers.py:185
+#: app/consumers.py:160
+msgid "ready"
+msgstr ""
+
+#: app/consumers.py:200
 #, python-format
 msgid "%(player)s won the tournament wowieee!!"
 msgstr "%(player)s a gagné le tournoi oh là là!!"
 
-#: app/consumers.py:205
+#: app/consumers.py:220
 msgid "next match"
 msgstr "prochain match"
 
-#: app/consumers.py:221
+#: app/consumers.py:248
 #, python-format
 msgid "match in %(seconds)s.."
 msgstr "match dans %(seconds)s.."
 
-#: app/game/game.py:142
+#: app/game/game.py:110
+msgid "not ready"
+msgstr ""
+
+#: app/game/game.py:111
+msgid "press"
+msgstr "appuyer"
+
+#: app/game/game.py:112
+msgid "or"
+msgstr "ou"
+
+#: app/game/game.py:113
+msgid "waiting for players to be ready.."
+msgstr ""
+
+#: app/game/game.py:168
 #, python-format
 msgid "%(player)s won the match woo!"
 msgstr "%(player)s a gagné le match waouh!"
 
-#: app/game/game.py:300
+#: app/game/game.py:345
 msgid "eliminated"
 msgstr "éliminé"
 
-#: app/game/game.py:301
+#: app/game/game.py:346
 #, python-format
 msgid "balls missed %(score)s/3"
 msgstr "balles perdues %(score)s/3"
 
-#: app/templates/app/game.django:4
+#: app/templates/app/game.django:5
 msgid "game.info.waiting"
 msgstr "en attente de joueurs.."
 
-#: app/templates/app/game.django:24
+#: app/templates/app/game.django:37
 msgid "game.info.press"
 msgstr "appuyer"
 
-#: app/templates/app/game.django:24
+#: app/templates/app/game.django:37
 msgid "game.info.to_exit"
 msgstr "partir"
 
-#: app/templates/app/join.django:7 app/templates/app/join_row.django:10
+#: app/templates/app/join.django:6 app/templates/app/join_row.django:10
 #: app/templates/app/join_row.django:11
 msgid "join.lobbyName.title"
 msgstr "Nom du lobby"
 
-#: app/templates/app/join.django:8 app/templates/app/join_row.django:22
+#: app/templates/app/join.django:7 app/templates/app/join_row.django:22
 #: app/templates/app/join_row.django:30
 msgid "join.type.title"
 msgstr "Mode de jeu"
 
-#: app/templates/app/join.django:9
+#: app/templates/app/join.django:8
 msgid "join.players.title"
 msgstr "Joueur.ses"
 
-#: app/templates/app/join.django:10 app/templates/app/join.django:11
+#: app/templates/app/join.django:9 app/templates/app/join.django:10
 #: app/templates/app/join_row.django:69 app/templates/app/join_row.django:70
 #: app/templates/app/join_row.django:77 app/templates/app/join_row.django:78
 msgid "join.playerName.title"
 msgstr "Nom du/de la joueur.se"
 
-#: app/templates/app/join.django:12
+#: app/templates/app/join.django:11
 msgid "join.action.title"
 msgstr "Action"
 
-#: app/templates/app/join.django:40
+#: app/templates/app/join.django:39
 msgid "language.go"
 msgstr "Go"
 
@@ -118,15 +138,15 @@ msgstr "Joueur.ses connecté.es"
 msgid "join.players.player_slots"
 msgstr "Nombre de joueur.ses"
 
-#: app/templates/app/join_row.django:89
+#: app/templates/app/join_row.django:90
 msgid "join.action.full"
 msgstr "Complet"
 
-#: app/templates/app/join_row.django:91
+#: app/templates/app/join_row.django:92
 msgid "join.action.join"
 msgstr "Rejoindre"
 
-#: app/templates/app/join_row.django:93
+#: app/templates/app/join_row.django:94
 msgid "join.action.create"
 msgstr "Créer"
 
@@ -140,56 +160,56 @@ msgstr ""
 "Le nom du lobby ne peut dépasser les 100 caractères, ils doivent être des "
 "caractères ASCII, des tirets (du 6 ou 8), ou des des points"
 
-#: app/views.py:75 app/views.py:82
+#: app/views.py:75 app/views.py:83
 msgid "input.player_name.length"
 msgstr "Le nom du/de la joueur.se doit être entre 1 et 12 caractères"
 
-#: app/views.py:78 app/views.py:85
+#: app/views.py:79 app/views.py:87
 msgid "input.player_name.whitespace"
 msgstr "Le nom du/de la joueur.se ne peut pas pas contenir d'espaces"
 
-#: app/views.py:88
+#: app/views.py:91
 msgid "input.player_name.same"
 msgstr "Les noms des joueur.ses ne peuvent pas être les mêmes"
 
-#: app/views.py:104
+#: app/views.py:107
 msgid "input.game1v1.count"
 msgstr "Le nombre de joueur.ses doit être de 2 pour ce mode de jeu."
 
-#: app/views.py:111
+#: app/views.py:114
 msgid "input.game1v1v1v1.count"
 msgstr "Le nombre de joueur.ses doit être de 4 pour ce mode de jeu."
 
-#: app/views.py:115
+#: app/views.py:118
 msgid "input.tournament1v1.count"
 msgstr ""
 "Le nombre de joueur.ses doit être une puissance de 2 pour ce mode de jeu."
 
-#: app/views.py:120
+#: app/views.py:123
 msgid "input.tournament1v1v1v1.count"
 msgstr ""
 "Le nombre de joueur.ses doit être une puissance de 4 pour ce mode de jeu."
 
-#: app/views.py:122
+#: app/views.py:125
 msgid "input.game_mode.invalid"
 msgstr "Mode de jeu invalide"
 
-#: app/views.py:129
+#: app/views.py:132
 msgid "input.lobby.nonexistent"
 msgstr "Le lobby n'existe plus"
 
-#: app/views.py:152
+#: app/views.py:155
 msgid "input.lobby.full"
 msgstr "Le lobby est plein"
 
-#: app/views.py:154
+#: app/views.py:157
 msgid "input.lobby.one_spot"
 msgstr "Seulement une place est disponible"
 
-#: app/views.py:156
+#: app/views.py:159
 msgid "input.player_name.one_taken"
 msgstr "Le nom du/de la joueur.se 1 est déjà prit"
 
-#: app/views.py:161
+#: app/views.py:164
 msgid "input.player_name.two_taken"
 msgstr "Le nom du/de la joueur.se 2 est déjà prit"
