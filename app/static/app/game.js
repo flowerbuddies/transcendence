@@ -47,8 +47,7 @@ function initConn(lobbyName, playerName, key1, key2) {
         if (data.type == "scene") {
             data.scene.forEach((element) => {
                 if (element.type != "score") return;
-                let status;
-                status = `: ${element.elimination_msg}`;
+                let status = `: ${element.elimination_msg}`;
                 if (data.is_tournament && element.score < 1) {
                     status = "";
                 } else if (!data.is_tournament && element.score < 3)
