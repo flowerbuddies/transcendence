@@ -88,8 +88,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def delete_lobby(self):
-       if self.lobby:
-           self.lobby.delete()
+        if self.lobby:
+            self.lobby.delete()
 
     async def send_players_list(self):
         players, max_players = await self.get_players()
@@ -120,9 +120,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         await self.disconnect_player()
         await self.channel_layer.group_discard(self.lobby_name, self.channel_name)
         if not self.lobby or await self.is_lobby_empty():
-           await self.delete_lobby()
-           if self.task:
-               self.task.cancel()
+            await self.delete_lobby()
+            if self.task:
+                self.task.cancel()
         else:
             try:
                 await self.send_players_list()
@@ -149,6 +149,18 @@ class LobbyConsumer(AsyncWebsocketConsumer):
         if data["player"] not in gs.players:
             return
         player = gs.players[data["player"]]
+        if not player.ready:
+            player.ready = True
+            await self.channel_layer.group_send(
+                self.lobby_name,
+                {
+                    "type": "readiness",
+                    "name": player.name,
+                    "side": player.side,
+                    "msg": _("ready"),
+                    "ready": True,
+                },
+            )
 
         if data["key"] == 1:
             player.paddle.is_up_pressed = not player.paddle.is_up_pressed
@@ -156,6 +168,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             player.paddle.is_down_pressed = not player.paddle.is_down_pressed
 
     async def players(self, event):
+        await self.send(text_data=json.dumps(event))
+
+    async def readiness(self, event):
         await self.send(text_data=json.dumps(event))
 
     async def time(self, event):
@@ -208,15 +223,27 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     def end_game(self, _):
         if self.lobby.name in lobby_to_gs.keys():
-           lobby_to_gs.pop(self.lobby.name)
+            lobby_to_gs.pop(self.lobby.name)
 
     async def mark_ai(self, gs):
         ai_players = await self.get_ai_players()
         ai_player_names = list(map(lambda player: player.name, ai_players))
         gs.mark_ai(ai_player_names)
 
+    async def players_not_ready(self):
+        gs = self.get_game_state()
+        if not gs:
+            return True
+        players_ready = True
+        for player in gs.players:
+            if not gs.players[player].ready:
+                players_ready = False
+        return players_ready
+
     async def match_timer(self):
-        seconds = 7
+        while not await self.players_not_ready():
+            await asyncio.sleep(0.4)
+        seconds = 3
         while seconds != -1:
             message = _("match in %(seconds)s..") % {"seconds": seconds}
             await self.channel_layer.group_send(
@@ -233,6 +260,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             await self.update_next_match_info(match_index + 1)
             await lobby_to_gs[self.lobby.name].set_up_match()
             await self.mark_ai(lobby_to_gs[self.lobby.name])
+            await lobby_to_gs[self.lobby.name].update_readiness()
             await self.match_timer()
             match_winner = await lobby_to_gs[self.lobby.name].game_loop()
             self.tournament.set_match_winner(match_index, match_winner)
@@ -268,6 +296,3 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             return lobby_to_gs[channel_to_lobby[self.channel_name]]
         except:
             return None
-
-
-# TODO: when the game is finished, remove the gs, cancel the task

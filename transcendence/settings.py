@@ -92,7 +92,6 @@ DATABASES = {
     }
 }
 
-# TODO: use Redis backend
 CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 

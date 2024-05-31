@@ -9,6 +9,7 @@ from .ai import BehaviorTree
 class Player:
     def __init__(self, side):
         self.side = side
+        self.ready = False
         self.score = 0
         self.name = None
         self.ai = None
@@ -19,6 +20,7 @@ class Player:
         self.paddle = Paddle(side)
 
     def reset(self, is_four_player):
+        self.ready = False
         self.score = 0
         self.name = None
         self.ai = None
@@ -63,12 +65,44 @@ class GameState:
         for name in names:
             if self.left.name == name:
                 self.left.ai = BehaviorTree(self, self.left)
+                self.left.ready = True
             elif self.right.name == name:
                 self.right.ai = BehaviorTree(self, self.right)
+                self.right.ready = True
             elif self.top.name == name:
                 self.top.ai = BehaviorTree(self, self.top)
+                self.top.ready = True
             elif self.bottom.name == name:
                 self.bottom.ai = BehaviorTree(self, self.bottom)
+                self.bottom.ready = True
+
+    async def update_readiness(self):
+        for player in self.players:
+            if not self.players[player].ready:
+                await self.lobby.channel_layer.group_send(
+                    self.lobby.lobby_name,
+                    {
+                        "type": "readiness",
+                        "name": self.players[player].name,
+                        "side": self.players[player].side,
+                        "msg": _("not ready"),
+                        "press_msg": _("press"),
+                        "or_msg": _("or"),
+                        "info_msg": _("waiting for players to be ready.."),
+                        "ready": False,
+                    },
+                )
+            else:
+                await self.lobby.channel_layer.group_send(
+                    self.lobby.lobby_name,
+                    {
+                        "type": "readiness",
+                        "name": self.players[player].name,
+                        "side": self.players[player].side,
+                        "msg": _("ready"),
+                        "ready": True,
+                    },
+                )
 
     def update_ai_players(self):
         if self.left.ai:

@@ -2,6 +2,8 @@ import { setBody } from "/static/app/index.js";
 import { registerJoinForms } from "/static/app/join.js";
 import { registerPlayerOptionsUpdate } from "/static/app/options.js";
 let data = {};
+let playerOneName;
+let playerTwoName;
 
 function initConn(lobbyName, playerName, key1, key2) {
     const gameSocketProtocol =
@@ -43,17 +45,13 @@ function initConn(lobbyName, playerName, key1, key2) {
             document.getElementById("info").textContent = content;
         }
         if (data.type == "scene") {
-            document.getElementById("score-right").textContent = "";
-            document.getElementById("score-left").textContent = "";
-            document.getElementById("score-top").textContent = "";
-            document.getElementById("score-bottom").textContent = "";
             data.scene.forEach((element) => {
                 if (element.type != "score") return;
-                let score = `: ${element.elimination_msg}`;
+                let status = `: ${element.elimination_msg}`;
                 if (data.is_tournament && element.score < 1) {
-                    score = "";
+                    status = "";
                 } else if (!data.is_tournament && element.score < 3)
-                    score = `: ${element.ball_msg}`;
+                    status = `: ${element.ball_msg}`;
                 if (element.side == "right" || element.side == "wall_right")
                     if (!element.name) {
                     } else {
@@ -62,7 +60,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                             .classList.remove("d-none");
                         document.getElementById(
                             "score-right"
-                        ).textContent = ` ${element.name}${score}`;
+                        ).textContent = `${element.name}${status}`;
                     }
                 if (element.side == "left" || element.side == "wall_left")
                     if (!element.name) {
@@ -72,7 +70,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                             .classList.remove("d-none");
                         document.getElementById(
                             "score-left"
-                        ).textContent = `${element.name}${score}`;
+                        ).textContent = `${element.name}${status}`;
                     }
                 if (element.side == "top" || element.side == "wall_top")
                     if (!element.name) {
@@ -82,7 +80,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                             .classList.remove("d-none");
                         document.getElementById(
                             "score-top"
-                        ).textContent = `${element.name}${score}`;
+                        ).textContent = `${element.name}${status}`;
                     }
                 if (element.side == "bottom" || element.side == "wall_bottom")
                     if (!element.name) {
@@ -92,9 +90,35 @@ function initConn(lobbyName, playerName, key1, key2) {
                             .classList.remove("d-none");
                         document.getElementById(
                             "score-bottom"
-                        ).textContent = `${element.name}${score}`;
+                        ).textContent = `${element.name}${status}`;
                     }
             });
+        }
+        if (data.type == "readiness") {
+            let status = data.msg;
+            if (!data.ready) {
+                document.getElementById("info").textContent = data.info_msg;
+                if (data.name == playerOneName)
+                    status = `${data.press_msg} ↑ ${data.or_msg} ↓`;
+                if (data.name == playerTwoName)
+                    status = `${data.press_msg} Q ${data.or_msg} A`;
+            }
+            if (data.side == "right")
+                document.getElementById(
+                    "score-right"
+                ).textContent = `${data.name}: ${status}`;
+            if (data.side == "left")
+                document.getElementById(
+                    "score-left"
+                ).textContent = `${data.name}: ${status}`;
+            if (data.side == "top")
+                document.getElementById(
+                    "score-top"
+                ).textContent = `${data.name}: ${status}`;
+            if (data.side == "bottom")
+                document.getElementById(
+                    "score-bottom"
+                ).textContent = `${data.name}: ${status}`;
         }
         if (data.type == "next_match") {
             let content = "";
@@ -211,16 +235,21 @@ function initScene() {
     }
 }
 
-//TODO translate
 export function joinLobby(lobbyName, player1Name, player2Name) {
+    document.getElementById("score-right").textContent = "";
+    document.getElementById("score-left").textContent = "";
+    document.getElementById("score-top").textContent = "";
+    document.getElementById("score-bottom").textContent = "";
     document.getElementById(
         "player-one-keys"
     ).textContent = `${player1Name}: ↑ ↓`;
+    playerOneName = player1Name;
     initConn(lobbyName, player1Name, "ArrowUp", "ArrowDown");
     if (player2Name) {
         document.getElementById(
             "player-two-keys"
         ).textContent = `${player2Name}: Q A`;
+        playerTwoName = player2Name;
         initConn(lobbyName, player2Name, "q", "a");
     }
     initScene();
@@ -246,20 +275,4 @@ function drawScene(scene, ctx) {
             ctx.canvas.height * element.height
         );
     });
-}
-
-// check performance
-let startTime = performance.now();
-let frames = 0;
-
-function updateFPS() {
-    frames++;
-    const currentTime = performance.now();
-    const delta = currentTime - startTime;
-
-    if (delta >= 1000) {
-        console.log("FPS:", frames);
-        frames = 0;
-        startTime = currentTime;
-    }
 }
