@@ -20,7 +20,7 @@ msgstr ""
 
 #: app/consumers.py:160 app/game/game.py:102
 msgid "ready"
-msgstr ""
+msgstr "prêt.e"
 
 #: app/consumers.py:200
 #, python-format
@@ -38,7 +38,7 @@ msgstr "match dans %(seconds)s.."
 
 #: app/game/game.py:88
 msgid "not ready"
-msgstr ""
+msgstr "pas prêt.e"
 
 #: app/game/game.py:89
 msgid "press"
@@ -50,7 +50,7 @@ msgstr "ou"
 
 #: app/game/game.py:91
 msgid "waiting for players to be ready.."
-msgstr ""
+msgstr "toustes les joueur.ses ne sont pas prêt.es.."
 
 #: app/game/game.py:178
 #, python-format
