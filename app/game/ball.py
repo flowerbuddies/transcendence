@@ -19,8 +19,8 @@ class Ball:
     def reset(self):
         self.x = 0.5 - self.radius
         self.y = 0.5 - self.radius
-        self.dx = bipolar_between(5e-2, 5e-1)
-        self.dy = bipolar_between(5e-2, 5e-1)
+        self.dx = bipolar_between(2e-1, 5e-1)
+        self.dy = bipolar_between(2e-1, 5e-1)
         self.trail = []
 
     def update(self, dt):
