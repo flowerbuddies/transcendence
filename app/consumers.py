@@ -260,6 +260,7 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             await self.update_next_match_info(match_index + 1)
             await lobby_to_gs[self.lobby.name].set_up_match()
             await self.mark_ai(lobby_to_gs[self.lobby.name])
+            await lobby_to_gs[self.lobby.name].update_readiness()
             await self.match_timer()
             match_winner = await lobby_to_gs[self.lobby.name].game_loop()
             self.tournament.set_match_winner(match_index, match_winner)

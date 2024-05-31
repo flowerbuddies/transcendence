@@ -76,6 +76,34 @@ class GameState:
                 self.bottom.ai = BehaviorTree(self, self.bottom)
                 self.bottom.ready = True
 
+    async def update_readiness(self):
+        for player in self.players:
+            if not self.players[player].ready:
+                await self.lobby.channel_layer.group_send(
+                    self.lobby.lobby_name,
+                    {
+                        "type": "readiness",
+                        "name": self.players[player].name,
+                        "side": self.players[player].side,
+                        "msg": _("not ready"),
+                        "press_msg": _("press"),
+                        "or_msg": _("or"),
+                        "info_msg": _("waiting for players to be ready.."),
+                        "ready": False,
+                    },
+                )
+            else:
+                await self.lobby.channel_layer.group_send(
+                    self.lobby.lobby_name,
+                    {
+                        "type": "readiness",
+                        "name": self.players[player].name,
+                        "side": self.players[player].side,
+                        "msg": _("ready"),
+                        "ready": True,
+                    },
+                )
+
     def update_ai_players(self):
         if self.left.ai:
             self.left.ai.update()
@@ -96,24 +124,6 @@ class GameState:
                 "is_tournament": self.is_tournament,
             },
         )
-        for player in self.players:
-            print(self.players[player].name)
-            print(self.players[player].side)
-            if self.players[player].ready:
-                continue
-            await self.lobby.channel_layer.group_send(
-                self.lobby.lobby_name,
-                {
-                    "type": "readiness",
-                    "name": self.players[player].name,
-                    "side": self.players[player].side,
-                    "msg": _("not ready"),
-                    "press_msg": _("press"),
-                    "or_msg": _("or"),
-                    "info_msg": _("waiting for players to be ready.."),
-                    "ready": False,
-                },
-            )
 
     def players_alive(self):
         alive_count = 0
