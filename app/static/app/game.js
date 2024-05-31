@@ -47,11 +47,12 @@ function initConn(lobbyName, playerName, key1, key2) {
         if (data.type == "scene") {
             data.scene.forEach((element) => {
                 if (element.type != "score") return;
-                let score = `: ${element.elimination_msg}`;
+                let status;
+                status = `: ${element.elimination_msg}`;
                 if (data.is_tournament && element.score < 1) {
-                    score = "";
+                    status = "";
                 } else if (!data.is_tournament && element.score < 3)
-                    score = `: ${element.ball_msg}`;
+                    status = `: ${element.ball_msg}`;
                 if (element.side == "right" || element.side == "wall_right")
                     if (!element.name) {
                     } else {
@@ -60,7 +61,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                             .classList.remove("d-none");
                         document.getElementById(
                             "score-right"
-                        ).textContent = ` ${element.name}${score}`;
+                        ).textContent = `${element.name}${status}`;
                     }
                 if (element.side == "left" || element.side == "wall_left")
                     if (!element.name) {
@@ -70,7 +71,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                             .classList.remove("d-none");
                         document.getElementById(
                             "score-left"
-                        ).textContent = `${element.name}${score}`;
+                        ).textContent = `${element.name}${status}`;
                     }
                 if (element.side == "top" || element.side == "wall_top")
                     if (!element.name) {
@@ -80,7 +81,7 @@ function initConn(lobbyName, playerName, key1, key2) {
                             .classList.remove("d-none");
                         document.getElementById(
                             "score-top"
-                        ).textContent = `${element.name}${score}`;
+                        ).textContent = `${element.name}${status}`;
                     }
                 if (element.side == "bottom" || element.side == "wall_bottom")
                     if (!element.name) {
@@ -90,9 +91,35 @@ function initConn(lobbyName, playerName, key1, key2) {
                             .classList.remove("d-none");
                         document.getElementById(
                             "score-bottom"
-                        ).textContent = `${element.name}${score}`;
+                        ).textContent = `${element.name}${status}`;
                     }
             });
+        }
+        if (data.type == "readiness") {
+            let status = data.msg;
+            if (!data.ready) {
+                document.getElementById("info").textContent = data.info_msg;
+                if (data.name == playerOneName)
+                    status = `${data.press_msg} ↑ ${data.or_msg} ↓`;
+                if (data.name == playerTwoName)
+                    status = `${data.press_msg} Q ${data.or_msg} A`;
+            }
+            if (data.side == "right")
+                document.getElementById(
+                    "score-right"
+                ).textContent = `${data.name}: ${status}`;
+            if (data.side == "left")
+                document.getElementById(
+                    "score-left"
+                ).textContent = `${data.name}: ${status}`;
+            if (data.side == "top")
+                document.getElementById(
+                    "score-top"
+                ).textContent = `${data.name}: ${status}`;
+            if (data.side == "bottom")
+                document.getElementById(
+                    "score-bottom"
+                ).textContent = `${data.name}: ${status}`;
         }
         if (data.type == "next_match") {
             let content = "";

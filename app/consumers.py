@@ -153,7 +153,13 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             player.ready = True
             await self.channel_layer.group_send(
                 self.lobby_name,
-                {"type": "readiness", "player": data["player"]},
+                {
+                    "type": "readiness",
+                    "name": player.name,
+                    "side": player.side,
+                    "msg": _("ready"),
+                    "ready": True,
+                },
             )
 
         if data["key"] == 1:
@@ -162,6 +168,9 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             player.paddle.is_down_pressed = not player.paddle.is_down_pressed
 
     async def players(self, event):
+        await self.send(text_data=json.dumps(event))
+
+    async def readiness(self, event):
         await self.send(text_data=json.dumps(event))
 
     async def time(self, event):
@@ -223,6 +232,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 
     async def players_not_ready(self):
         gs = self.get_game_state()
+        if not gs:
+            return True
         players_ready = True
         for player in gs.players:
             if not gs.players[player].ready:
@@ -284,6 +295,3 @@ class LobbyConsumer(AsyncWebsocketConsumer):
             return lobby_to_gs[channel_to_lobby[self.channel_name]]
         except:
             return None
-
-
-# TODO: when the game is finished, remove the gs, cancel the task
