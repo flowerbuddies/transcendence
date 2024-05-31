@@ -276,19 +276,3 @@ function drawScene(scene, ctx) {
         );
     });
 }
-
-// check performance
-let startTime = performance.now();
-let frames = 0;
-
-function updateFPS() {
-    frames++;
-    const currentTime = performance.now();
-    const delta = currentTime - startTime;
-
-    if (delta >= 1000) {
-        console.log("FPS:", frames);
-        frames = 0;
-        startTime = currentTime;
-    }
-}
