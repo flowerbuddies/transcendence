@@ -29,7 +29,6 @@ class Tournament:
         self.unassigned_players: list[str] = []
         self.winner: str = None
         self.gamestate = gamestate # <-- not used? t. Noel
-        print("Tournament created with {} players".format(self.player_count))
 
     def get_match_count(self):
         if self.match_count is not None:
@@ -45,7 +44,6 @@ class Tournament:
             rolling = rolling // 4
             total += rolling
         self.match_count = total
-        print("Total matches for 4 player tournament: {}".format(total))
         return self.match_count
 
     def get_match(self, index: int):
@@ -56,7 +54,6 @@ class Tournament:
     def start_tournament(self):
         required_player_count = 4 if self.is_four_player else 2
         if self.player_count < required_player_count:
-            print("Not enough players to create a tournament")
             return
         players = self.players
         shuffle(players)
@@ -73,11 +70,9 @@ class Tournament:
         """Assigns players in a match to their positions in the gamestate object"""
         required_player_count = 4 if self.is_four_player else 2
         if match_index < 0 or match_index >= len(self.matches):
-            print("Invalid match index")
             return
         match = self.matches[match_index]
         if len(match.players) != required_player_count:
-            print("Match has invalid number of players")
             return
         gs.players[match.players[0]] = gs.left
         gs.players[match.players[1]] = gs.right
@@ -87,13 +82,10 @@ class Tournament:
 
     def set_match_winner(self, match_index: int, winner: str):
         if match_index < 0 or match_index >= len(self.matches):
-            print("Invalid match index")
             return
         if winner not in self.matches[match_index].players:
-            print("Invalid winner for match")
             return
         if self.matches[match_index].winner is not None:
-            print("Match already has a winner")
             return
         self.matches[match_index].winner = winner
         self.unassigned_players.append(winner)
@@ -102,18 +94,14 @@ class Tournament:
     def _assign_future_matches(self, match_index: int):
         required_player_count = 4 if self.is_four_player else 2
         if match_index < 0 or match_index >= self.match_count:
-            print("Invalid match index")
             return
         if match_index == self.match_count - 1:
             self.winner = self.unassigned_players.pop()
-            print("Winner of the tournament is {}".format(self.winner))
             return
         if len(self.unassigned_players) < 1:
-            print("No players to assign, this should not happen!")
             return
         for i in range(match_index + 1, self.match_count):
             match = self.matches[i]
             if len(match.players) < required_player_count:
                 match.players.append(self.unassigned_players.pop())
                 return
-        print("No matches to assign players to")
